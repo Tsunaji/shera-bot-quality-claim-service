@@ -8,6 +8,7 @@ const restify = require('restify');
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState } = require('botbuilder');
+const { BlobStorage } = require('botbuilder-azure');
 
 // Import required bot configuration.
 const { BotConfiguration } = require('botframework-config');
@@ -73,7 +74,12 @@ adapter.onTurnError = async (context, error) => {
 // See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
 // Create conversation and user state with in-memory storage provider.
-const memoryStorage = new MemoryStorage();
+// const memoryStorage = new MemoryStorage();
+
+const memoryStorage = new BlobStorage({
+    containerName: "sherabotsvcp",
+    storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotsvcp;AccountKey=KwLke2CpEIrNT5qHvYk7xcbIK6HBNNdAYjWdvZk7oyDQvNy8d+3xz8ENcDhSKqwO9L92r9U8AvxxneMkn/VoHQ==;EndpointSuffix=core.windows.net"
+})
 
 const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
@@ -84,7 +90,6 @@ const myBot = new MyBot(conversationState, userState);
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
     adapter.processActivity(req, res, async (context) => {
-
         // Route to main dialog.
         await myBot.onTurn(context);
     });

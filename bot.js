@@ -3,9 +3,16 @@
 
 const { ActivityTypes, CardFactory } = require('botbuilder');
 const { ChoicePrompt, DialogSet, TextPrompt, AttachmentPrompt, WaterfallDialog } = require('botbuilder-dialogs');
+const mysql = require('mysql');
+const Sequelize = require('sequelize');
 
 const { MyMenu } = require('./MyMenu');
 const menu = new MyMenu();
+
+const sequelize = new Sequelize('scm001', 'root', 'admin', {
+    dialect: 'mysql',
+    host: "localhost"
+});
 
 // The accessor names for the conversation data and user profile state property accessors.
 const DIALOG_STATE_PROPERTY = 'dialogState';
@@ -83,10 +90,22 @@ class MyBot {
             this.submitClaim.bind(this),
         ]));
 
+        // this.customer = [];
+
+        // sequelize.query("SELECT * FROM vehicle where vehicleId = 35", { raw: true }).then(myTableRows => {
+        //     // console.log(myTableRows);
+        //     this.setCustomer(myTableRows);
+        // })
+    }
+
+    async setCustomer(value) {
+        this.customer = value;
     }
 
     // step 1
     async promptForSapId(step) {
+        // this.printValue(this.customer);
+        console.log(this.customer);
         return await step.prompt(SAP_ID_PROMPT, `ขอทราบ รหัสลูกค้าใน SAP ของร้านค้าหลักค่ะ`);
     }
 
@@ -244,7 +263,7 @@ class MyBot {
     async onTurn(turnContext) {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
-
+            console.log("Get message");
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
 
@@ -294,8 +313,10 @@ class MyBot {
             await this.conversationState.saveChanges(turnContext);
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {
             // Send greeting when users are added to the conversation.
+            console.log("Welcome");
             await this.sendWelcomeMessage(turnContext);
         } else {
+            console.log("Anything else");
             // Generic message for all other activities
             await turnContext.sendActivity(`[${turnContext.activity.type} event detected]`);
         }
@@ -315,6 +336,7 @@ class MyBot {
                 if (conversationMember.id !== this.activity.recipient.id) {
                     // Because the TurnContext was bound to this function, the bot can call
                     // `TurnContext.sendActivity` via `this.sendActivity`;
+                    console.log("Main Welcome");
                     await this.sendActivity({ attachments: [menu.mainMenu()] });
                 }
             }

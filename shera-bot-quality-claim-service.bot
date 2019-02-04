@@ -1,13 +1,52 @@
 {
     "name": "shera-bot-quality-claim-service",
+    "description": "",
     "services": [
         {
+            "type": "abs",
+            "tenantId": "3a9136c1-b8dc-48b7-9de6-1264ac6ced3e",
+            "subscriptionId": "c41f4af1-e4b8-420e-8304-6b9359899876",
+            "resourceGroup": "shera-bot",
+            "serviceName": "shera-bot-quality-claim-service",
+            "name": "shera-bot-quality-claim-service",
+            "id": "1",
+            "appId": "fa1f6709-4e72-4256-8c5a-195c6ddef3c1"
+        },
+        {
+            "type": "blob",
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=sherabotsvcp;AccountKey=KwLke2CpEIrNT5qHvYk7xcbIK6HBNNdAYjWdvZk7oyDQvNy8d+3xz8ENcDhSKqwO9L92r9U8AvxxneMkn/VoHQ==;",
+            "tenantId": "3a9136c1-b8dc-48b7-9de6-1264ac6ced3e",
+            "subscriptionId": "c41f4af1-e4b8-420e-8304-6b9359899876",
+            "resourceGroup": "shera-bot",
+            "serviceName": "sherabotsvcp",
+            "id": "2"
+        },
+        {
             "type": "endpoint",
-            "name": "development",
-            "endpoint": "http://localhost:3978/api/messages",
             "appId": "",
             "appPassword": "",
-            "id": "1"
+            "endpoint": "http://localhost:3978/api/messages",
+            "name": "development",
+            "id": "3"
+        },
+        {
+            "type": "endpoint",
+            "appId": "fa1f6709-4e72-4256-8c5a-195c6ddef3c1",
+            "appPassword": "vgpQVLV33~_blfqNZT720)[",
+            "endpoint": "https://sherabotqualit7co.azurewebsites.net/api/messages",
+            "name": "production",
+            "id": "4"
+        },
+        {
+            "type": "appInsights",
+            "instrumentationKey": "58a9530b-abba-40cb-97cd-42d9c9b8903b",
+            "applicationId": "fd91caa3-f2b9-4fdd-9dce-585fa143238c",
+            "apiKeys": {},
+            "tenantId": "3a9136c1-b8dc-48b7-9de6-1264ac6ced3e",
+            "subscriptionId": "c41f4af1-e4b8-420e-8304-6b9359899876",
+            "resourceGroup": "shera-bot",
+            "serviceName": "shera-bot-quality-claim-service27qyhm",
+            "id": "5"
         }
     ],
     "padlock": "",

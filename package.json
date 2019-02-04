@@ -17,11 +17,15 @@
     },
     "dependencies": {
         "botbuilder": "^4.2.0",
+        "botbuilder-azure": "^4.2.0",
         "botbuilder-dialogs": "^4.2.0",
         "botframework-config": "^4.2.0",
         "dotenv": "^6.1.0",
+        "mysql": "^2.16.0",
+        "mysql2": "^1.6.4",
         "nodemailer": "^5.1.1",
-        "restify": "^7.2.3"
+        "restify": "^7.2.3",
+        "sequelize": "^4.42.0"
     },
     "devDependencies": {
         "eslint": "^5.8.0",

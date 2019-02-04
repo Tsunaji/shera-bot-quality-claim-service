@@ -378,7 +378,7 @@ class MyMenu {
         var mailOptions = {
             from: 'jirasak.ka.92@gmail.com',
             to: 'jirasak_ka@shera.com',
-            subject: 'New Case Claim CRM',
+            subject: 'Open New Case Quality Claim CRM',
             text: message,
             attachments: attachmentsImages
         };
