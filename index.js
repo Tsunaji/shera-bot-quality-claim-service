@@ -40,6 +40,8 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 // .bot file path
 const BOT_FILE = path.join(__dirname, (process.env.botFilePath || ''));
 
+console.log(("BOT FILE: ")+BOT_FILE)
+
 // Read bot configuration from .bot file.
 let botConfig;
 try {
@@ -74,12 +76,12 @@ adapter.onTurnError = async (context, error) => {
 // See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
 // Create conversation and user state with in-memory storage provider.
-// const memoryStorage = new MemoryStorage();
+const memoryStorage = new MemoryStorage();
 
-const memoryStorage = new BlobStorage({
-    containerName: "sherabotsvcp",
-    storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotsvcp;AccountKey=KwLke2CpEIrNT5qHvYk7xcbIK6HBNNdAYjWdvZk7oyDQvNy8d+3xz8ENcDhSKqwO9L92r9U8AvxxneMkn/VoHQ==;EndpointSuffix=core.windows.net"
-})
+// const memoryStorage = new BlobStorage({
+//     containerName: "sherabotm6s1",
+//     storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotm6s1;AccountKey=kflPkl0IC2lqF8Inq1pdMFeUjN+CyKwVpJj6ABJaNbHOenk+lvZp9+kA5yDCQwGYx6Hd3leuQsJ/ttETaUw8Vg==;EndpointSuffix=core.windows.net"
+// })
 
 const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);

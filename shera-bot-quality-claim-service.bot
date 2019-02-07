@@ -14,11 +14,11 @@
         },
         {
             "type": "blob",
-            "connectionString": "DefaultEndpointsProtocol=https;AccountName=sherabotsvcp;AccountKey=KwLke2CpEIrNT5qHvYk7xcbIK6HBNNdAYjWdvZk7oyDQvNy8d+3xz8ENcDhSKqwO9L92r9U8AvxxneMkn/VoHQ==;",
+            "connectionString": "DefaultEndpointsProtocol=https;AccountName=sherabotm6s1;AccountKey=kflPkl0IC2lqF8Inq1pdMFeUjN+CyKwVpJj6ABJaNbHOenk+lvZp9+kA5yDCQwGYx6Hd3leuQsJ/ttETaUw8Vg==;",
             "tenantId": "3a9136c1-b8dc-48b7-9de6-1264ac6ced3e",
             "subscriptionId": "c41f4af1-e4b8-420e-8304-6b9359899876",
             "resourceGroup": "shera-bot",
-            "serviceName": "sherabotsvcp",
+            "serviceName": "sherabotm6s1",
             "id": "2"
         },
         {
@@ -32,15 +32,15 @@
         {
             "type": "endpoint",
             "appId": "fa1f6709-4e72-4256-8c5a-195c6ddef3c1",
-            "appPassword": "vgpQVLV33~_blfqNZT720)[",
-            "endpoint": "https://sherabotqualit7co.azurewebsites.net/api/messages",
+            "appPassword": "gxeKNF6*;rpjjFGCO0810@%",
+            "endpoint": "https://sherabotquali8d16.azurewebsites.net/api/messages",
             "name": "production",
             "id": "4"
         },
         {
             "type": "appInsights",
-            "instrumentationKey": "58a9530b-abba-40cb-97cd-42d9c9b8903b",
-            "applicationId": "fd91caa3-f2b9-4fdd-9dce-585fa143238c",
+            "instrumentationKey": "c791ab30-7d71-42e0-8492-85848b269187",
+            "applicationId": "78474f6e-7896-4649-b426-d974cea4f2ca",
             "apiKeys": {},
             "tenantId": "3a9136c1-b8dc-48b7-9de6-1264ac6ced3e",
             "subscriptionId": "c41f4af1-e4b8-420e-8304-6b9359899876",

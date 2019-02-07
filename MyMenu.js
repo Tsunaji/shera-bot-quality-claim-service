@@ -88,12 +88,12 @@ class MyMenu {
                                 },
                                 {
                                     "type": "TextBlock",
-                                    "text": "ชื่อ XXX",
+                                    "text": user.customerName,
                                     "isSubtle": true
                                 },
                                 {
                                     "type": "TextBlock",
-                                    "text": "XXX",
+                                    "text": user.customerAddress,
                                     "isSubtle": true
                                 },
                                 {
@@ -343,8 +343,8 @@ class MyMenu {
 
     sendMail(user) {
         const message = "รหัสร้านค้าหลัก: " + user.sapId + "\n"
-            + "ชื่อร้านค้าหลัก: " + "ชื่อ XXX" + "\n"
-            + "ที่อยู่ร้านค้า: " + "XXX" + "\n"
+            + "ชื่อร้านค้าหลัก: " + user.customerName + "\n"
+            + "ที่อยู่ร้านค้า: " + user.customerAddress + "\n"
             + "ชื่อร้านค้าย่อย: " + user.subCustName + "\n"
             + "ชื่อผุ้ติดต่อ: " + user.contactName + "\n"
             + "เบอร์ติดต่อ: " + user.phone + "\n"

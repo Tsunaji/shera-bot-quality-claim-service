@@ -3,16 +3,16 @@
 
 const { ActivityTypes, CardFactory } = require('botbuilder');
 const { ChoicePrompt, DialogSet, TextPrompt, AttachmentPrompt, WaterfallDialog } = require('botbuilder-dialogs');
-const mysql = require('mysql');
-const Sequelize = require('sequelize');
+
+// const Sequelize = require('sequelize');
 
 const { MyMenu } = require('./MyMenu');
 const menu = new MyMenu();
 
-const sequelize = new Sequelize('scm001', 'root', 'admin', {
-    dialect: 'mysql',
-    host: "localhost"
-});
+// const sequelize = new Sequelize('scm001', 'root', 'admin', {
+//     dialect: 'mysql',
+//     host: "localhost"
+// });
 
 // The accessor names for the conversation data and user profile state property accessors.
 const DIALOG_STATE_PROPERTY = 'dialogState';
@@ -57,8 +57,36 @@ class MyBot {
         this.dialogState = this.conversationState.createProperty(DIALOG_STATE_PROPERTY);
         this.dialogs = new DialogSet(this.dialogState);
 
+        // this.customer = [];
+
+        // sequelize.query("SELECT * FROM vehicle where vehicleId = 35", { raw: true }).then(myTableRows => {
+        //     // console.log(myTableRows);
+        //     this.setCustomer(myTableRows);
+        // })
+
         // Add prompts that will be used by the main dialogs.
-        this.dialogs.add(new TextPrompt(SAP_ID_PROMPT));
+        this.dialogs.add(new TextPrompt(SAP_ID_PROMPT, async (prompt) => {
+
+            const user = await this.userProfile.get(prompt.context, {});
+
+            if (prompt.recognized.succeeded) {
+
+                // if (prompt.recognized.value === '1234') {
+                //     user.customerName = 'โต่วต๋ง ฮกเหล็ง';
+                //     user.customerAddress = 'สวรรค์ชั้น 7';
+                //     return true;
+                // }
+
+                if (true) {
+                    user.customerName = 'โต่วต๋ง ฮกเหล็ง';
+                    user.customerAddress = 'สวรรค์ชั้น 7';
+                    return true;
+                }
+
+            }
+            return false;
+
+        }));
         this.dialogs.add(new TextPrompt(SUB_CUST_NAME_PROMPT));
         this.dialogs.add(new TextPrompt(CONTACT_NAME_PROMPT));
         this.dialogs.add(new TextPrompt(PHONE_PROMPT));
@@ -87,15 +115,8 @@ class MyBot {
             this.promptForProblem.bind(this),
             this.promptForImages.bind(this),
             this.summaryClaim.bind(this),
-            this.submitClaim.bind(this),
+            this.submitClaim.bind(this)
         ]));
-
-        // this.customer = [];
-
-        // sequelize.query("SELECT * FROM vehicle where vehicleId = 35", { raw: true }).then(myTableRows => {
-        //     // console.log(myTableRows);
-        //     this.setCustomer(myTableRows);
-        // })
     }
 
     async setCustomer(value) {
@@ -104,9 +125,13 @@ class MyBot {
 
     // step 1
     async promptForSapId(step) {
-        // this.printValue(this.customer);
         console.log(this.customer);
-        return await step.prompt(SAP_ID_PROMPT, `ขอทราบ รหัสลูกค้าใน SAP ของร้านค้าหลักค่ะ`);
+        await step.context.sendActivity(`ระหว่างกระบวณการแจ้งเคลม ท่านสามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
+        return await step.prompt(SAP_ID_PROMPT,
+            {
+                prompt: 'ขอทราบ รหัสลูกค้าใน SAP ของร้านค้าหลักค่ะ',
+                retryPrompt: 'ขอโทษค่ะ ไม่มีรหัสลูกค้านี้ในระบบ กรุณาระบุรหัสลูกค้าใหม่อีกครั้งค่ะ'
+            });
     }
 
     // step 2
@@ -114,7 +139,7 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         user.sapId = step.result;
         await this.userProfile.set(step.context, user);
-        return await step.prompt(SUB_CUST_NAME_PROMPT, `ขอทราบ ชื่อร้านค้าย่อย ค่ะ (ถ้าไม่มีใส่ -)`);
+        return await step.prompt(SUB_CUST_NAME_PROMPT, `ขอทราบ ชื่อร้านค้าย่อย ค่ะ`);
     }
 
     // step 3
@@ -211,7 +236,12 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         user.problem = step.result;
         await this.userProfile.set(step.context, user);
-        return await step.prompt(IMAGES_PROMPT, `กรุณาอัพโหลดรูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (สามารถอัพโหลดได้มากกว่า 1 รูป)`);
+        return await step.prompt(IMAGES_PROMPT,
+            {
+                prompt: 'กรุณาอัพโหลดรูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (ถ้าต้องการอัพโหลดหลายรูป กรุณาเลือกรูปทั้งหมด แล้วกดส่งข้อความค่ะ)',
+                retryPrompt: 'ขอโทษค่ะ จำเป็นต้องใช้รูปภาพเพื่อประกอบการแจ้งเคลม กรุณาอัพโหลดรูปภาพใหม่อีกครั้งค่ะ'
+            }
+        );
     }
 
     // step 13
@@ -263,12 +293,11 @@ class MyBot {
     async onTurn(turnContext) {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
-            console.log("Get message");
+
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
 
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
-
             console.log("utterance = " + utterance);
 
             if (utterance === 'ยกเลิก') {
@@ -301,7 +330,7 @@ class MyBot {
                     await dc.continueDialog();
                 }
                 else {
-                    await dc.context.sendActivity(`ขออภัยค่ะไม่พบคำตอบที่คุณถาม ลองดูบริการที่เรามีดังนี้ค่ะ`);
+                    await dc.context.sendActivity(`สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ`);
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 }
             }
@@ -313,10 +342,8 @@ class MyBot {
             await this.conversationState.saveChanges(turnContext);
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {
             // Send greeting when users are added to the conversation.
-            console.log("Welcome");
             await this.sendWelcomeMessage(turnContext);
         } else {
-            console.log("Anything else");
             // Generic message for all other activities
             await turnContext.sendActivity(`[${turnContext.activity.type} event detected]`);
         }
@@ -333,10 +360,9 @@ class MyBot {
                 // The bot is the recipient of all events from the channel, including all ConversationUpdate-type activities
                 // turnContext.activity.membersAdded !== turnContext.activity.aecipient.id indicates 
                 // a user was added to the conversation 
-                if (conversationMember.id !== this.activity.recipient.id) {
+                if (conversationMember.id === this.activity.recipient.id) {
                     // Because the TurnContext was bound to this function, the bot can call
                     // `TurnContext.sendActivity` via `this.sendActivity`;
-                    console.log("Main Welcome");
                     await this.sendActivity({ attachments: [menu.mainMenu()] });
                 }
             }
