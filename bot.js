@@ -262,7 +262,7 @@ class MyBot {
             console.log(user.images);
             for (var i in user.images) {
                 var obj = {};
-                obj.name = user.images[i].name;
+                // obj.name = user.images[i].name;
                 obj.contentType = user.images[i].contentType;
                 obj.contentUrl = user.images[i].contentUrl;
                 attachmentsImages.push(obj);

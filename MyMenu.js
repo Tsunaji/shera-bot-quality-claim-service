@@ -363,7 +363,7 @@ class MyMenu {
         if (user.images.length > 0) {
             for (var i in user.images) {
                 var obj = {};
-                obj.filename = user.images[i].name;
+                // obj.filename = user.images[i].name;
                 obj.contentType = user.images[i].contentType;
                 obj.path = user.images[i].contentUrl;
                 attachmentsImages.push(obj);
