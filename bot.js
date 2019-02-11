@@ -261,11 +261,13 @@ class MyBot {
         if (user.images.length > 0) {
             console.log(user.images);
             for (var i in user.images) {
-                var obj = {};
-                // obj.name = user.images[i].name;
-                obj.contentType = user.images[i].contentType;
-                obj.contentUrl = user.images[i].contentUrl;
-                attachmentsImages.push(obj);
+                if (user.images[i].contentType.match("image")) {
+                    var obj = {};
+                    // obj.name = user.images[i].name;
+                    obj.contentType = user.images[i].contentType;
+                    obj.contentUrl = user.images[i].contentUrl;
+                    attachmentsImages.push(obj);
+                }
             }
         }
 
