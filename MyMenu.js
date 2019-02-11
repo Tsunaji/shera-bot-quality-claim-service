@@ -1,6 +1,9 @@
 const { CardFactory, MessageFactory } = require('botbuilder');
 const nodemailer = require('nodemailer');
 
+const mailAuthenUser = 'botservice@shera.com';
+const mailAuthenPass = 'Ak5CB2x47qBAsyHx';
+
 class MyMenu {
 
     mainMenu() {
@@ -367,29 +370,21 @@ class MyMenu {
             }
         }
 
-        // var transporter = nodemailer.createTransport({
-        //     service: 'gmail',
-        //     auth: {
-        //         user: 'jirasak.ka.92@gmail.com',
-        //         pass: 'tsunaji23042535'
-        //     }
-        // });
-
         var transporter = nodemailer.createTransport({
             host: 'smtp.office365.com',
             port: 587,
             secure: false,
             requireTLS: true,
             auth: {
-                user: 'botservice@shera.com',
-                pass: 'Ak5CB2x47qBAsyHx'
+                user: mailAuthenUser,
+                pass: mailAuthenPass
             }
         });
 
         var mailOptions = {
             from: 'botservice@shera.com',
             to: 'crmclaim@shera.com',
-            subject: 'CRM new case quality claim',
+            subject: 'CRM new case quality claim from ' + user.customerName,
             text: message,
             attachments: attachmentsImages
         };

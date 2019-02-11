@@ -71,15 +71,17 @@ class MyBot {
 
             if (prompt.recognized.succeeded) {
 
-                // if (prompt.recognized.value === '1234') {
-                //     user.customerName = 'โต่วต๋ง ฮกเหล็ง';
-                //     user.customerAddress = 'สวรรค์ชั้น 7';
-                //     return true;
-                // }
-
-                if (true) {
-                    user.customerName = 'โต่วต๋ง ฮกเหล็ง';
-                    user.customerAddress = 'สวรรค์ชั้น 7';
+                if (prompt.recognized.value === '15') {
+                    user.customerName = 'ทดสอบ เลิศวสิน (2002)	';
+                    user.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000 ประเทศ Thailand';
+                    return true;
+                } else if (prompt.recognized.value === '6') {
+                    user.customerName = 'ทดสอบ เลิศวสิน (2002)	';
+                    user.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300 ประเทศ Thailand';
+                    return true;
+                } else if (!isNaN(prompt.recognized.value)) {
+                    user.customerName = 'ทดสอบ xxxxx';
+                    user.customerAddress = 'ทดสอบ yyyyy';
                     return true;
                 }
 
@@ -257,6 +259,7 @@ class MyBot {
         const attachmentsImages = [];
 
         if (user.images.length > 0) {
+            console.log(user.images);
             for (var i in user.images) {
                 var obj = {};
                 obj.name = user.images[i].name;
