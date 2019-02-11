@@ -376,7 +376,7 @@ class MyMenu {
         });
 
         var mailOptions = {
-            from: 'jirasak.ka.92@gmail.com',
+            from: 'noreply@gmail.com',
             to: 'jirasak_ka@shera.com',
             subject: 'Open New Case Quality Claim CRM',
             text: message,
