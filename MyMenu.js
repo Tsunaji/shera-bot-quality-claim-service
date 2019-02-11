@@ -367,18 +367,29 @@ class MyMenu {
             }
         }
 
+        // var transporter = nodemailer.createTransport({
+        //     service: 'gmail',
+        //     auth: {
+        //         user: 'jirasak.ka.92@gmail.com',
+        //         pass: 'tsunaji23042535'
+        //     }
+        // });
+
         var transporter = nodemailer.createTransport({
-            service: 'gmail',
+            host: 'smtp.office365.com',
+            port: 587,
+            secure: false,
+            requireTLS: true,
             auth: {
-                user: 'jirasak.ka.92@gmail.com',
-                pass: 'tsunaji23042535'
+                user: 'botservice@shera.com',
+                pass: 'Ak5CB2x47qBAsyHx'
             }
         });
 
         var mailOptions = {
-            from: 'noreply@gmail.com',
-            to: 'jirasak_ka@shera.com',
-            subject: 'Open New Case Quality Claim CRM',
+            from: 'botservice@shera.com',
+            to: 'crmclaim@shera.com',
+            subject: 'CRM new case quality claim',
             text: message,
             attachments: attachmentsImages
         };
