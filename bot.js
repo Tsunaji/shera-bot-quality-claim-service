@@ -259,6 +259,7 @@ class MyBot {
         const attachmentsImages = [];
 
         if (user.images.length > 0) {
+            console.log(user);
             console.log(user.images);
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
@@ -304,6 +305,10 @@ class MyBot {
 
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
             console.log("utterance = " + utterance);
+
+            console.log(turnContext.activity.attachments);
+            console.log(turnContext.activity.attachmentsImages);
+            console.log(turnContext.activity.AttachmentPrompt);
 
             if (utterance === 'ยกเลิก') {
                 if (dc.activeDialog) {
