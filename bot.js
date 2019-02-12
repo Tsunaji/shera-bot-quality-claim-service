@@ -306,6 +306,10 @@ class MyBot {
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
             console.log("utterance = " + utterance);
 
+            const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
+
+            console.log(connector);
+
             console.log(turnContext.activity.attachments);
             console.log(turnContext.activity.attachmentsImages);
             console.log(turnContext.activity.AttachmentPrompt);
