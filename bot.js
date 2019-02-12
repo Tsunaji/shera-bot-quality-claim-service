@@ -262,7 +262,7 @@ class MyBot {
             console.log(user);
             console.log(user.images);
             for (var i in user.images) {
-                if (user.images[i].contentType.match("image")) {
+                if (user.images[i].contentType.match("image/")) {
                     var obj = {};
                     // obj.name = user.images[i].name;
                     obj.contentType = user.images[i].contentType;
