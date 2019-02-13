@@ -72,12 +72,16 @@ class MyBot {
             if (prompt.recognized.succeeded) {
 
                 if (prompt.recognized.value === '15') {
-                    user.customerName = 'ทดสอบ เลิศวสิน (2002)	';
-                    user.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000 ประเทศ Thailand';
+                    user.customerName = 'ทดสอบ เลิศวสิน (2002)';
+                    user.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000';
                     return true;
                 } else if (prompt.recognized.value === '6') {
-                    user.customerName = 'ทดสอบ เลิศวสิน (2002)	';
-                    user.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300 ประเทศ Thailand';
+                    user.customerName = 'ทดสอบ ตั้งเล่งเฮง';
+                    user.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300';
+                    return true;
+                } else if (prompt.recognized.value === '60') {
+                    user.customerName = 'ทดสอบ ปากน้ำโพเคหะภัณฑ์';
+                    user.customerAddress = 'ทดสอบ เลขที่ 112/2 ถนน สวรรค์วิถี ตำบล ปากน้ำโพ อำเภอ เมือง จังหวัด นครสวรรค์ รหัสไปรษณีย์ 60000';
                     return true;
                 } else if (!isNaN(prompt.recognized.value)) {
                     user.customerName = 'ทดสอบ xxxxx';
@@ -141,6 +145,10 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         user.sapId = step.result;
         await this.userProfile.set(step.context, user);
+
+        await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + user.customerName);
+        await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + user.customerAddress);
+
         return await step.prompt(SUB_CUST_NAME_PROMPT, `ขอทราบ ชื่อร้านค้าย่อย ค่ะ`);
     }
 
@@ -262,7 +270,7 @@ class MyBot {
             console.log(user);
             console.log(user.images);
             for (var i in user.images) {
-                if (user.images[i].contentType.match("image/")) {
+                if (user.images[i].contentType.match("image")) {
                     var obj = {};
                     // obj.name = user.images[i].name;
                     obj.contentType = user.images[i].contentType;
