@@ -276,12 +276,12 @@ class MyBot {
             console.log(user);
             console.log(user.images);
 
-            this.getToken();
+            await this.getToken();
 
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
                     if (step.context.activity.channelId !== 'emulator' || step.context.activity.channelId !== 'webchat') {
-                        const imageData = this.getImage(user.images[i].contentUrl);
+                        const imageData = await this.getImage(user.images[i].contentUrl);
 
                         const base64Image = Buffer.from(imageData).toString('base64');
 
@@ -339,6 +339,8 @@ class MyBot {
 
             const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
 
+            // this.getImage('xxx');
+
             // if(turnContext.activity.){
 
             // }
@@ -352,6 +354,9 @@ class MyBot {
             console.log(turnContext.activity.attachments);
             console.log(turnContext.activity.attachmentsImages);
             console.log(turnContext.activity.AttachmentPrompt);
+
+            // await this.getToken();
+            // await this.getImage("");
 
             if (utterance === 'ยกเลิก') {
                 if (dc.activeDialog) {
@@ -447,12 +452,13 @@ class MyBot {
     }
 
     async getImage(url) {
-        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
+        const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
         const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
-        return await axios.get(url, { headers: { Authorization: AuthStr } })
+        console.log(AuthStr);
+        return await axios.get(URL, { headers: { Authorization: AuthStr } })
             .then(response => {
                 // If request is good...
-                console.log(response.data);
+                console.log("data response: " + response.data);
                 return response.data;
             })
             .catch((error) => {
