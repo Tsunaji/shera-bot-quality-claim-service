@@ -3,7 +3,11 @@
 
 const { ActivityTypes, CardFactory } = require('botbuilder');
 const { ChoicePrompt, DialogSet, TextPrompt, AttachmentPrompt, WaterfallDialog } = require('botbuilder-dialogs');
-
+const async = require('async');
+const url = require('url');
+const request = require('request');
+const axios = require('axios');
+const querystring = require('querystring');
 // const Sequelize = require('sequelize');
 
 const { MyMenu } = require('./MyMenu');
@@ -33,6 +37,8 @@ const WHEN_INSTALL_PROMPT = 'when_install_promt';
 const PROBLEM_PROMPT = 'problem_promt';
 const IMAGES_PROMPT = 'images_prompt';
 const CHOICE_SUBMIT_PROMPT = 'choice_submit_prompt';
+
+const USER_TOEKN = '';
 
 class MyBot {
 
@@ -157,7 +163,7 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         user.subCustName = step.result;
         await this.userProfile.set(step.context, user);
-        return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อผู้ติดต่อ ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
+        return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อลูกค้า ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
     }
 
     // step 4
@@ -198,7 +204,7 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         user.size = step.result;
         await this.userProfile.set(step.context, user);
-        return await step.prompt(QTY_PROMPT, `ขอทราบ สีของสินค้า ที่ต้องการจะเคลมค่ะ`);
+        return await step.prompt(QTY_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
     }
 
     // step 9
@@ -269,13 +275,28 @@ class MyBot {
         if (user.images.length > 0) {
             console.log(user);
             console.log(user.images);
+
+            this.getToken();
+
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
-                    var obj = {};
-                    // obj.name = user.images[i].name;
-                    obj.contentType = user.images[i].contentType;
-                    obj.contentUrl = user.images[i].contentUrl;
-                    attachmentsImages.push(obj);
+                    if (step.context.activity.channelId !== 'emulator' || step.context.activity.channelId !== 'webchat') {
+                        const imageData = this.getImage(user.images[i].contentUrl);
+
+                        const base64Image = Buffer.from(imageData).toString('base64');
+
+                        var obj = {};
+                        // obj.name = user.images[i].name;
+                        obj.contentType = 'image/png';
+                        obj.contentUrl = `data:image/png;base64,${base64Image}`
+                        attachmentsImages.push(obj);
+                    } else {
+                        var obj = {};
+                        // obj.name = user.images[i].name;
+                        obj.contentType = user.images[i].contentType;
+                        obj.contentUrl = user.images[i].contentUrl;
+                        attachmentsImages.push(obj);
+                    }
                 }
             }
         }
@@ -317,6 +338,14 @@ class MyBot {
             console.log("utterance = " + utterance);
 
             const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
+
+            // if(turnContext.activity.){
+
+            // }
+
+            // const token = await connector.Credentials.GetTokenAsync();
+
+            // console.log("TOKEN: " + token);
 
             console.log(connector);
 
@@ -396,6 +425,39 @@ class MyBot {
             const replyPromises = turnContext.activity.membersAdded.map(welcomeUserFunc.bind(turnContext));
             await Promise.all(replyPromises);
         }
+    }
+
+    async getToken() {
+        const data = {
+            grant_type: 'client_credentials',
+            client_id: '8fccd5f2-36dc-4197-b134-383ec70f6ec2',
+            client_secret: 'rI5%0Ct!h{Vrt-A5!QMbf*w!AFz',
+            scope: 'https://api.botframework.com/.default',
+        };
+        // console.log(data);
+        return await axios.post('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token', querystring.stringify(data))
+            .then(response => {
+                console.log(response.data);
+                this.USER_TOKEN = response.data.access_token;
+                console.log('userresponse ' + response.data.access_token);
+            })
+            .catch((error) => {
+                console.log('error ' + error);
+            });
+    }
+
+    async getImage(url) {
+        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
+        const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
+        return await axios.get(url, { headers: { Authorization: AuthStr } })
+            .then(response => {
+                // If request is good...
+                console.log(response.data);
+                return response.data;
+            })
+            .catch((error) => {
+                console.log('error ' + error);
+            });
     }
 }
 
