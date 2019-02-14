@@ -8,6 +8,7 @@ const url = require('url');
 const request = require('request');
 const axios = require('axios');
 const querystring = require('querystring');
+const base64Image = '';
 // const Sequelize = require('sequelize');
 
 const { MyMenu } = require('./MyMenu');
@@ -281,14 +282,14 @@ class MyBot {
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
                     if (step.context.activity.channelId !== 'emulator' || step.context.activity.channelId !== 'webchat') {
+                        console.log(user.images[i].contentUrl);
                         const imageData = await this.getImage(user.images[i].contentUrl);
-
-                        const base64Image = Buffer.from(imageData).toString('base64');
-
+                        // const base64Image = Buffer.from(imageData).toString('base64');
+                        var base64String = new Buffer(imageData, 'binary').toString('base64');
                         var obj = {};
                         // obj.name = user.images[i].name;
                         obj.contentType = 'image/png';
-                        obj.contentUrl = `data:image/png;base64,${base64Image}`
+                        obj.contentUrl = `data:image/png;base64,${base64String}`
                         attachmentsImages.push(obj);
                     } else {
                         var obj = {};
@@ -329,7 +330,7 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            console.log(turnContext.activity);
+            // console.log(turnContext.activity);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
@@ -337,26 +338,43 @@ class MyBot {
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
             console.log("utterance = " + utterance);
 
-            const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
+            // const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
 
-            // this.getImage('xxx');
+            // console.log(connector);
 
-            // if(turnContext.activity.){
-
-            // }
-
-            // const token = await connector.Credentials.GetTokenAsync();
-
-            // console.log("TOKEN: " + token);
-
-            console.log(connector);
-
-            console.log(turnContext.activity.attachments);
-            console.log(turnContext.activity.attachmentsImages);
-            console.log(turnContext.activity.AttachmentPrompt);
+            // console.log(turnContext.activity.attachments);
+            // console.log(turnContext.activity.attachmentsImages);
+            // console.log(turnContext.activity.AttachmentPrompt);
 
             // await this.getToken();
-            // await this.getImage("");
+            // const imageData = await this.getImage("");
+            // // this.base64Image = Buffer.from(imageData).toString('base64');
+            // var base64String = new Buffer(imageData, 'binary').toString('base64');
+
+            // await dc.context.sendActivity({
+            //     attachments: [{
+            //         name: 'TEST',
+            //         contentType: 'image/*',
+            //         contentUrl: `data:image/*;base64,${base64String}`
+            //     }]
+            // });
+
+            // await dc.context.sendActivity({
+            //     attachments: [{
+            //         name: 'TEST.png',
+            //         contentType: 'image/png',
+            //         contentUrl: `data:image/png;base64,${this.base64Image}`
+            //     }]
+            // });
+            // await dc.context.sendActivity({
+            //     attachments: [{
+            //         name: 'TEST',
+            //         contentType: 'image/jpg',
+            //         contentUrl: `https://images.homedepot-static.com/productImages/e350ef76-f7ff-46ee-83d2-606aab23453c/svn/mea-nursery-rose-bushes-62014-64_1000.jpg`
+            //     }]
+            // });
+
+            // console.log(imageData);
 
             if (utterance === 'ยกเลิก') {
                 if (dc.activeDialog) {
@@ -442,9 +460,9 @@ class MyBot {
         // console.log(data);
         return await axios.post('https://login.microsoftonline.com/botframework.com/oauth2/v2.0/token', querystring.stringify(data))
             .then(response => {
-                console.log(response.data);
+                // console.log(response.data);
                 this.USER_TOKEN = response.data.access_token;
-                console.log('userresponse ' + response.data.access_token);
+                // console.log('userresponse ' + response.data.access_token);
             })
             .catch((error) => {
                 console.log('error ' + error);
@@ -452,13 +470,13 @@ class MyBot {
     }
 
     async getImage(url) {
-        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
+        const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-sa-d8-aea6907a54a216e7c387e2c2dc0d2e7f/views/original';
         const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
-        console.log(AuthStr);
-        return await axios.get(url, { headers: { Authorization: AuthStr } })
+        // console.log(AuthStr);
+        return await axios.get(URL, { headers: { Authorization: AuthStr } })
             .then(response => {
                 // If request is good...
-                console.log("data response: " + response.data);
+                // console.log("data response: " + response.data);
                 return response.data;
             })
             .catch((error) => {
