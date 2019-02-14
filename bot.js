@@ -452,10 +452,10 @@ class MyBot {
     }
 
     async getImage(url) {
-        const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
+        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-ea-d8-178b164f813585606e52e3afbbb2b92f/views/original';
         const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
         console.log(AuthStr);
-        return await axios.get(URL, { headers: { Authorization: AuthStr } })
+        return await axios.get(url, { headers: { Authorization: AuthStr } })
             .then(response => {
                 // If request is good...
                 console.log("data response: " + response.data);
