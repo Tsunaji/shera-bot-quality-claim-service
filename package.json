@@ -22,6 +22,7 @@
         "botbuilder-dialogs": "^4.2.0",
         "botframework-config": "^4.2.0",
         "dotenv": "^6.1.0",
+        "fs": "0.0.1-security",
         "mysql": "^2.16.0",
         "mysql2": "^1.6.4",
         "nodemailer": "^5.1.1",

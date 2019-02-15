@@ -8,7 +8,10 @@ const url = require('url');
 const request = require('request');
 const axios = require('axios');
 const querystring = require('querystring');
+const fs = require('fs');
+const path = require('path');
 const base64Image = '';
+
 // const Sequelize = require('sequelize');
 
 const { MyMenu } = require('./MyMenu');
@@ -346,31 +349,59 @@ class MyBot {
             // console.log(turnContext.activity.attachmentsImages);
             // console.log(turnContext.activity.AttachmentPrompt);
 
-            // await this.getToken();
-            // const imageData = await this.getImage("");
-            // // this.base64Image = Buffer.from(imageData).toString('base64');
-            // var base64String = new Buffer(imageData, 'binary').toString('base64');
+            await this.getToken();
+            const imageData = await this.getImage(turnContext.activity.attachments.contentUrl);
+
+            // const imageData = '';
+
+            // console.log(__dirname);
+            // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
+            const base64Image = Buffer.from(imageData).toString('base64');
+
+            // const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
+            // const conversationId = turnContext.activity.conversation.id;
+            // const response = await connector.conversations.uploadAttachment(conversationId, {
+            //     name: 'architecture-resize.png',
+            //     originalBase64: imageData,
+            //     type: 'image/png'
+            // });
+
+            // // Retrieve baseUri from ConnectorClient for... something.
+            // const baseUri = connector.baseUri;
+            // const attachmentUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + `v3/attachments/${encodeURI(response.id)}/views/original`;
+            // return {
+            //     name: 'architecture-resize.png',
+            //     contentType: 'image/png',
+            //     contentUrl: attachmentUri
+            // };
+
+            await dc.context.sendActivity({
+                attachments: [{
+                    name: 'TEST.png',
+                    contentType: 'image/png',
+                    contentUrl: `data:image/png;base64,${base64Image}`
+                }]
+            });
 
             // await dc.context.sendActivity({
             //     attachments: [{
             //         name: 'TEST',
-            //         contentType: 'image/*',
-            //         contentUrl: `data:image/*;base64,${base64String}`
-            //     }]
-            // });
-
-            // await dc.context.sendActivity({
-            //     attachments: [{
-            //         name: 'TEST.png',
             //         contentType: 'image/png',
-            //         contentUrl: `data:image/png;base64,${this.base64Image}`
+            //         contentUrl: `data:image/png;base64,${imageData}`
             //     }]
             // });
             // await dc.context.sendActivity({
             //     attachments: [{
             //         name: 'TEST',
-            //         contentType: 'image/jpg',
+            //         contentType: 'image/png',
             //         contentUrl: `https://images.homedepot-static.com/productImages/e350ef76-f7ff-46ee-83d2-606aab23453c/svn/mea-nursery-rose-bushes-62014-64_1000.jpg`
+            //     }]
+            // });
+            // await dc.context.sendActivity({
+            //     attachments: [{
+            //         name: 'TEST',
+            //         contentType: 'image/png',
+            //         contentUrl: attachmentUri
             //     }]
             // });
 
@@ -470,13 +501,17 @@ class MyBot {
     }
 
     async getImage(url) {
-        const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-sa-d8-aea6907a54a216e7c387e2c2dc0d2e7f/views/original';
+        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-sa-d8-aea6907a54a216e7c387e2c2dc0d2e7f/views/original';
         const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
         // console.log(AuthStr);
-        return await axios.get(URL, { headers: { Authorization: AuthStr } })
+        return await axios.get(url, { headers: { Authorization: AuthStr, contentType: 'application/octet-stream' } })
             .then(response => {
                 // If request is good...
                 // console.log("data response: " + response.data);
+                // console.log(response.headers);
+                // console.log("response: " + response.data.length);
+                console.log(response.headers);
+                console.log(response.data.length);
                 return response.data;
             })
             .catch((error) => {
