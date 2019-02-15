@@ -345,18 +345,30 @@ class MyBot {
 
             // console.log(connector);
 
-            // console.log(turnContext.activity.attachments);
+            // console.log(turnContext.activity.attachments.contentUrl);
             // console.log(turnContext.activity.attachmentsImages);
             // console.log(turnContext.activity.AttachmentPrompt);
 
-            await this.getToken();
-            const imageData = await this.getImage(turnContext.activity.attachments.contentUrl);
+            // console.log(turnContext.activity.attachments[0].contentType);
 
-            // const imageData = '';
+            // if (turnContext.activity.attachments[0].contentType.match("image")) {
+                await this.getToken();
+                const imageData = await this.getImage(turnContext.activity.attachments[0].contentUrl);
 
-            // console.log(__dirname);
-            // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
-            const base64Image = Buffer.from(imageData).toString('base64');
+                // const imageData = '';
+
+                // console.log(__dirname);
+                // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
+                const base64Image = Buffer.from(imageData).toString('base64');
+
+                await dc.context.sendActivity({
+                    attachments: [{
+                        name: 'TEST.png',
+                        contentType: 'image/png',
+                        contentUrl: `data:image/png;base64,${base64Image}`
+                    }]
+                });
+            // }
 
             // const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
             // const conversationId = turnContext.activity.conversation.id;
@@ -369,19 +381,9 @@ class MyBot {
             // // Retrieve baseUri from ConnectorClient for... something.
             // const baseUri = connector.baseUri;
             // const attachmentUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + `v3/attachments/${encodeURI(response.id)}/views/original`;
-            // return {
-            //     name: 'architecture-resize.png',
-            //     contentType: 'image/png',
-            //     contentUrl: attachmentUri
-            // };
 
-            await dc.context.sendActivity({
-                attachments: [{
-                    name: 'TEST.png',
-                    contentType: 'image/png',
-                    contentUrl: `data:image/png;base64,${base64Image}`
-                }]
-            });
+
+
 
             // await dc.context.sendActivity({
             //     attachments: [{
