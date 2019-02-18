@@ -355,20 +355,56 @@ class MyBot {
                 await this.getToken();
                 const imageData = await this.getImage(turnContext.activity.attachments[0].contentUrl);
 
+                // const imageData = fs.readFileSync(path.join(__dirname, '/resources/architecture-resize.png'));
+                const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
+                const conversationId = turnContext.activity.conversation.id;
+                const response = await connector.conversations.uploadAttachment(conversationId, {
+                    name: 'architecture-resize.png',
+                    originalBase64: imageData,
+                    type: 'image/png'
+                });
+        
+                // Retrieve baseUri from ConnectorClient for... something.
+                const baseUri = connector.baseUri;
+                const attachmentUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + `v3/attachments/${ encodeURI(response.id) }/views/original`;
+                // return {
+                //     name: 'architecture-resize.png',
+                //     contentType: 'image/png',
+                //     contentUrl: attachmentUri
+                // };
+
+                await dc.context.sendActivity({
+                    attachments: [{
+                        name: 'TEST',
+                        contentType: 'image/png',
+                        contentUrl: attachmentUri
+                    }]
+                });
+
+                // console.log(imageData);
+
                 // const imageData = '';
 
                 // console.log(__dirname);
                 // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
-                const base64Image = Buffer.from(imageData).toString('base64');
+                // const base64Image = Buffer.from(imageData).toString('base64');
 
-                await dc.context.sendActivity({
-                    attachments: [{
-                        name: 'TEST.png',
-                        contentType: 'image/png',
-                        contentUrl: `data:image/png;base64,${base64Image}`
-                    }]
-                });
+                // await dc.context.sendActivity({
+                //     attachments: [{
+                //         name: 'TEST.png',
+                //         contentType: 'image/png',
+                //         contentUrl: `data:image/png;base64,${base64Image}`
+                //     }]
+                // });
             // }
+
+            // await dc.context.sendActivity({
+            //     attachments: [{
+            //         name: 'TEST',
+            //         contentType: 'image/png',
+            //         contentUrl: `data:image/png;base64,${imageData}`
+            //     }]
+            // });
 
             // const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
             // const conversationId = turnContext.activity.conversation.id;
@@ -382,16 +418,6 @@ class MyBot {
             // const baseUri = connector.baseUri;
             // const attachmentUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + `v3/attachments/${encodeURI(response.id)}/views/original`;
 
-
-
-
-            // await dc.context.sendActivity({
-            //     attachments: [{
-            //         name: 'TEST',
-            //         contentType: 'image/png',
-            //         contentUrl: `data:image/png;base64,${imageData}`
-            //     }]
-            // });
             // await dc.context.sendActivity({
             //     attachments: [{
             //         name: 'TEST',
@@ -503,10 +529,10 @@ class MyBot {
     }
 
     async getImage(url) {
-        // const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-sa-d8-aea6907a54a216e7c387e2c2dc0d2e7f/views/original';
+        const URL = 'https://smba.trafficmanager.net/apac/v3/attachments/0-sa-d8-aea6907a54a216e7c387e2c2dc0d2e7f/views/original';
         const AuthStr = 'Bearer '.concat(this.USER_TOKEN);
         // console.log(AuthStr);
-        return await axios.get(url, { headers: { Authorization: AuthStr, contentType: 'application/octet-stream' } })
+        return await axios.get(URL, { headers: { Authorization: AuthStr, contentType: 'application/octet-stream' } })
             .then(response => {
                 // If request is good...
                 // console.log("data response: " + response.data);
