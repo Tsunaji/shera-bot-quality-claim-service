@@ -354,13 +354,13 @@ class MyBot {
             // if (turnContext.activity.attachments[0].contentType.match("image")) {
                 await this.getToken();
                 const imageData = await this.getImage(turnContext.activity.attachments[0].contentUrl);
-
+                const base64Image = Buffer.from(imageData).toString('base64');
                 // const imageData = fs.readFileSync(path.join(__dirname, '/resources/architecture-resize.png'));
                 const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
                 const conversationId = turnContext.activity.conversation.id;
                 const response = await connector.conversations.uploadAttachment(conversationId, {
                     name: 'architecture-resize.png',
-                    originalBase64: imageData,
+                    originalBase64: base64Image,
                     type: 'image/png'
                 });
         
