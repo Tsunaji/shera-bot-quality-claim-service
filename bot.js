@@ -333,7 +333,7 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            // console.log(turnContext.activity);
+            console.log(turnContext.activity);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
@@ -354,50 +354,19 @@ class MyBot {
             // if (turnContext.activity.attachments[0].contentType.match("image")) {
                 await this.getToken();
                 const imageData = await this.getImage(turnContext.activity.attachments[0].contentUrl);
-                // const base64Image = Buffer.from(imageData).toString('base64');
-                // const imageData = fs.readFileSync(path.join(__dirname, '/resources/architecture-resize.png'));
-                const connector = turnContext.adapter.createConnectorClient(turnContext.activity.serviceUrl);
-                const conversationId = turnContext.activity.conversation.id;
-                const response = await connector.conversations.uploadAttachment(conversationId, {
-                    name: 'architecture-resize.png',
-                    originalBase64: imageData,
-                    type: 'image/png'
-                });
-        
-                console.log(connector);
 
-                // Retrieve baseUri from ConnectorClient for... something.
-                const baseUri = connector.baseUri;
-                const attachmentUri = baseUri + (baseUri.endsWith('/') ? '' : '/') + `v3/attachments/${ encodeURI(response.id) }/views/original`;
-                // return {
-                //     name: 'architecture-resize.png',
-                //     contentType: 'image/png',
-                //     contentUrl: attachmentUri
-                // };
+                // const imageData = '';
+
+                // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
+                const base64Image = Buffer.from(imageData).toString('base64');
 
                 await dc.context.sendActivity({
                     attachments: [{
                         name: 'TEST',
-                        contentType: 'image/png',
-                        contentUrl: attachmentUri
+                        contentType: 'image/*',
+                        contentUrl: `data:image/*;base64,${base64Image}`
                     }]
                 });
-
-                // console.log(imageData);
-
-                // const imageData = '';
-
-                // console.log(__dirname);
-                // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
-                // const base64Image = Buffer.from(imageData).toString('base64');
-
-                // await dc.context.sendActivity({
-                //     attachments: [{
-                //         name: 'TEST.png',
-                //         contentType: 'image/png',
-                //         contentUrl: `data:image/png;base64,${base64Image}`
-                //     }]
-                // });
             // }
 
             // await dc.context.sendActivity({
