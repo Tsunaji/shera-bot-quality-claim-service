@@ -360,11 +360,15 @@ class MyBot {
                 // const imageData = fs.readFileSync(path.join(__dirname, '/logo.png'));
                 const base64Image = Buffer.from(imageData).toString('base64');
 
+                console.log("------BASE64-------")
+                console.log(base64Image);
+                console.log("------BASE64-------")
+
                 await dc.context.sendActivity({
                     attachments: [{
                         name: 'TEST',
-                        contentType: 'image/*',
-                        contentUrl: `data:image/*;base64,${base64Image}`
+                        contentType: 'image/png',
+                        contentUrl: `data:image/png;base64,${base64Image}`
                     }]
                 });
             // }
