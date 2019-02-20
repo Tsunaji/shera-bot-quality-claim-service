@@ -260,7 +260,6 @@ class MyBot {
         //get informer name
         user.name = step.context.activity.from.name;
 
-        await this.userProfile.set(step.context, user);
         await step.context.sendActivity({
             text: 'สรุปรายการแจ้งเคลมคุณภาพ',
             attachments: [CardFactory.adaptiveCard(menu.summaryMenu(user))]
@@ -293,7 +292,7 @@ class MyBot {
                 }
             }
             user.image = attachmentsImages;
-            console.log(user.image);
+            await this.userProfile.set(step.context, user);
         }
 
         await step.context.sendActivity({
