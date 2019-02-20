@@ -293,6 +293,7 @@ class MyBot {
                 }
             }
             user.image = attachmentsImages;
+            console.log(user.image);
         }
 
         await step.context.sendActivity({
