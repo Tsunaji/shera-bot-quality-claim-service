@@ -31,6 +31,7 @@ class Helpers {
                 var obj = {};
                 obj.contentType = user.images[i].contentType;
                 obj.path = user.images[i].contentUrl;
+                console.log(obj.path);
                 attachmentsImages.push(obj);
             }
         }
