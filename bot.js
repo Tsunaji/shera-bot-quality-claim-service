@@ -291,13 +291,12 @@ class MyBot {
                     }
                 }
             }
-            user.image = attachmentsImages;
-            console.log(user.image);
+            user.images = attachmentsImages;
             await this.userProfile.set(step.context, user);
         }
 
         await step.context.sendActivity({
-            attachments: user.image
+            attachments: user.images
         });
         await step.prompt(CHOICE_SUBMIT_PROMPT, 'ยืนยันการทำรายการหรือไม่ ?', ['yes', 'no']);
     }
