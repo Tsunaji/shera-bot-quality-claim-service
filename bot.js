@@ -277,7 +277,7 @@ class MyBot {
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
 
                         const contentUrl = user.images[i].contentUrl;
-                        const imageData = await services.getAuthenImage(user, contentUrl);
+                        const imageData = await services.getAuthenImage(step.context, contentUrl);
                         const base64Image = Buffer.from(imageData).toString('base64');
 
                         var obj = {};
