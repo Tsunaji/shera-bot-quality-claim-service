@@ -261,6 +261,8 @@ class MyBot {
     async summaryClaim(step) {
         const user = await this.userProfile.get(step.context, {});
         user.images = step.result;
+        //get informer name
+        user.name = user.activity.from.name;
         await this.userProfile.set(step.context, user);
         await step.context.sendActivity({
             text: 'สรุปรายการแจ้งเคลมคุณภาพ',
@@ -306,8 +308,6 @@ class MyBot {
     async submitClaim(step) {
         const user = await this.userProfile.get(step.context, {});
         if (step.result && step.result.value === 'yes') {
-
-            user.name = user.activity.from.name;
 
             //send mail to callcenter
             const helpers = new Helpers();
