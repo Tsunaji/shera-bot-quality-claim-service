@@ -307,6 +307,8 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
         if (step.result && step.result.value === 'yes') {
 
+            user.name = user.activity.from.name;
+
             //send mail to callcenter
             const helpers = new Helpers();
             helpers.sendMail(user);
