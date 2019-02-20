@@ -292,6 +292,7 @@ class MyBot {
                 }
             }
             user.image = attachmentsImages;
+            console.log(user.image);
             await this.userProfile.set(step.context, user);
         }
 
