@@ -128,13 +128,8 @@ class MyBot {
         ]));
     }
 
-    async setCustomer(value) {
-        this.customer = value;
-    }
-
     // step 1
     async promptForSapId(step) {
-        console.log(this.customer);
         await step.context.sendActivity(`ระหว่างกระบวณการแจ้งเคลม ท่านสามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
             {
@@ -261,8 +256,10 @@ class MyBot {
     async summaryClaim(step) {
         const user = await this.userProfile.get(step.context, {});
         user.images = step.result;
+
         //get informer name
-        user.name = user.activity.from.name;
+        user.name = step.context.activity.from.name;
+
         await this.userProfile.set(step.context, user);
         await step.context.sendActivity({
             text: 'สรุปรายการแจ้งเคลมคุณภาพ',
@@ -329,6 +326,8 @@ class MyBot {
     async onTurn(turnContext) {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
+
+            // console.log(turnContext.activity.from.name);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
