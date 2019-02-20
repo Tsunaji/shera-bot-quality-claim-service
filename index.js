@@ -8,7 +8,7 @@ const restify = require('restify');
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState } = require('botbuilder');
-const { BlobStorage } = require('botbuilder-azure');
+// const { BlobStorage } = require('botbuilder-azure');
 
 // Import required bot configuration.
 const { BotConfiguration } = require('botframework-config');
