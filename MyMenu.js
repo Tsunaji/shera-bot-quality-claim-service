@@ -1,14 +1,26 @@
-const { CardFactory, MessageFactory } = require('botbuilder');
+const { CardFactory, MessageFactory, ActionTypes } = require('botbuilder');
+const path = require('path');
+const fs = require('fs');
 
 class MyMenu {
 
     mainMenu() {
+
+        const imageData = fs.readFileSync(path.join(__dirname, '/resources/logo_shera_web.png'));
+        const base64Image = Buffer.from(imageData).toString('base64');
+
+        const contentUrl = `data:image/png;base64,${base64Image}`;
+
+        const buttons = [
+            { type: ActionTypes.ImBack, title: 'เคลมคุณภาพ', value: 'เคลมคุณภาพ' },
+            { type: ActionTypes.ImBack, title: 'ติดต่อเจ้าหน้าที่', value: 'ติดต่อเจ้าหน้าที่' }
+        ];
+
         return CardFactory.heroCard(
-            'SHERA ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ',
-            'ท่านสามารถเลือกบริการที่ท่านต้องการทราบได้จากเมนูด้านล่างนี้ '
-            + 'ในระหว่างการสนทนาสามารถพิมพ์ "ยกเลิก" เพื่อเริ่มการสนทนาใหม่ได้ตลอดเวลา',
-            ['http://www.shera.com/assets/images/th/shared/logo.png'],
-            ['แจ้งเคลมคุณภาพ', 'ติดต่อเจ้าหน้าที่']
+            'SHERA CRM',
+            'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
+            [contentUrl],
+            buttons
         );
     }
 

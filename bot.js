@@ -3,6 +3,8 @@
 
 const { ActivityTypes, CardFactory } = require('botbuilder');
 const { ChoicePrompt, DialogSet, TextPrompt, AttachmentPrompt, WaterfallDialog } = require('botbuilder-dialogs');
+const path = require('path');
+const fs = require('fs');
 
 // const Sequelize = require('sequelize');
 
@@ -23,6 +25,18 @@ const CONVERSATION_DATA_PROPERTY = 'conversationData';
 const USER_PROFILE_PROPERTY = 'userProfile';
 
 const GET_CLAIM = 'get_claim';
+const REPEAT_SUB_CUST_NAME = 'repeat_sub_cust_name';
+const REPEAT_CONTACT_NAME = 'repeat_contact_name';
+const REPEAT_PHONE = 'repeat_phone';
+const REPEAT_PROBLEM_ADDRESS = 'repeat_problem_address';
+const REPEAT_PRODUCT = 'repeat_product';
+const REPEAT_SIZE = 'repeat_size';
+const REPEAT_COLOR = 'repeat_color';
+const REPEAT_QTY = 'repeat_qty';
+const REPEAT_WHEN_INSTALL = 'repeat_when_install';
+const REPEAT_PROBLEM = 'repeat_problem';
+const REPEAT_IMAGES = 'repeat_images';
+
 const SAP_ID_PROMPT = 'sap_id_prompt';
 const SUB_CUST_NAME_PROMPT = 'sub_cust_name_propmt';
 const CONTACT_NAME_PROMPT = 'contact_name_promt';
@@ -35,7 +49,20 @@ const QTY_PROMPT = 'qty_promt';
 const WHEN_INSTALL_PROMPT = 'when_install_promt';
 const PROBLEM_PROMPT = 'problem_promt';
 const IMAGES_PROMPT = 'images_prompt';
-const CHOICE_SUBMIT_PROMPT = 'choice_submit_prompt';
+const CHOICE_PROMPT = 'choice_prompt';
+
+const MAIN_MENU = "เมนูหลัก";
+const CALL_CENTER = "ติดต่อเจ้าหน้าที่";
+const QUALITY_CLAIM = "เคลมคุณภาพ"
+const BEFORE_INSTALL = "ก่อนติดตั้ง";
+const AFTER_INSTALL = "หลังติดตั้ง";
+const OK = 'ตกลง';
+const CANCEL = 'ยกเลิก';
+const EDIT = 'แก้ไข';
+const YES = 'ใช่';
+const NO = 'ไม่';
+
+const claimInfo = {};
 
 class MyBot {
 
@@ -70,25 +97,23 @@ class MyBot {
         // Add prompts that will be used by the main dialogs.
         this.dialogs.add(new TextPrompt(SAP_ID_PROMPT, async (prompt) => {
 
-            const user = await this.userProfile.get(prompt.context, {});
-
             if (prompt.recognized.succeeded) {
 
                 if (prompt.recognized.value === '15') {
-                    user.customerName = 'ทดสอบ เลิศวสิน (2002)';
-                    user.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000';
+                    claimInfo.customerName = 'ทดสอบ เลิศวสิน (2002)';
+                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000';
                     return true;
                 } else if (prompt.recognized.value === '6') {
-                    user.customerName = 'ทดสอบ ตั้งเล่งเฮง';
-                    user.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300';
+                    claimInfo.customerName = 'ทดสอบ ตั้งเล่งเฮง';
+                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300';
                     return true;
                 } else if (prompt.recognized.value === '60') {
-                    user.customerName = 'ทดสอบ ปากน้ำโพเคหะภัณฑ์';
-                    user.customerAddress = 'ทดสอบ เลขที่ 112/2 ถนน สวรรค์วิถี ตำบล ปากน้ำโพ อำเภอ เมือง จังหวัด นครสวรรค์ รหัสไปรษณีย์ 60000';
+                    claimInfo.customerName = 'ทดสอบ ปากน้ำโพเคหะภัณฑ์';
+                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 112/2 ถนน สวรรค์วิถี ตำบล ปากน้ำโพ อำเภอ เมือง จังหวัด นครสวรรค์ รหัสไปรษณีย์ 60000';
                     return true;
                 } else if (!isNaN(prompt.recognized.value)) {
-                    user.customerName = 'ทดสอบ xxxxx';
-                    user.customerAddress = 'ทดสอบ yyyyy';
+                    claimInfo.customerName = 'ทดสอบ xxxxx';
+                    claimInfo.customerAddress = 'ทดสอบ yyyyy';
                     return true;
                 }
 
@@ -106,7 +131,7 @@ class MyBot {
         this.dialogs.add(new TextPrompt(QTY_PROMPT));
         this.dialogs.add(new TextPrompt(WHEN_INSTALL_PROMPT));
         this.dialogs.add(new TextPrompt(PROBLEM_PROMPT));
-        this.dialogs.add(new ChoicePrompt(CHOICE_SUBMIT_PROMPT));
+        this.dialogs.add(new ChoicePrompt(CHOICE_PROMPT));
         this.dialogs.add(new AttachmentPrompt(IMAGES_PROMPT));
 
         // Create a dialog that asks the user for their claim data.
@@ -122,7 +147,151 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_SUB_CUST_NAME, [
+            this.promptForSubCustName.bind(this),
+            this.promptForContactName.bind(this),
+            this.promptForPhone.bind(this),
+            this.promptForProblemAddress.bind(this),
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_CONTACT_NAME, [
+            this.promptForContactName.bind(this),
+            this.promptForPhone.bind(this),
+            this.promptForProblemAddress.bind(this),
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_PHONE, [
+            this.promptForPhone.bind(this),
+            this.promptForProblemAddress.bind(this),
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_PROBLEM_ADDRESS, [
+            this.promptForProblemAddress.bind(this),
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_PRODUCT, [
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_SIZE, [
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_COLOR, [
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_QTY, [
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_WHEN_INSTALL, [
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_PROBLEM, [
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_IMAGES, [
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
         ]));
@@ -130,7 +299,8 @@ class MyBot {
 
     // step 1
     async promptForSapId(step) {
-        await step.context.sendActivity(`ระหว่างกระบวณการแจ้งเคลม ท่านสามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
+        await step.context.sendActivity(`ระหว่างกระบวณการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า`);
+        await step.context.sendActivity(`และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
             {
                 prompt: 'ขอทราบ รหัสลูกค้าใน SAP ของร้านค้าหลักค่ะ',
@@ -140,142 +310,169 @@ class MyBot {
 
     // step 2
     async promptForSubCustName(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.sapId = step.result;
-        await this.userProfile.set(step.context, user);
-
-        await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + user.customerName);
-        await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + user.customerAddress);
+        claimInfo.sapId = step.result;
+        await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + claimInfo.customerName);
+        await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + claimInfo.customerAddress);
 
         return await step.prompt(SUB_CUST_NAME_PROMPT, `ขอทราบ ชื่อร้านค้าย่อย ค่ะ`);
     }
 
     // step 3
     async promptForContactName(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.subCustName = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อลูกค้า ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(GET_CLAIM, claimInfo);
+        } else {
+            claimInfo.subCustName = step.result;
+            return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อลูกค้า ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
+        }
     }
 
     // step 4
     async promptForPhone(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.contactName = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(PHONE_PROMPT, `ขอทราบ เบอร์ติดต่อ ค่ะ`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_SUB_CUST_NAME, claimInfo);
+        } else {
+            claimInfo.contactName = step.result;
+            return await step.prompt(PHONE_PROMPT, `ขอทราบ เบอร์ติดต่อ ค่ะ`);
+        }
     }
 
     // step 5
     async promptForProblemAddress(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.phone = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(PROBLEM_ADDRESS_PROMPT, `ขอทราบ ที่อยู่ร้าน ที่เกิดปัญหาค่ะ`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_CONTACT_NAME, claimInfo);
+        } else {
+            claimInfo.phone = step.result;
+            return await step.prompt(PROBLEM_ADDRESS_PROMPT, `ขอทราบ ที่อยู่ร้าน ที่เกิดปัญหาค่ะ`);
+        }
     }
 
     // step 6
     async promptForProduct(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.problemAddress = step.result;
-        await this.userProfile.set(step.context, user);
-        await step.context.sendActivity({ attachments: [menu.productsMenu()] });
-        return await step.prompt(PRODUCT_PROMPT);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_PHONE, claimInfo);
+        } else {
+            claimInfo.problemAddress = step.result;
+            await step.context.sendActivity({ attachments: [menu.productsMenu()] });
+            return await step.prompt(PRODUCT_PROMPT);
+        }
     }
 
     // step 7
     async promptForSize(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.product = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(SIZE_PROMPT, `ขอทราบ ขนาดของสินค้า ที่ต้องการจะเคลมค่ะ`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_PROBLEM_ADDRESS, claimInfo);
+        } else {
+            claimInfo.product = step.result;
+            return await step.prompt(SIZE_PROMPT, `ขอทราบ ขนาดของสินค้า ที่ต้องการจะเคลมค่ะ`);
+        }
     }
 
     // step 8
     async promptForColor(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.size = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(QTY_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_PRODUCT, claimInfo);
+        } else {
+            claimInfo.size = step.result;
+            return await step.prompt(QTY_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
+        }
     }
 
     // step 9
     async promptForQty(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.color = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(QTY_PROMPT, `ขอทราบ จำนวนสินค้า ที่ต้องการจะเคลมค่ะ`);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_SIZE, claimInfo);
+        } else {
+            claimInfo.color = step.result;
+            return await step.prompt(QTY_PROMPT, `ขอทราบ จำนวนสินค้า ที่ต้องการจะเคลมค่ะ`);
+        }
     }
 
     // step 10
     async promptForWhenInstall(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.qty = step.result;
-        await this.userProfile.set(step.context, user);
-        await step.context.sendActivity({ attachments: [menu.whenInstallMenu()] });
-        return await step.prompt(WHEN_INSTALL_PROMPT);
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_COLOR, claimInfo);
+        } else {
+            claimInfo.qty = step.result;
+            await step.context.sendActivity({ attachments: [menu.whenInstallMenu()] });
+            return await step.prompt(WHEN_INSTALL_PROMPT);
+        }
     }
 
     // step 11
     async promptForProblem(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.whenInstall = step.result;
-        await this.userProfile.set(step.context, user);
-
-        if (user.product === 'เฌอร่า') {
-            if (user.whenInstall === 'ก่อนติดตั้ง') {
-                await step.context.sendActivity(menu.sheraBeforeInstallProblemMenu());
-            } else {
-                await step.context.sendActivity(menu.sheraAfterInstallProblemMenu());
-            }
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_QTY, claimInfo);
         } else {
-            if (user.whenInstall === 'ก่อนติดตั้ง') {
-                await step.context.sendActivity(menu.lwrBeforeInstallProblemMenu());
+            claimInfo.whenInstall = step.result;
+            if (claimInfo.product === 'เฌอร่า') {
+                if (claimInfo.whenInstall === BEFORE_INSTALL) {
+                    await step.context.sendActivity(menu.sheraBeforeInstallProblemMenu());
+                } else {
+                    await step.context.sendActivity(menu.sheraAfterInstallProblemMenu());
+                }
             } else {
-                await step.context.sendActivity(menu.lwrAfterInstallProblemMenu());
+                if (claimInfo.whenInstall === AFTER_INSTALL) {
+                    await step.context.sendActivity(menu.lwrBeforeInstallProblemMenu());
+                } else {
+                    await step.context.sendActivity(menu.lwrAfterInstallProblemMenu());
+                }
             }
+            return await step.prompt(PROBLEM_PROMPT);
         }
-
-        return await step.prompt(PROBLEM_PROMPT);
     }
 
     // step 12
-    async promptForImages(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.problem = step.result;
-        await this.userProfile.set(step.context, user);
-        return await step.prompt(IMAGES_PROMPT,
-            {
-                prompt: 'กรุณาอัพโหลดรูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (ถ้าต้องการอัพโหลดหลายรูป กรุณาเลือกรูปทั้งหมด แล้วกดส่งข้อความค่ะ)',
-                retryPrompt: 'ขอโทษค่ะ จำเป็นต้องใช้รูปภาพเพื่อประกอบการแจ้งเคลม กรุณาอัพโหลดรูปภาพใหม่อีกครั้งค่ะ'
-            }
-        );
+    async promptConfirmForm(step) {
+
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_WHEN_INSTALL, claimInfo);
+        } else {
+            claimInfo.problem = step.result;
+
+            //get informer name
+            claimInfo.name = step.context.activity.from.name;
+
+            await step.context.sendActivity({
+                text: 'สรุปรายการแจ้งเคลมคุณภาพ',
+                attachments: [CardFactory.adaptiveCard(menu.summaryMenu(claimInfo))]
+            });
+
+            return await step.prompt(CHOICE_PROMPT, 'ต้องการแก้ไขข้อมูลหรือไม่ ?', ['แก้ไข', 'ไม่แก้ไข']);
+        }
     }
 
     // step 13
-    async summaryClaim(step) {
-        const user = await this.userProfile.get(step.context, {});
-        user.images = step.result;
+    async promptForImages(step) {
+        if (step.result && step.result.value === EDIT) {
+            return await step.replaceDialog(REPEAT_PROBLEM, claimInfo);
+        } else {
+            return await step.prompt(IMAGES_PROMPT,
+                {
+                    prompt: 'กรุณาอัพโหลดรูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (ถ้าต้องการอัพโหลดหลายรูป กรุณาเลือกรูปทั้งหมด แล้วกดส่งข้อความค่ะ)',
+                    retryPrompt: 'ขอโทษค่ะ จำเป็นต้องใช้รูปภาพเพื่อประกอบการแจ้งเคลม กรุณาอัพโหลดรูปภาพใหม่อีกครั้งค่ะ'
+                }
+            );
+        }
+    }
 
-        //get informer name
-        user.name = step.context.activity.from.name;
-
-        await step.context.sendActivity({
-            text: 'สรุปรายการแจ้งเคลมคุณภาพ',
-            attachments: [CardFactory.adaptiveCard(menu.summaryMenu(user))]
-        });
+    // step 14
+    async promptConfirmImages(step) {
+        claimInfo.images = step.result;
 
         const attachmentsImages = [];
 
-        if (user.images.length > 0) {
+        if (claimInfo.images.length > 0) {
+
+            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
 
             const services = new Services();
 
-            for (var i in user.images) {
-                if (user.images[i].contentType.match("image")) {
+            for (var i in claimInfo.images) {
+                if (claimInfo.images[i].contentType.match("image")) {
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
 
-                        const contentUrl = user.images[i].contentUrl;
+                        const contentUrl = claimInfo.images[i].contentUrl;
                         const imageData = await services.getAuthenImage(step.context, contentUrl);
                         const base64Image = Buffer.from(imageData).toString('base64');
 
@@ -285,30 +482,38 @@ class MyBot {
                         attachmentsImages.push(obj);
                     } else {
                         var obj = {};
-                        obj.contentType = user.images[i].contentType;
-                        obj.contentUrl = user.images[i].contentUrl;
+                        obj.contentType = claimInfo.images[i].contentType;
+                        obj.contentUrl = claimInfo.images[i].contentUrl;
                         attachmentsImages.push(obj);
                     }
                 }
             }
-            user.images = attachmentsImages;
-            await this.userProfile.set(step.context, user);
+            claimInfo.images = attachmentsImages;
         }
 
         await step.context.sendActivity({
-            attachments: user.images
+            attachments: claimInfo.images
         });
-        await step.prompt(CHOICE_SUBMIT_PROMPT, 'ยืนยันการทำรายการหรือไม่ ?', ['yes', 'no']);
+
+        return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพ ?', ['ใช่', 'ไม่']);
     }
 
-    // step 14
-    async submitClaim(step) {
-        const user = await this.userProfile.get(step.context, {});
-        if (step.result && step.result.value === 'yes') {
+    // step 15
+    async summaryClaim(step) {
 
+        if (step.result && step.result.value === YES) {
+            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการทำรายการหรือไม่ ?', ['ใช่', 'ไม่']);
+        } else {
+            return await step.replaceDialog(REPEAT_IMAGES, claimInfo);
+        }
+    }
+
+    // step 16
+    async submitClaim(step) {
+        if (step.result && step.result.value === YES) {
             //send mail to callcenter
             const helpers = new Helpers();
-            helpers.sendMail(user);
+            helpers.sendMail(claimInfo);
 
             await step.context.sendActivity(`เราได้ส่งข้อมูลการแจ้งเคลมคุณภาพให้แล้วค่ะ`);
             await step.context.sendActivity({ attachments: [menu.mainMenu()] });
@@ -327,15 +532,13 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            // console.log(turnContext.activity.from.name);
-
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
 
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
             console.log("utterance = " + utterance);
 
-            if (utterance === 'ยกเลิก') {
+            if (utterance === CANCEL) {
                 if (dc.activeDialog) {
                     await dc.cancelAllDialogs();
                     await dc.context.sendActivity(`ยกเลิกแล้วค่ะ`);
@@ -344,18 +547,16 @@ class MyBot {
                     await dc.context.sendActivity(`ไม่มีอะไรให้ยกเลิกค่ะ`);
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 }
-            } else if (utterance === 'เมนูหลัก') {
+            } else if (utterance === MAIN_MENU) {
                 await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
-            } else if (utterance === 'ติดต่อเจ้าหน้าที่') {
+            } else if (utterance === CALL_CENTER) {
                 await dc.context.sendActivity(`ติดต่อที่เบอร์โทร 02-289-9888`);
-            } else if (utterance === 'แจ้งเคลมคุณภาพ') {
+            } else if (utterance === QUALITY_CLAIM) {
                 if (dc.activeDialog) {
                     await dc.cancelAllDialogs();
                     console.log("Cancel current dialog and start new claim.")
                 }
                 await dc.beginDialog(GET_CLAIM);
-            } else if (utterance === 'ถอย') {
-                await dc.repromptDialog();
             }
 
             // Start the sample dialog in response to any other input.
