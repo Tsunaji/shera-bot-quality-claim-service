@@ -18,7 +18,7 @@ class Helpers {
             + "ชื่อผุ้ติดต่อ: " + user.contactName + "\n"
             + "เบอร์ติดต่อ: " + user.phone + "\n"
             + "ที่อยู่ลูกค้าที่เกิดปัญหา: " + user.problemAddress + "\n"
-            + "ชนิดผลิตภัณฑ์: " + user.product + "\n"
+            + "ชนิดผลิตภัณฑ์: " + user.division + " " + user.product + "\n"
             + "ขนาดผลิตภัณฑ์: " + user.size + "\n"
             + "สีผลิตภัณฑ์: " + user.color + "\n"
             + "จำนวนสินค้าที่มีปัญหา: " + user.qty + "\n"

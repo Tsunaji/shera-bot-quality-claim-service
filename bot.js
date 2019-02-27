@@ -3,32 +3,27 @@
 
 const { ActivityTypes, CardFactory } = require('botbuilder');
 const { ChoicePrompt, DialogSet, TextPrompt, AttachmentPrompt, WaterfallDialog } = require('botbuilder-dialogs');
-const path = require('path');
-const fs = require('fs');
-
-// const Sequelize = require('sequelize');
-
-// const sequelize = new Sequelize('scm001', 'root', 'admin', {
-//     dialect: 'mysql',
-//     host: "localhost"
-// });
+const empty = require('is-empty');
 
 const { MyMenu } = require('./MyMenu');
 const { Helpers } = require('./Helpers');
 const { Services } = require('./Services');
 
 const menu = new MyMenu();
+const services = new Services();
 
 // The accessor names for the conversation data and user profile state property accessors.
 const DIALOG_STATE_PROPERTY = 'dialogState';
 const CONVERSATION_DATA_PROPERTY = 'conversationData';
 const USER_PROFILE_PROPERTY = 'userProfile';
 
+//waterfall flow
 const GET_CLAIM = 'get_claim';
 const REPEAT_SUB_CUST_NAME = 'repeat_sub_cust_name';
 const REPEAT_CONTACT_NAME = 'repeat_contact_name';
 const REPEAT_PHONE = 'repeat_phone';
 const REPEAT_PROBLEM_ADDRESS = 'repeat_problem_address';
+const REPEAT_DIVISON = 'repeat_division';
 const REPEAT_PRODUCT = 'repeat_product';
 const REPEAT_SIZE = 'repeat_size';
 const REPEAT_COLOR = 'repeat_color';
@@ -37,11 +32,13 @@ const REPEAT_WHEN_INSTALL = 'repeat_when_install';
 const REPEAT_PROBLEM = 'repeat_problem';
 const REPEAT_IMAGES = 'repeat_images';
 
+//prompt dialog
 const SAP_ID_PROMPT = 'sap_id_prompt';
 const SUB_CUST_NAME_PROMPT = 'sub_cust_name_propmt';
 const CONTACT_NAME_PROMPT = 'contact_name_promt';
 const PHONE_PROMPT = 'phone_promt';
 const PROBLEM_ADDRESS_PROMPT = 'problem_address_promt';
+const DIVISION_PROMPT = 'division_prompt';
 const PRODUCT_PROMPT = 'product_promt';
 const SIZE_PROMPT = 'size_promt';
 const COLOR_PROMPT = 'color_promt';
@@ -51,18 +48,21 @@ const PROBLEM_PROMPT = 'problem_promt';
 const IMAGES_PROMPT = 'images_prompt';
 const CHOICE_PROMPT = 'choice_prompt';
 
+//menu text
 const MAIN_MENU = "เมนูหลัก";
 const CALL_CENTER = "ติดต่อเจ้าหน้าที่";
 const QUALITY_CLAIM = "เคลมคุณภาพ"
-const BEFORE_INSTALL = "ก่อนติดตั้ง";
-const AFTER_INSTALL = "หลังติดตั้ง";
-const OK = 'ตกลง';
 const CANCEL = 'ยกเลิก';
 const EDIT = 'แก้ไข';
 const YES = 'ใช่';
-const NO = 'ไม่';
 
-const claimInfo = {};
+//response text
+const CALL_CENTER_RESPONSE = "ติดต่อที่เบอร์โทร 02-289-9888";
+const CANCEL_RESPONSE = 'ยกเลิกให้แล้วค่ะ';
+const CANCEL_NOTHING = 'ไม่มีอะไรให้ยกเลิกค่ะ';
+const TEXT_NOTHING_MATCH = "สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ";
+
+let claimInfo = {};
 
 class MyBot {
 
@@ -72,6 +72,8 @@ class MyBot {
      * @param {UserState} userState property accessor
      */
     constructor(conversationState, userState) {
+
+        services.getCustomerById(6);
 
         if (!conversationState) throw new Error('Missing parameter.  conversationState is required');
         if (!userState) throw new Error('Missing parameter.  userState is required');
@@ -86,13 +88,6 @@ class MyBot {
 
         this.dialogState = this.conversationState.createProperty(DIALOG_STATE_PROPERTY);
         this.dialogs = new DialogSet(this.dialogState);
-
-        // this.customer = [];
-
-        // sequelize.query("SELECT * FROM vehicle where vehicleId = 35", { raw: true }).then(myTableRows => {
-        //     // console.log(myTableRows);
-        //     this.setCustomer(myTableRows);
-        // })
 
         // Add prompts that will be used by the main dialogs.
         this.dialogs.add(new TextPrompt(SAP_ID_PROMPT, async (prompt) => {
@@ -125,12 +120,59 @@ class MyBot {
         this.dialogs.add(new TextPrompt(CONTACT_NAME_PROMPT));
         this.dialogs.add(new TextPrompt(PHONE_PROMPT));
         this.dialogs.add(new TextPrompt(PROBLEM_ADDRESS_PROMPT));
-        this.dialogs.add(new TextPrompt(PRODUCT_PROMPT));
+        this.dialogs.add(new TextPrompt(DIVISION_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+                const productInfo = menu.productsInfo();
+                for (let i = 0; i < productInfo.length; i++) {
+                    if (prompt.recognized.value === productInfo[i].name) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }));
+        this.dialogs.add(new TextPrompt(PRODUCT_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+                const productInfo = menu.productsInfo();
+                for (let i = 0; i < productInfo.length; i++) {
+                    if (claimInfo.division === productInfo[i].name) {
+                        for (let j = 0; j < productInfo[i].product.length; j++) {
+                            if (prompt.recognized.value === productInfo[i].product[j]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }));
         this.dialogs.add(new TextPrompt(SIZE_PROMPT));
         this.dialogs.add(new TextPrompt(COLOR_PROMPT));
         this.dialogs.add(new TextPrompt(QTY_PROMPT));
-        this.dialogs.add(new TextPrompt(WHEN_INSTALL_PROMPT));
-        this.dialogs.add(new TextPrompt(PROBLEM_PROMPT));
+        this.dialogs.add(new ChoicePrompt(WHEN_INSTALL_PROMPT));
+        this.dialogs.add(new TextPrompt(PROBLEM_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+                const productInfo = menu.productsInfo();
+                for (let i = 0; i < productInfo.length; i++) {
+                    if (claimInfo.division === productInfo[i].name) {
+                        if (claimInfo.whenInstall === "ก่อนติดตั้ง") {
+                            for (let j = 0; j < productInfo[i].problem.before_installing.length; j++) {
+                                if (prompt.recognized.value === productInfo[i].problem.before_installing[j]) {
+                                    return true;
+                                }
+                            }
+                        } else if (claimInfo.whenInstall === "หลังติดตั้ง") {
+                            for (let j = 0; j < productInfo[i].problem.after_installing.length; j++) {
+                                if (prompt.recognized.value === productInfo[i].problem.after_installing[j]) {
+                                    return true;
+                                }
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }));
         this.dialogs.add(new ChoicePrompt(CHOICE_PROMPT));
         this.dialogs.add(new AttachmentPrompt(IMAGES_PROMPT));
 
@@ -141,6 +183,7 @@ class MyBot {
             this.promptForContactName.bind(this),
             this.promptForPhone.bind(this),
             this.promptForProblemAddress.bind(this),
+            this.promptForDivision.bind(this),
             this.promptForProduct.bind(this),
             this.promptForSize.bind(this),
             this.promptForColor.bind(this),
@@ -159,6 +202,7 @@ class MyBot {
             this.promptForContactName.bind(this),
             this.promptForPhone.bind(this),
             this.promptForProblemAddress.bind(this),
+            this.promptForDivision.bind(this),
             this.promptForProduct.bind(this),
             this.promptForSize.bind(this),
             this.promptForColor.bind(this),
@@ -176,6 +220,7 @@ class MyBot {
             this.promptForContactName.bind(this),
             this.promptForPhone.bind(this),
             this.promptForProblemAddress.bind(this),
+            this.promptForDivision.bind(this),
             this.promptForProduct.bind(this),
             this.promptForSize.bind(this),
             this.promptForColor.bind(this),
@@ -192,6 +237,7 @@ class MyBot {
         this.dialogs.add(new WaterfallDialog(REPEAT_PHONE, [
             this.promptForPhone.bind(this),
             this.promptForProblemAddress.bind(this),
+            this.promptForDivision.bind(this),
             this.promptForProduct.bind(this),
             this.promptForSize.bind(this),
             this.promptForColor.bind(this),
@@ -207,6 +253,22 @@ class MyBot {
 
         this.dialogs.add(new WaterfallDialog(REPEAT_PROBLEM_ADDRESS, [
             this.promptForProblemAddress.bind(this),
+            this.promptForDivision.bind(this),
+            this.promptForProduct.bind(this),
+            this.promptForSize.bind(this),
+            this.promptForColor.bind(this),
+            this.promptForQty.bind(this),
+            this.promptForWhenInstall.bind(this),
+            this.promptForProblem.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_DIVISON, [
+            this.promptForDivision.bind(this),
             this.promptForProduct.bind(this),
             this.promptForSize.bind(this),
             this.promptForColor.bind(this),
@@ -310,7 +372,14 @@ class MyBot {
 
     // step 2
     async promptForSubCustName(step) {
-        claimInfo.sapId = step.result;
+        if (empty(step.options)) {
+            claimInfo.sapId = step.result;
+        } else {
+            claimInfo = step.options;
+            if (!empty(step.result)) {
+                claimInfo.sapId = step.result;
+            }
+        }
         await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + claimInfo.customerName);
         await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + claimInfo.customerAddress);
 
@@ -322,7 +391,14 @@ class MyBot {
         if (step.result === EDIT) {
             return await step.replaceDialog(GET_CLAIM, claimInfo);
         } else {
-            claimInfo.subCustName = step.result;
+            if (empty(step.options)) {
+                claimInfo.subCustName = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.subCustName = step.result;
+                }
+            }
             return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อลูกค้า ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
         }
     }
@@ -332,7 +408,14 @@ class MyBot {
         if (step.result === EDIT) {
             return await step.replaceDialog(REPEAT_SUB_CUST_NAME, claimInfo);
         } else {
-            claimInfo.contactName = step.result;
+            if (empty(step.options)) {
+                claimInfo.contactName = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.contactName = step.result;
+                }
+            }
             return await step.prompt(PHONE_PROMPT, `ขอทราบ เบอร์ติดต่อ ค่ะ`);
         }
     }
@@ -342,93 +425,167 @@ class MyBot {
         if (step.result === EDIT) {
             return await step.replaceDialog(REPEAT_CONTACT_NAME, claimInfo);
         } else {
-            claimInfo.phone = step.result;
+            if (empty(step.options)) {
+                claimInfo.phone = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.phone = step.result;
+                }
+            }
             return await step.prompt(PROBLEM_ADDRESS_PROMPT, `ขอทราบ ที่อยู่ร้าน ที่เกิดปัญหาค่ะ`);
         }
     }
 
     // step 6
-    async promptForProduct(step) {
+    async promptForDivision(step) {
         if (step.result === EDIT) {
             return await step.replaceDialog(REPEAT_PHONE, claimInfo);
         } else {
-            claimInfo.problemAddress = step.result;
-            await step.context.sendActivity({ attachments: [menu.productsMenu()] });
-            return await step.prompt(PRODUCT_PROMPT);
+            if (empty(step.options)) {
+                claimInfo.problemAddress = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.problemAddress = step.result;
+                }
+            }
+            await step.context.sendActivity({ attachments: [menu.divisionMenu()] });
+            return await step.prompt(DIVISION_PROMPT,
+                {
+                    retryPrompt: 'ขอโทษค่ะ กรุณาเลือก Division ที่มีในรายการค่ะ'
+                });
         }
     }
 
     // step 7
-    async promptForSize(step) {
+    async promptForProduct(step) {
         if (step.result === EDIT) {
             return await step.replaceDialog(REPEAT_PROBLEM_ADDRESS, claimInfo);
         } else {
-            claimInfo.product = step.result;
-            return await step.prompt(SIZE_PROMPT, `ขอทราบ ขนาดของสินค้า ที่ต้องการจะเคลมค่ะ`);
+            if (empty(step.options)) {
+                claimInfo.division = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.division = step.result;
+                }
+            }
+            await step.context.sendActivity({ attachments: [menu.productsMenu(claimInfo.division)] });
+            return await step.prompt(PRODUCT_PROMPT,
+                {
+                    retryPrompt: 'ขอโทษค่ะ กรุณาเลือกผลิตภัณฑ์ที่มีในรายการค่ะ'
+                });
         }
     }
 
     // step 8
-    async promptForColor(step) {
+    async promptForSize(step) {
         if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_PRODUCT, claimInfo);
+            return await step.replaceDialog(REPEAT_DIVISON, claimInfo);
         } else {
-            claimInfo.size = step.result;
-            return await step.prompt(QTY_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
+            if (empty(step.options)) {
+                claimInfo.product = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.product = step.result;
+                }
+            }
+            return await step.prompt(SIZE_PROMPT, `ขอทราบ ขนาดของสินค้า ที่ต้องการจะเคลมค่ะ`);
         }
     }
 
     // step 9
-    async promptForQty(step) {
+    async promptForColor(step) {
         if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_SIZE, claimInfo);
+            return await step.replaceDialog(REPEAT_PRODUCT, claimInfo);
         } else {
-            claimInfo.color = step.result;
-            return await step.prompt(QTY_PROMPT, `ขอทราบ จำนวนสินค้า ที่ต้องการจะเคลมค่ะ`);
+            if (empty(step.options)) {
+                claimInfo.size = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.size = step.result;
+                }
+            }
+            return await step.prompt(COLOR_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
         }
     }
 
     // step 10
-    async promptForWhenInstall(step) {
+    async promptForQty(step) {
         if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_COLOR, claimInfo);
+            return await step.replaceDialog(REPEAT_SIZE, claimInfo);
         } else {
-            claimInfo.qty = step.result;
-            await step.context.sendActivity({ attachments: [menu.whenInstallMenu()] });
-            return await step.prompt(WHEN_INSTALL_PROMPT);
+            if (empty(step.options)) {
+                claimInfo.color = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.color = step.result;
+                }
+            }
+            return await step.prompt(QTY_PROMPT, `ขอทราบ จำนวนสินค้า ที่ต้องการจะเคลมค่ะ`);
         }
     }
 
     // step 11
-    async promptForProblem(step) {
+    async promptForWhenInstall(step) {
         if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_QTY, claimInfo);
+            return await step.replaceDialog(REPEAT_COLOR, claimInfo);
         } else {
-            claimInfo.whenInstall = step.result;
-            if (claimInfo.product === 'เฌอร่า') {
-                if (claimInfo.whenInstall === BEFORE_INSTALL) {
-                    await step.context.sendActivity(menu.sheraBeforeInstallProblemMenu());
-                } else {
-                    await step.context.sendActivity(menu.sheraAfterInstallProblemMenu());
-                }
+            if (empty(step.options)) {
+                claimInfo.qty = step.result;
             } else {
-                if (claimInfo.whenInstall === AFTER_INSTALL) {
-                    await step.context.sendActivity(menu.lwrBeforeInstallProblemMenu());
-                } else {
-                    await step.context.sendActivity(menu.lwrAfterInstallProblemMenu());
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.qty = step.result;
                 }
             }
-            return await step.prompt(PROBLEM_PROMPT);
+            // await step.context.sendActivity({ attachments: [menu.whenInstallMenu()] });
+            return await step.prompt(WHEN_INSTALL_PROMPT, {
+                prompt: 'กรุณาเลือกช่วงที่ผลิตภัณฑ์เกิดปัญหาค่ะ',
+                retryPrompt: 'ขอโทษค่ะ กรุณาเลือกจากตัวเลือกที่มีให้ค่ะ',
+                choices: ['ก่อนติดตั้ง', 'หลังติดตั้ง']
+            });
         }
     }
 
     // step 12
-    async promptConfirmForm(step) {
+    async promptForProblem(step) {
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_QTY, claimInfo);
+        } else {
+            if (empty(step.options)) {
+                claimInfo.whenInstall = step.result.value;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result.value)) {
+                    claimInfo.whenInstall = step.result.value;
+                }
+            }
+            await step.context.sendActivity({ attachments: [menu.problemMenu(claimInfo.division, claimInfo.whenInstall)] });
+            return await step.prompt(PROBLEM_PROMPT,
+                {
+                    retryPrompt: 'ขอโทษค่ะ กรุณาเลือกปัญหาที่มีในรายการค่ะ'
+                });
+        }
+    }
 
+    // step 13
+    async promptConfirmForm(step) {
         if (step.result === EDIT) {
             return await step.replaceDialog(REPEAT_WHEN_INSTALL, claimInfo);
         } else {
-            claimInfo.problem = step.result;
+            if (empty(step.options)) {
+                claimInfo.problem = step.result;
+            } else {
+                claimInfo = step.options;
+                if (!empty(step.result)) {
+                    claimInfo.problem = step.result;
+                }
+            }
 
             //get informer name
             claimInfo.name = step.context.activity.from.name;
@@ -442,7 +599,7 @@ class MyBot {
         }
     }
 
-    // step 13
+    // step 14
     async promptForImages(step) {
         if (step.result && step.result.value === EDIT) {
             return await step.replaceDialog(REPEAT_PROBLEM, claimInfo);
@@ -456,17 +613,23 @@ class MyBot {
         }
     }
 
-    // step 14
+    // step 15
     async promptConfirmImages(step) {
-        claimInfo.images = step.result;
+
+        if (empty(step.options)) {
+            claimInfo.images = step.result;
+        } else {
+            claimInfo = step.options;
+            if (!empty(step.result)) {
+                claimInfo.images = step.result;
+            }
+        }
 
         const attachmentsImages = [];
 
         if (claimInfo.images.length > 0) {
 
             await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
-
-            const services = new Services();
 
             for (var i in claimInfo.images) {
                 if (claimInfo.images[i].contentType.match("image")) {
@@ -498,7 +661,7 @@ class MyBot {
         return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพ ?', ['ใช่', 'ไม่']);
     }
 
-    // step 15
+    // step 16
     async summaryClaim(step) {
 
         if (step.result && step.result.value === YES) {
@@ -508,7 +671,7 @@ class MyBot {
         }
     }
 
-    // step 16
+    // step 17
     async submitClaim(step) {
         if (step.result && step.result.value === YES) {
             //send mail to callcenter
@@ -541,16 +704,16 @@ class MyBot {
             if (utterance === CANCEL) {
                 if (dc.activeDialog) {
                     await dc.cancelAllDialogs();
-                    await dc.context.sendActivity(`ยกเลิกแล้วค่ะ`);
+                    await dc.context.sendActivity(CANCEL_RESPONSE);
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 } else {
-                    await dc.context.sendActivity(`ไม่มีอะไรให้ยกเลิกค่ะ`);
+                    await dc.context.sendActivity(CANCEL_NOTHING);
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 }
             } else if (utterance === MAIN_MENU) {
                 await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
             } else if (utterance === CALL_CENTER) {
-                await dc.context.sendActivity(`ติดต่อที่เบอร์โทร 02-289-9888`);
+                await dc.context.sendActivity(CALL_CENTER_RESPONSE);
             } else if (utterance === QUALITY_CLAIM) {
                 if (dc.activeDialog) {
                     await dc.cancelAllDialogs();
@@ -566,7 +729,7 @@ class MyBot {
                     await dc.continueDialog();
                 }
                 else {
-                    await dc.context.sendActivity(`สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ`);
+                    await dc.context.sendActivity(TEXT_NOTHING_MATCH);
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 }
             }
