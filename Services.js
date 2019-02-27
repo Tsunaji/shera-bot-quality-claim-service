@@ -51,18 +51,18 @@ class Services {
         //     ssl: true
         // };
 
-        // var config =
-        // {
-        //     host: "thazrd1002.mysql.database.azure.com",
-        //     user: "THAZRD1002@thazrd1002",
-        //     password: "+$\)a53&Wq:f4@CS7/]`UZ=MsyntG?-G",
-        //     database: "digitals_shera",
-        //     port: 3306,
-        //     ssl:
-        //     {
-        //         ca: fs.readFileSync(path.join(__dirname, '/BaltimoreCyberTrustRoot.crt.pem'))
-        //     }
-        // };
+        var config =
+        {
+            host: "thazrd1002.mysql.database.azure.com",
+            user: "THAZRD1002@thazrd1002",
+            password: "+$\)a53&Wq:f4@CS7/]`UZ=MsyntG?-G",
+            database: "digitals_shera",
+            port: 3306,
+            ssl:
+            {
+                ca: fs.readFileSync(path.join(__dirname, '/BaltimoreCyberTrustRoot.crt.pem'))
+            }
+        };
 
         // var config =
         // {
@@ -74,34 +74,34 @@ class Services {
         //     ssl: true
         // };
 
-        // const conn = new mysql.createConnection(config);
+        const conn = new mysql.createConnection(config);
 
-        // conn.connect(
-        //     function (err) {
-        //         if (err) {
-        //             console.log("!!! Cannot connect !!! Error:");
-        //             console.error(err);
-        //             // throw err;
-        //         }
-        //         else {
-        //             console.log("Connection established.");
-        //             // queryDatabase();
-        //         }
-        //     });
-
-        const sequelize = new Sequelize('digitals_shera', 'THAZRD1002@thazrd1002', '+$\)a53&Wq:f4@CS7/]`UZ=MsyntG?-G', {
-            dialect: 'mysql',
-            host: "thazrd1002.mysql.database.azure.com",
-            dialectOptions: {
-                ssl: {
-                    ca: fs.readFileSync(__dirname + '/BaltimoreCyberTrustRoot.crt.pem')
+        conn.connect(
+            function (err) {
+                if (err) {
+                    console.log("!!! Cannot connect !!! Error:");
+                    // console.error(err);
+                    throw err;
                 }
-            }
-        });
+                else {
+                    console.log("Connection established.");
+                    // queryDatabase();
+                }
+            });
 
-        sequelize.query("SELECT count(*) FROM customer_info", { raw: true }).then(myTableRows => {
-            console.log(myTableRows);
-        })
+        // const sequelize = new Sequelize('digitals_shera', 'THAZRD1002@thazrd1002', '+$\)a53&Wq:f4@CS7/]`UZ=MsyntG?-G', {
+        //     dialect: 'mysql',
+        //     host: "thazrd1002.mysql.database.azure.com",
+        //     dialectOptions: {
+        //         ssl: {
+        //             ca: fs.readFileSync(__dirname + '/BaltimoreCyberTrustRoot.crt.pem')
+        //         }
+        //     }
+        // });
+
+        // sequelize.query("SELECT count(*) FROM customer_info", { raw: true }).then(myTableRows => {
+        //     console.log(myTableRows);
+        // })
     }
 }
 
