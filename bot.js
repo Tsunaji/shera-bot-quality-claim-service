@@ -63,6 +63,7 @@ const CANCEL_NOTHING = 'ไม่มีอะไรให้ยกเลิก�
 const TEXT_NOTHING_MATCH = "สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ";
 
 let claimInfo = {};
+let customerInfo = [];
 
 class MyBot {
 
@@ -94,12 +95,9 @@ class MyBot {
 
                 const id = Number(prompt.recognized.value);
 
-                const response = await services.getCustomerById(id);
+                customerInfo = await services.getCustomerById(id);
 
-                if (response.length > 0) {
-                    const customer = response[0];
-                    claimInfo.customerName = customer.TITLE_MEDI + " " + customer.NAME1;
-                    claimInfo.customerAddress = customer.FULLADR;
+                if (customerInfo.length > 0 && id !== 0) {
                     return true;
                 }
 
@@ -371,6 +369,9 @@ class MyBot {
                 claimInfo.sapId = step.result;
             }
         }
+
+        await this.setCustomerDetails();
+
         await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + claimInfo.customerName);
         await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + claimInfo.customerAddress);
 
@@ -676,6 +677,12 @@ class MyBot {
             await step.context.sendActivity({ attachments: [menu.mainMenu()] });
         }
         return await step.endDialog();
+    }
+
+    async setCustomerDetails() {
+        const customer = customerInfo[0];
+        claimInfo.customerName = customer.TITLE_MEDI + " " + customer.NAME1;
+        claimInfo.customerAddress = customer.FULLADR;
     }
 
     /**
