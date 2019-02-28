@@ -9,11 +9,11 @@ class Helpers {
 
     async sendMail(user) {
 
-        const mailHost = process.env.MAIL_HOST;
-        const mailAuthenUser = process.env.MAIL_AUTHEN_USER;
-        const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD;
-        const mailFrom = process.env.MAIL_FROM;
-        const mailTo = process.env.MAIL_TO;
+        const mailHost = process.env.MAIL_HOST || ConfigurationManager.AppSettings["MAIL_HOST"];
+        const mailAuthenUser = process.env.MAIL_AUTHEN_USER || ConfigurationManager.AppSettings["MAIL_AUTHEN_USER"];
+        const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || ConfigurationManager.AppSettings["MAIL_AUTHEN_PASSWORD"];
+        const mailFrom = process.env.MAIL_FROM || ConfigurationManager.AppSettings["MAIL_FROM"];
+        const mailTo = process.env.MAIL_TO || ConfigurationManager.AppSettings["MAIL_TO"];
 
         const message = "ชื่อผู้แจ้ง : " + user.name + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"

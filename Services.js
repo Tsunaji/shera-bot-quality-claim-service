@@ -43,9 +43,14 @@ class Services {
 
     async getCustomerById(id) {
 
-        const sequelize = new Sequelize(process.env.MYSQL_DATABASE, process.env.MYSQL_USER, process.env.MYSQL_PASSWORD, {
+        const mySqlDatabase = process.env.MYSQL_DATABASE || ConfigurationManager.AppSettings["MYSQL_DATABASE"];
+        const mySqlUser = process.env.MYSQL_USER || ConfigurationManager.AppSettings["MYSQL_USER"];
+        const mySqlPassword = process.env.MYSQL_PASSWORD || ConfigurationManager.AppSettings["MYSQL_PASSWORD"];
+        const mySqlHost = process.env.MYSQL_HOST || ConfigurationManager.AppSettings["MYSQL_HOST"];
+
+        const sequelize = new Sequelize(mySqlDatabase, mySqlUser, mySqlPassword, {
             dialect: 'mysql',
-            host: process.env.MYSQL_HOST,
+            host: mySqlHost,
             dialectOptions: {
                 ssl: {
                     ca: fs.readFileSync(path.join(__dirname, '/BaltimoreCyberTrustRoot.crt.pem'))
