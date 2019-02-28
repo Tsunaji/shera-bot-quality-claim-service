@@ -73,8 +73,6 @@ class MyBot {
      */
     constructor(conversationState, userState) {
 
-        services.getCustomerById(6);
-
         if (!conversationState) throw new Error('Missing parameter.  conversationState is required');
         if (!userState) throw new Error('Missing parameter.  userState is required');
 
@@ -94,21 +92,14 @@ class MyBot {
 
             if (prompt.recognized.succeeded) {
 
-                if (prompt.recognized.value === '15') {
-                    claimInfo.customerName = 'ทดสอบ เลิศวสิน (2002)';
-                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 141/3 หมู่ที่ 7 ตำบล หนองป่าครั่ง อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50000';
-                    return true;
-                } else if (prompt.recognized.value === '6') {
-                    claimInfo.customerName = 'ทดสอบ ตั้งเล่งเฮง';
-                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 29/1 ถนน วังสิงห์คำ ตำบล ช้างม่อย อำเภอ เมืองเชียงใหม่ จังหวัด เชียงใหม่ รหัสไปรษณีย์ 50300';
-                    return true;
-                } else if (prompt.recognized.value === '60') {
-                    claimInfo.customerName = 'ทดสอบ ปากน้ำโพเคหะภัณฑ์';
-                    claimInfo.customerAddress = 'ทดสอบ เลขที่ 112/2 ถนน สวรรค์วิถี ตำบล ปากน้ำโพ อำเภอ เมือง จังหวัด นครสวรรค์ รหัสไปรษณีย์ 60000';
-                    return true;
-                } else if (!isNaN(prompt.recognized.value)) {
-                    claimInfo.customerName = 'ทดสอบ xxxxx';
-                    claimInfo.customerAddress = 'ทดสอบ yyyyy';
+                const id = Number(prompt.recognized.value);
+
+                const response = await services.getCustomerById(id);
+
+                if (response.length > 0) {
+                    const customer = response[0];
+                    claimInfo.customerName = customer.TITLE_MEDI + " " + customer.NAME1;
+                    claimInfo.customerAddress = customer.FULLADR;
                     return true;
                 }
 
@@ -692,6 +683,7 @@ class MyBot {
      * @param {TurnContext} turnContext turn context object.
      */
     async onTurn(turnContext) {
+
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 

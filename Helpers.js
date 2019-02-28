@@ -1,14 +1,19 @@
 const nodemailer = require('nodemailer');
+const path = require('path');
+const dotenv = require('dotenv');
+
+const ENV_FILE = path.join(__dirname, '.env');
+dotenv.config({ path: ENV_FILE });
 
 class Helpers {
 
     async sendMail(user) {
 
-        const mailHost = 'smtp.office365.com';
-        const mailAuthenUser = 'botservice@shera.com';
-        const mailAuthenPass = 'Ak5CB2x47qBAsyHx';
-        const mailFrom = 'botservice@shera.com';
-        const mailTo = 'crmclaim@shera.com';
+        const mailHost = process.env.MAIL_HOST;
+        const mailAuthenUser = process.env.MAIL_AUTHEN_USER;
+        const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD;
+        const mailFrom = process.env.MAIL_FROM;
+        const mailTo = process.env.MAIL_TO;
 
         const message = "ชื่อผู้แจ้ง : " + user.name + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"

@@ -1,4 +1,4 @@
-const { CardFactory, MessageFactory, ActionTypes } = require('botbuilder');
+const { CardFactory, ActionTypes } = require('botbuilder');
 const path = require('path');
 const fs = require('fs');
 
