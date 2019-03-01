@@ -11,11 +11,17 @@ class Helpers {
 
     async sendMail(user) {
 
-        const mailHost = process.env.MAIL_HOST || process.env.APPSETTING_MAIL_HOST;
-        const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
-        const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
-        const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
-        const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
+        const mailHost = "smtp.office365.com";
+        const mailAuthenUser = "botservice@shera.com";
+        const mailAuthenPass = "Ak5CB2x47qBAsyHx";
+        const mailFrom = "botservice@shera.com";
+        const mailTo = "crmclaim@shera.com";
+
+        // const mailHost = process.env.MAIL_HOST || process.env.APPSETTING_MAIL_HOST;
+        // const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
+        // const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
+        // const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
+        // const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
 
         const message = "ชื่อผู้แจ้ง : " + user.name + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"
