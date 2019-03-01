@@ -3,12 +3,8 @@ const querystring = require('querystring');
 const Sequelize = require('sequelize');
 const path = require('path');
 const fs = require('fs');
-// const dotenv = require('dotenv');
-
-// dotenv.config();
-
-// const ENV_FILE = path.join(__dirname, '.env');
-// dotenv.config({ path: ENV_FILE });
+const dotenv = require('dotenv');
+dotenv.config();
 
 class Services {
 
@@ -45,15 +41,10 @@ class Services {
 
     async getCustomerById(id) {
 
-        const mySqlDatabase = "thazrd1002.mysql.database.azure.com";
-        const mySqlUser = "digitals_shera";
-        const mySqlPassword = "it_app@thazrd1002";
-        const mySqlHost = "3@4WsLP*8_bn-LkC";
-
-        // const mySqlDatabase = process.env.MYSQL_DATABASE || process.env.APPSETTING_MYSQL_DATABASE;
-        // const mySqlUser = process.env.MYSQL_USER || process.env.APPSETTING_MYSQL_USER;
-        // const mySqlPassword = process.env.MYSQL_PASSWORD || process.env.APPSETTING_MYSQL_PASSWORD;
-        // const mySqlHost = process.env.MYSQL_HOST || process.env.APPSETTING_MYSQL_HOST;
+        const mySqlDatabase = process.env.MYSQL_DATABASE || process.env.APPSETTING_MYSQL_DATABASE;
+        const mySqlUser = process.env.MYSQL_USER || process.env.APPSETTING_MYSQL_USER;
+        const mySqlPassword = process.env.MYSQL_PASSWORD || process.env.APPSETTING_MYSQL_PASSWORD;
+        const mySqlHost = process.env.MYSQL_HOST || process.env.APPSETTING_MYSQL_HOST;
 
         const sequelize = new Sequelize(mySqlDatabase, mySqlUser, mySqlPassword, {
             dialect: 'mysql',
