@@ -43,10 +43,10 @@ class Services {
 
     async getCustomerById(id) {
 
-        const mySqlDatabase = process.env.MYSQL_DATABASE || process.env["MYSQL_DATABASE"];
-        const mySqlUser = process.env.MYSQL_USER || process.env["MYSQL_USER"];
-        const mySqlPassword = process.env.MYSQL_PASSWORD || process.env["MYSQL_PASSWORD"];
-        const mySqlHost = process.env.MYSQL_HOST || process.env["MYSQL_HOST"];
+        const mySqlDatabase = process.env.MYSQL_DATABASE || process.env.APPSETTING_MYSQL_DATABASE;
+        const mySqlUser = process.env.MYSQL_USER || process.env.APPSETTING_MYSQL_USER;
+        const mySqlPassword = process.env.MYSQL_PASSWORD || process.env.APPSETTING_MYSQL_PASSWORD;
+        const mySqlHost = process.env.MYSQL_HOST || process.env.APPSETTING_MYSQL_HOST;
 
         const sequelize = new Sequelize(mySqlDatabase, mySqlUser, mySqlPassword, {
             dialect: 'mysql',
