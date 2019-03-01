@@ -3,9 +3,9 @@ const querystring = require('querystring');
 const Sequelize = require('sequelize');
 const path = require('path');
 const fs = require('fs');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 
-dotenv.config();
+// dotenv.config();
 
 // const ENV_FILE = path.join(__dirname, '.env');
 // dotenv.config({ path: ENV_FILE });

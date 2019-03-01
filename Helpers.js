@@ -1,8 +1,8 @@
 const nodemailer = require('nodemailer');
 const path = require('path');
-const dotenv = require('dotenv');
+// const dotenv = require('dotenv');
 
-dotenv.config();
+// dotenv.config();
 
 // const ENV_FILE = path.join(__dirname, '.env');
 // dotenv.config({ path: ENV_FILE });
