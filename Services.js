@@ -5,8 +5,10 @@ const path = require('path');
 const fs = require('fs');
 const dotenv = require('dotenv');
 
-const ENV_FILE = path.join(__dirname, '.env');
-dotenv.config({ path: ENV_FILE });
+dotenv.config();
+
+// const ENV_FILE = path.join(__dirname, '.env');
+// dotenv.config({ path: ENV_FILE });
 
 class Services {
 
