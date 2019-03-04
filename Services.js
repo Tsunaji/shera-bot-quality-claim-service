@@ -56,9 +56,15 @@ class Services {
             }
         });
 
-        const customer = await sequelize.query(`SELECT * FROM customer_info where KUNNR = ${id}`, { raw: true }).then(myTableRows => {
-            return myTableRows[0];
-        })
+        const customer = await sequelize.query(`SELECT * FROM customer_info where KUNNR = ${id}`,
+            {
+                raw: true
+            }).then(myTableRows => {
+                return myTableRows[0];
+            }).catch(function (err) {
+                // console.log(err);
+                return [];
+            });
         return customer;
     }
 }

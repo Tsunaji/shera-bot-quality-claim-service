@@ -93,7 +93,11 @@ class MyBot {
 
             if (prompt.recognized.succeeded) {
 
-                const id = Number(prompt.recognized.value);
+                let id = prompt.recognized.value;
+
+                if (isNaN(id)) {
+                    id = "'" + id + "'";
+                }
 
                 customerInfo = await services.getCustomerById(id);
 
@@ -681,6 +685,7 @@ class MyBot {
 
     async setCustomerDetails() {
         const customer = customerInfo[0];
+        claimInfo.sapId = customer.KUNNR;
         claimInfo.customerName = customer.TITLE_MEDI + " " + customer.NAME1;
         claimInfo.customerAddress = customer.FULLADR;
     }
