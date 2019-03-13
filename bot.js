@@ -55,6 +55,7 @@ const QUALITY_CLAIM = "เคลมคุณภาพ"
 const CANCEL = 'ยกเลิก';
 const EDIT = 'แก้ไข';
 const YES = 'ใช่';
+const NO = 'ไม่';
 
 //response text
 const CALL_CENTER_RESPONSE = "ติดต่อที่เบอร์โทร 02-289-9888";
@@ -115,6 +116,9 @@ class MyBot {
         this.dialogs.add(new TextPrompt(PROBLEM_ADDRESS_PROMPT));
         this.dialogs.add(new TextPrompt(DIVISION_PROMPT, async (prompt) => {
             if (prompt.recognized.succeeded) {
+                if (prompt.recognized.value === EDIT) {
+                    return true;
+                }
                 const productInfo = menu.productsInfo();
                 for (let i = 0; i < productInfo.length; i++) {
                     if (prompt.recognized.value === productInfo[i].name) {
@@ -126,6 +130,9 @@ class MyBot {
         }));
         this.dialogs.add(new TextPrompt(PRODUCT_PROMPT, async (prompt) => {
             if (prompt.recognized.succeeded) {
+                if (prompt.recognized.value === EDIT) {
+                    return true;
+                }
                 const productInfo = menu.productsInfo();
                 for (let i = 0; i < productInfo.length; i++) {
                     if (claimInfo.division === productInfo[i].name) {
@@ -145,6 +152,9 @@ class MyBot {
         this.dialogs.add(new ChoicePrompt(WHEN_INSTALL_PROMPT));
         this.dialogs.add(new TextPrompt(PROBLEM_PROMPT, async (prompt) => {
             if (prompt.recognized.succeeded) {
+                if (prompt.recognized.value === EDIT) {
+                    return true;
+                }
                 const productInfo = menu.productsInfo();
                 for (let i = 0; i < productInfo.length; i++) {
                     if (claimInfo.division === productInfo[i].name) {
@@ -528,45 +538,51 @@ class MyBot {
 
     // step 11
     async promptForWhenInstall(step) {
-        if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_COLOR, claimInfo);
+        if (empty(step.result)) { // update data from previous dialog
+            claimInfo = step.options;
         } else {
-            if (empty(step.options)) {
-                claimInfo.qty = step.result;
+            console.log(step.result);
+            if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
+                return await step.replaceDialog(REPEAT_COLOR, claimInfo);
             } else {
-                claimInfo = step.options;
-                if (!empty(step.result)) {
+                if (empty(step.options)) { // normal step
+                    claimInfo.qty = step.result;
+                } else { // normal repeat step
+                    claimInfo = step.options;
                     claimInfo.qty = step.result;
                 }
             }
-            // await step.context.sendActivity({ attachments: [menu.whenInstallMenu()] });
-            return await step.prompt(WHEN_INSTALL_PROMPT, {
-                prompt: 'กรุณาเลือกช่วงที่ผลิตภัณฑ์เกิดปัญหาค่ะ',
-                retryPrompt: 'ขอโทษค่ะ กรุณาเลือกจากตัวเลือกที่มีให้ค่ะ',
-                choices: ['ก่อนติดตั้ง', 'หลังติดตั้ง']
-            });
         }
+        return await step.prompt(WHEN_INSTALL_PROMPT, {
+            prompt: 'กรุณาเลือกช่วงที่ผลิตภัณฑ์เกิดปัญหาค่ะ',
+            retryPrompt: 'ขอโทษค่ะ กรุณาเลือกจากตัวเลือกที่มีให้ค่ะ',
+            choices: ['ก่อนติดตั้ง', 'หลังติดตั้ง', 'แก้ไข']
+        });
     }
 
     // step 12
     async promptForProblem(step) {
-        if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_QTY, claimInfo);
+        if (empty(step.result)) { // update data from previous dialog
+            claimInfo = step.options;
         } else {
-            if (empty(step.options)) {
-                claimInfo.whenInstall = step.result.value;
+            if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
+                return await step.replaceDialog(REPEAT_QTY, claimInfo);
             } else {
-                claimInfo = step.options;
-                if (!empty(step.result.value)) {
+                if (empty(step.options)) { // normal step
+                    claimInfo.whenInstall = step.result.value;
+                } else { // normal repeat step
+                    claimInfo = step.options;
                     claimInfo.whenInstall = step.result.value;
                 }
             }
-            await step.context.sendActivity({ attachments: [menu.problemMenu(claimInfo.division, claimInfo.whenInstall)] });
-            return await step.prompt(PROBLEM_PROMPT,
-                {
-                    retryPrompt: 'ขอโทษค่ะ กรุณาเลือกปัญหาที่มีในรายการค่ะ'
-                });
         }
+
+        await step.context.sendActivity({ attachments: [menu.problemMenu(claimInfo.division, claimInfo.whenInstall)] });
+        return await step.prompt(PROBLEM_PROMPT,
+            {
+                retryPrompt: 'ขอโทษค่ะ กรุณาเลือกปัญหาที่มีในรายการค่ะ'
+            });
+
     }
 
     // step 13
@@ -591,13 +607,13 @@ class MyBot {
                 attachments: [CardFactory.adaptiveCard(menu.summaryMenu(claimInfo))]
             });
 
-            return await step.prompt(CHOICE_PROMPT, 'ต้องการแก้ไขข้อมูลหรือไม่ ?', ['แก้ไข', 'ไม่แก้ไข']);
+            return await step.prompt(CHOICE_PROMPT, 'ยืมยันข้อมูลฟอร์มหรือไม่ ?', ['ใช่', 'ไม่']);
         }
     }
 
     // step 14
     async promptForImages(step) {
-        if (step.result && step.result.value === EDIT) {
+        if (step.result && step.result.value === NO) {
             return await step.replaceDialog(REPEAT_PROBLEM, claimInfo);
         } else {
             return await step.prompt(IMAGES_PROMPT,
@@ -654,14 +670,14 @@ class MyBot {
             attachments: claimInfo.images
         });
 
-        return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพ ?', ['ใช่', 'ไม่']);
+        return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
     }
 
     // step 16
     async summaryClaim(step) {
 
         if (step.result && step.result.value === YES) {
-            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการทำรายการหรือไม่ ?', ['ใช่', 'ไม่']);
+            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
         } else {
             return await step.replaceDialog(REPEAT_IMAGES, claimInfo);
         }
