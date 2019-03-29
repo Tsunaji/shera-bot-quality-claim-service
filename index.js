@@ -8,7 +8,7 @@ const restify = require('restify');
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
 const { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState } = require('botbuilder');
-// const { BlobStorage } = require('botbuilder-azure');
+const { BlobStorage } = require('botbuilder-azure');
 
 // Import required bot configuration.
 const { BotConfiguration } = require('botframework-config');
@@ -40,7 +40,7 @@ server.listen(process.env.port || process.env.PORT || 3978, () => {
 // .bot file path
 const BOT_FILE = path.join(__dirname, (process.env.botFilePath || ''));
 
-console.log(("BOT FILE: ")+BOT_FILE)
+console.log(("BOT FILE: ") + BOT_FILE)
 
 // Read bot configuration from .bot file.
 let botConfig;
@@ -76,12 +76,12 @@ adapter.onTurnError = async (context, error) => {
 // See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
 // Create conversation and user state with in-memory storage provider.
-const memoryStorage = new MemoryStorage();
+// const memoryStorage = new MemoryStorage();
 
-// const memoryStorage = new BlobStorage({
-//     containerName: "sherabotm6s1",
-//     storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotm6s1;AccountKey=kflPkl0IC2lqF8Inq1pdMFeUjN+CyKwVpJj6ABJaNbHOenk+lvZp9+kA5yDCQwGYx6Hd3leuQsJ/ttETaUw8Vg==;EndpointSuffix=core.windows.net"
-// })
+const memoryStorage = new BlobStorage({
+    containerName: "sherabotcrmstrg",
+    storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotcrmstrg;AccountKey=EloytUy02o0+Yw2B2EhD/AkhJAM2BtnuBbEfbLyXgeXu674NqZ8lx7HtlzvSpzY7OqGQCJtMDQ15jfNyNZFYrA==;"
+})
 
 const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);

@@ -405,7 +405,7 @@ class MyBot {
                     claimInfo.subCustName = step.result;
                 }
             }
-            return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อลูกค้า ค่ะ (เจ้าของบ้าน/เจ้าของร้าน/ผู้รับเหมา)`);
+            return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อผู้ติดต่อ หรือ ผู้ใช้งาน หรือ ผู้รับเหมา ค่ะ`);
         }
     }
 
