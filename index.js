@@ -80,7 +80,7 @@ adapter.onTurnError = async (context, error) => {
 
 const memoryStorage = new BlobStorage({
     containerName: "sherabotcrmstrg",
-    storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotcrmstrg;AccountKey=EloytUy02o0+Yw2B2EhD/AkhJAM2BtnuBbEfbLyXgeXu674NqZ8lx7HtlzvSpzY7OqGQCJtMDQ15jfNyNZFYrA==;"
+    storageAccountOrConnectionString: "DefaultEndpointsProtocol=https;AccountName=sherabotcrmstrg;AccountKey=EloytUy02o0+Yw2B2EhD/AkhJAM2BtnuBbEfbLyXgeXu674NqZ8lx7HtlzvSpzY7OqGQCJtMDQ15jfNyNZFYrA==;EndpointSuffix=core.windows.net"
 })
 
 const conversationState = new ConversationState(memoryStorage);
