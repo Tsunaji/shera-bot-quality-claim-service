@@ -364,7 +364,7 @@ class MyBot {
 
     // step 1
     async promptForSapId(step) {
-        await step.context.sendActivity(`ระหว่างกระบวณการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า`);
+        await step.context.sendActivity(`ระหว่างกระบวนการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า`);
         await step.context.sendActivity(`และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
             {
