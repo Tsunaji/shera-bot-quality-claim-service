@@ -24,7 +24,8 @@ class Helpers {
             + "ขนาดผลิตภัณฑ์: " + user.size + "\n"
             + "สีผลิตภัณฑ์: " + user.color + "\n"
             + "จำนวนสินค้าที่มีปัญหา: " + user.qty + "\n"
-            + "ปัญหาที่เกิด: " + user.problem + " เกิด" + user.whenInstall;
+            + "ปัญหาที่เกิด: " + user.problem + " เกิด" + user.whenInstall + "\n"
+            + "ข้อมูลเพิ่มเติม: " + user.moreInformation;
 
         const attachmentsImages = [];
 

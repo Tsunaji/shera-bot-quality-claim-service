@@ -30,6 +30,7 @@ const REPEAT_COLOR = 'repeat_color';
 const REPEAT_QTY = 'repeat_qty';
 const REPEAT_WHEN_INSTALL = 'repeat_when_install';
 const REPEAT_PROBLEM = 'repeat_problem';
+const REPEAT_MORE_INFORMATION = 'repeat_more_information';
 const REPEAT_IMAGES = 'repeat_images';
 
 //prompt dialog
@@ -46,6 +47,7 @@ const QTY_PROMPT = 'qty_promt';
 const WHEN_INSTALL_PROMPT = 'when_install_promt';
 const PROBLEM_PROMPT = 'problem_promt';
 const IMAGES_PROMPT = 'images_prompt';
+const MORE_INFORMATION_PROMPT = 'more_information_prompt';
 const CHOICE_PROMPT = 'choice_prompt';
 
 //menu text
@@ -188,6 +190,7 @@ class MyBot {
             }
             return false;
         }));
+        this.dialogs.add(new TextPrompt(MORE_INFORMATION_PROMPT));
         this.dialogs.add(new ChoicePrompt(CHOICE_PROMPT));
         this.dialogs.add(new AttachmentPrompt(IMAGES_PROMPT));
 
@@ -205,6 +208,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -224,6 +228,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -242,6 +247,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -259,6 +265,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -275,6 +282,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -290,6 +298,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -304,6 +313,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -317,6 +327,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -329,6 +340,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -340,6 +352,7 @@ class MyBot {
             this.promptForQty.bind(this),
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -350,6 +363,7 @@ class MyBot {
         this.dialogs.add(new WaterfallDialog(REPEAT_WHEN_INSTALL, [
             this.promptForWhenInstall.bind(this),
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -359,6 +373,16 @@ class MyBot {
 
         this.dialogs.add(new WaterfallDialog(REPEAT_PROBLEM, [
             this.promptForProblem.bind(this),
+            this.promptForMoreInformation.bind(this),
+            this.promptConfirmForm.bind(this),
+            this.promptForImages.bind(this),
+            this.promptConfirmImages.bind(this),
+            this.summaryClaim.bind(this),
+            this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(REPEAT_MORE_INFORMATION, [
+            this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
             this.promptConfirmImages.bind(this),
@@ -614,16 +638,14 @@ class MyBot {
 
         let user = await this.userProfile.get(step.context, {});
 
-        if (empty(step.result)) { // update data from previous dialog
-            user = step.options;
+        if (step.result === EDIT) {
+            return await step.replaceDialog(REPEAT_COLOR, user);
         } else {
-            if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
-                return await step.replaceDialog(REPEAT_COLOR, user);
+            if (empty(step.options)) {
+                user.qty = step.result;
             } else {
-                if (empty(step.options)) { // normal step
-                    user.qty = step.result;
-                } else { // normal repeat step
-                    user = step.options;
+                user = step.options;
+                if (!empty(step.result)) {
                     user.qty = step.result;
                 }
             }
@@ -667,20 +689,45 @@ class MyBot {
             });
     }
 
-    // step 13
+    //step 13
+    async promptForMoreInformation(step) {
+
+        let user = await this.userProfile.get(step.context, {});
+
+        if (empty(step.result)) { // update data from previous dialog
+            user = step.options;
+        } else {
+            if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
+                return await step.replaceDialog(REPEAT_WHEN_INSTALL, user);
+            } else {
+                if (empty(step.options)) { // normal step
+                    user.problem = step.result;
+                } else { // normal repeat step
+                    user = step.options;
+                    user.problem = step.result;
+                }
+            }
+        }
+
+        await this.userProfile.set(step.context, user);
+
+        return await step.prompt(MORE_INFORMATION_PROMPT, `ขอทราบ ข้อมูลเพิ่มเติม ที่ท่านต้องการแจ้งค่ะ`);
+    }
+
+    // step 14
     async promptConfirmForm(step) {
 
         let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            return await step.replaceDialog(REPEAT_WHEN_INSTALL, user);
+            return await step.replaceDialog(REPEAT_PROBLEM, user);
         } else {
             if (empty(step.options)) {
-                user.problem = step.result;
+                user.moreInformation = step.result;
             } else {
                 user = step.options;
                 if (!empty(step.result)) {
-                    user.problem = step.result;
+                    user.moreInformation = step.result;
                 }
             }
 
@@ -698,11 +745,11 @@ class MyBot {
         }
     }
 
-    // step 14
+    // step 15
     async promptForImages(step) {
         if (step.result && step.result.value === NO) {
             const user = await this.userProfile.get(step.context, {});
-            return await step.replaceDialog(REPEAT_PROBLEM, user);
+            return await step.replaceDialog(REPEAT_MORE_INFORMATION, user);
         } else {
             return await step.prompt(IMAGES_PROMPT,
                 {
@@ -713,7 +760,7 @@ class MyBot {
         }
     }
 
-    // step 15
+    // step 16
     async promptConfirmImages(step) {
 
         let user = await this.userProfile.get(step.context, {});
@@ -765,7 +812,7 @@ class MyBot {
         return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
     }
 
-    // step 16
+    // step 17
     async summaryClaim(step) {
         if (step.result && step.result.value === YES) {
             return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
@@ -775,7 +822,7 @@ class MyBot {
         }
     }
 
-    // step 17
+    // step 18
     async submitClaim(step) {
         if (step.result && step.result.value === YES) {
             //send mail to callcenter

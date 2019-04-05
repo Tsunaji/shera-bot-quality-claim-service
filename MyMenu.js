@@ -272,6 +272,10 @@ class MyMenu {
                                 {
                                     "type": "TextBlock",
                                     "text": "ปัญหาที่เกิด"
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": "ข้อมูลเพิ่มเติม"
                                 }
                             ]
                         },
@@ -342,6 +346,11 @@ class MyMenu {
                                 {
                                     "type": "TextBlock",
                                     "text": user.problem + " เกิด" + user.whenInstall,
+                                    "isSubtle": true
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": user.moreInformation,
                                     "isSubtle": true
                                 }
                             ]
