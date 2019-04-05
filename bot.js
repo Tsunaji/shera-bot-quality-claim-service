@@ -65,9 +65,6 @@ const CANCEL_RESPONSE = 'ยกเลิกให้แล้วค่ะ';
 const CANCEL_NOTHING = 'ไม่มีอะไรให้ยกเลิกค่ะ';
 const TEXT_NOTHING_MATCH = "สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ";
 
-let claimInfo = {};
-let customerInfo = [];
-
 class MyBot {
 
     /**
@@ -391,23 +388,6 @@ class MyBot {
     // step 2
     async promptForSubCustName(step) {
 
-        // if (empty(step.options)) {
-        //     claimInfo.sapId = step.result;
-        // } else {
-        //     claimInfo = step.options;
-        //     if (!empty(step.result)) {
-        //         claimInfo.sapId = step.result;
-        //     }
-        // }
-
-        // await this.setCustomerDetails();
-
-        // await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + claimInfo.customerName);
-        // await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + claimInfo.customerAddress);
-
-        // const user = Array.isArray(step.options) ? step.options : await this.userProfile.get(step.context, {});
-        // let user = {};
-
         let user = await this.userProfile.get(step.context, {});
 
         if (empty(step.options)) {
@@ -439,29 +419,12 @@ class MyBot {
     // step 3
     async promptForContactName(step) {
 
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(GET_CLAIM, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.subCustName = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.subCustName = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อผู้ติดต่อ หรือ ผู้ใช้งาน หรือ ผู้รับเหมา ค่ะ`);
-        // }
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(GET_CLAIM, user);
         } else {
-
-            let user = {};
-
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.subCustName = step.result;
             } else {
                 user = step.options;
@@ -472,12 +435,6 @@ class MyBot {
 
             await this.userProfile.set(step.context, user);
 
-            // console.log("2");
-            // console.log(step.options);
-
-            // console.log("user2")
-            // console.log(user);
-
             return await step.prompt(CONTACT_NAME_PROMPT, `ขอทราบ ชื่อผู้ติดต่อ หรือ ผู้ใช้งาน หรือ ผู้รับเหมา ค่ะ`);
         }
 
@@ -485,30 +442,13 @@ class MyBot {
 
     // step 4
     async promptForPhone(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_SUB_CUST_NAME, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.contactName = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.contactName = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(PHONE_PROMPT, `ขอทราบ เบอร์ติดต่อ ค่ะ`);
-        // }
 
-        // console.log("step");
-        // console.log(await this.userProfile.get(step.context, {}));
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_SUB_CUST_NAME, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.contactName = step.result;
             } else {
                 user = step.options;
@@ -525,27 +465,13 @@ class MyBot {
 
     // step 5
     async promptForProblemAddress(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_CONTACT_NAME, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.phone = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.phone = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(PROBLEM_ADDRESS_PROMPT, `ขอทราบ ที่อยู่ร้าน ที่เกิดปัญหาค่ะ`);
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_CONTACT_NAME, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.phone = step.result;
             } else {
                 user = step.options;
@@ -562,31 +488,13 @@ class MyBot {
 
     // step 6
     async promptForDivision(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_PHONE, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.problemAddress = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.problemAddress = step.result;
-        //         }
-        //     }
-        //     await step.context.sendActivity({ attachments: [menu.divisionMenu()] });
-        //     return await step.prompt(DIVISION_PROMPT,
-        //         {
-        //             retryPrompt: 'ขอโทษค่ะ กรุณาเลือก Division ที่มีในรายการค่ะ'
-        //         });
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_PHONE, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.problemAddress = step.result;
             } else {
                 user = step.options;
@@ -607,31 +515,13 @@ class MyBot {
 
     // step 7
     async promptForProduct(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_PROBLEM_ADDRESS, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.division = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.division = step.result;
-        //         }
-        //     }
-        //     await step.context.sendActivity({ attachments: [menu.productsMenu(claimInfo.division)] });
-        //     return await step.prompt(PRODUCT_PROMPT,
-        //         {
-        //             retryPrompt: 'ขอโทษค่ะ กรุณาเลือกผลิตภัณฑ์ที่มีในรายการค่ะ'
-        //         });
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_PROBLEM_ADDRESS, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.division = step.result;
             } else {
                 user = step.options;
@@ -652,27 +542,13 @@ class MyBot {
 
     // step 8
     async promptForSize(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_DIVISON, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.product = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.product = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(SIZE_PROMPT, `ขอทราบ ขนาดของสินค้า ที่ต้องการจะเคลมค่ะ`);
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_DIVISON, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.product = step.result;
             } else {
                 user = step.options;
@@ -689,27 +565,13 @@ class MyBot {
 
     // step 9
     async promptForColor(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_PRODUCT, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.size = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.size = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(COLOR_PROMPT, `ขอทราบ สีและลายของสินค้า ที่ต้องการจะเคลมค่ะ`);
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_PRODUCT, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.size = step.result;
             } else {
                 user = step.options;
@@ -726,27 +588,13 @@ class MyBot {
 
     // step 10
     async promptForQty(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_SIZE, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.color = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.color = step.result;
-        //         }
-        //     }
-        //     return await step.prompt(QTY_PROMPT, `ขอทราบ จำนวนสินค้า ที่ต้องการจะเคลมค่ะ`);
-        // }
+
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_SIZE, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.color = step.result;
             } else {
                 user = step.options;
@@ -763,37 +611,16 @@ class MyBot {
 
     // step 11
     async promptForWhenInstall(step) {
-        // if (empty(step.result)) { // update data from previous dialog
-        //     claimInfo = step.options;
-        // } else {
-        //     console.log(step.result);
-        //     if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
-        //         return await step.replaceDialog(REPEAT_COLOR, claimInfo);
-        //     } else {
-        //         if (empty(step.options)) { // normal step
-        //             claimInfo.qty = step.result;
-        //         } else { // normal repeat step
-        //             claimInfo = step.options;
-        //             claimInfo.qty = step.result;
-        //         }
-        //     }
-        // }
-        // return await step.prompt(WHEN_INSTALL_PROMPT, {
-        //     prompt: 'กรุณาเลือกช่วงที่ผลิตภัณฑ์เกิดปัญหาค่ะ',
-        //     retryPrompt: 'ขอโทษค่ะ กรุณาเลือกจากตัวเลือกที่มีให้ค่ะ',
-        //     choices: ['ก่อนติดตั้ง', 'หลังติดตั้ง', 'แก้ไข']
-        // });
 
-        let user = {};
+        let user = await this.userProfile.get(step.context, {});
+
         if (empty(step.result)) { // update data from previous dialog
             user = step.options;
         } else {
             if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
-                user = await this.userProfile.get(step.context, {});
                 return await step.replaceDialog(REPEAT_COLOR, user);
             } else {
                 if (empty(step.options)) { // normal step
-                    user = await this.userProfile.get(step.context, {});
                     user.qty = step.result;
                 } else { // normal repeat step
                     user = step.options;
@@ -813,37 +640,16 @@ class MyBot {
 
     // step 12
     async promptForProblem(step) {
-        // if (empty(step.result)) { // update data from previous dialog
-        //     claimInfo = step.options;
-        // } else {
-        //     if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
-        //         return await step.replaceDialog(REPEAT_QTY, claimInfo);
-        //     } else {
-        //         if (empty(step.options)) { // normal step
-        //             claimInfo.whenInstall = step.result.value;
-        //         } else { // normal repeat step
-        //             claimInfo = step.options;
-        //             claimInfo.whenInstall = step.result.value;
-        //         }
-        //     }
-        // }
 
-        // await step.context.sendActivity({ attachments: [menu.problemMenu(claimInfo.division, claimInfo.whenInstall)] });
-        // return await step.prompt(PROBLEM_PROMPT,
-        //     {
-        //         retryPrompt: 'ขอโทษค่ะ กรุณาเลือกปัญหาที่มีในรายการค่ะ'
-        //     });
+        let user = await this.userProfile.get(step.context, {});
 
-        let user = {};
         if (empty(step.result)) { // update data from previous dialog
             user = step.options;
         } else {
             if (step.result === EDIT || step.result.value === EDIT) { // edit previous step
-                user = await this.userProfile.get(step.context, {});
                 return await step.replaceDialog(REPEAT_QTY, user);
             } else {
                 if (empty(step.options)) { // normal step
-                    user = await this.userProfile.get(step.context, {});
                     user.whenInstall = step.result.value;
                 } else { // normal repeat step
                     user = step.options;
@@ -863,36 +669,13 @@ class MyBot {
 
     // step 13
     async promptConfirmForm(step) {
-        // if (step.result === EDIT) {
-        //     return await step.replaceDialog(REPEAT_WHEN_INSTALL, claimInfo);
-        // } else {
-        //     if (empty(step.options)) {
-        //         claimInfo.problem = step.result;
-        //     } else {
-        //         claimInfo = step.options;
-        //         if (!empty(step.result)) {
-        //             claimInfo.problem = step.result;
-        //         }
-        //     }
 
-        //     //get informer name
-        //     claimInfo.name = step.context.activity.from.name;
-
-        //     await step.context.sendActivity({
-        //         text: 'สรุปรายการแจ้งเคลมคุณภาพ',
-        //         attachments: [CardFactory.adaptiveCard(menu.summaryMenu(claimInfo))]
-        //     });
-
-        //     return await step.prompt(CHOICE_PROMPT, 'ยืมยันข้อมูลฟอร์มหรือไม่ ?', ['ใช่', 'ไม่']);
-        // }
+        let user = await this.userProfile.get(step.context, {});
 
         if (step.result === EDIT) {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_WHEN_INSTALL, user);
         } else {
-            let user = {};
             if (empty(step.options)) {
-                user = await this.userProfile.get(step.context, {});
                 user.problem = step.result;
             } else {
                 user = step.options;
@@ -932,53 +715,10 @@ class MyBot {
 
     // step 15
     async promptConfirmImages(step) {
-        // if (empty(step.options)) {
-        //     claimInfo.images = step.result;
-        // } else {
-        //     claimInfo = step.options;
-        //     if (!empty(step.result)) {
-        //         claimInfo.images = step.result;
-        //     }
-        // }
 
-        // const attachmentsImages = [];
+        let user = await this.userProfile.get(step.context, {});
 
-        // if (claimInfo.images.length > 0) {
-
-        //     await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
-
-        //     for (var i in claimInfo.images) {
-        //         if (claimInfo.images[i].contentType.match("image")) {
-        //             if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
-
-        //                 const contentUrl = claimInfo.images[i].contentUrl;
-        //                 const imageData = await services.getAuthenImage(step.context, contentUrl);
-        //                 const base64Image = Buffer.from(imageData).toString('base64');
-
-        //                 var obj = {};
-        //                 obj.contentType = 'image/png';
-        //                 obj.contentUrl = `data:image/png;base64,${base64Image}`
-        //                 attachmentsImages.push(obj);
-        //             } else {
-        //                 var obj = {};
-        //                 obj.contentType = claimInfo.images[i].contentType;
-        //                 obj.contentUrl = claimInfo.images[i].contentUrl;
-        //                 attachmentsImages.push(obj);
-        //             }
-        //         }
-        //     }
-        //     claimInfo.images = attachmentsImages;
-        // }
-
-        // await step.context.sendActivity({
-        //     attachments: claimInfo.images
-        // });
-
-        // return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
-
-        let user = {};
         if (empty(step.options)) {
-            user = await this.userProfile.get(step.context, {});
             user.images = step.result;
         } else {
             user = step.options;
@@ -1037,18 +777,6 @@ class MyBot {
 
     // step 17
     async submitClaim(step) {
-        // if (step.result && step.result.value === YES) {
-        //     //send mail to callcenter
-        //     const helpers = new Helpers();
-        //     helpers.sendMail(claimInfo);
-
-        //     await step.context.sendActivity(`เราได้ส่งข้อมูลการแจ้งเคลมคุณภาพให้แล้วค่ะ`);
-        //     await step.context.sendActivity({ attachments: [menu.mainMenu()] });
-        // } else {
-        //     await step.context.sendActivity(`ยกเลิกการแจ้งเคลมให้แล้วค่ะ`);
-        //     await step.context.sendActivity({ attachments: [menu.mainMenu()] });
-        // }
-
         if (step.result && step.result.value === YES) {
             //send mail to callcenter
             const helpers = new Helpers();
@@ -1062,13 +790,6 @@ class MyBot {
             await step.context.sendActivity({ attachments: [menu.mainMenu()] });
         }
         return await step.endDialog();
-    }
-
-    async setCustomerDetails() {
-        const customer = customerInfo[0];
-        claimInfo.sapId = customer.KUNNR;
-        claimInfo.customerName = customer.TITLE_MEDI + " " + customer.NAME1;
-        claimInfo.customerAddress = customer.FULLADR;
     }
 
     /**
