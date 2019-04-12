@@ -850,6 +850,10 @@ class MyBot {
 
             console.log(turnContext);
 
+            console.log("tenant");
+
+            console.log(turnContext.activity.channelData.tenant);
+
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
 
