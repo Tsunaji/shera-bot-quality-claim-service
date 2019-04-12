@@ -11,7 +11,7 @@ class Helpers {
         const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
         const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
-        const mailCC = user.email === undefined ? user.email : '';
+        const mailCC = user.email !== undefined ? user.email : '';
 
         const message = "ชื่อผู้แจ้ง : " + user.name + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"

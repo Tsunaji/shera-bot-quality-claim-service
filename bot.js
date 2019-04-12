@@ -743,8 +743,6 @@ class MyBot {
 
             await this.userProfile.set(step.context, user);
 
-            console.log(user);
-
             await step.context.sendActivity({
                 text: 'สรุปรายการแจ้งเคลมคุณภาพ',
                 attachments: [CardFactory.adaptiveCard(menu.summaryMenu(user))]
@@ -856,10 +854,6 @@ class MyBot {
 
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
-
-            const graphUser = await services.getGraphUser(turnContext);
-
-            console.log(graphUser.mail);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
