@@ -10,14 +10,14 @@ class Services {
 
     async getGraphUser(context) {
 
-        // const host = context.adapter.credentials.oAuthEndpoint;
+        const host = 'https://login.microsoftonline.com/' + context.activity.channelData.tenant + '/oauth2/v2.0/token';
 
-        // const data = {
-        //     grant_type: 'client_credentials',
-        //     client_id: context.adapter.credentials.appId,
-        //     client_secret: context.adapter.credentials.appPassword,
-        //     scope: context.adapter.credentials.oAuthScope,
-        // };
+        const data = {
+            grant_type: 'client_credentials',
+            client_id: context.adapter.credentials.appId,
+            client_secret: context.adapter.credentials.appPassword,
+            scope: 'https://graph.microsoft.com/.default',
+        };
 
         //get access token
         const token = await axios.post(host, querystring.stringify(data))
@@ -30,14 +30,15 @@ class Services {
 
         //get user data from Microsoft Graph
         const AuthStr = 'Bearer '.concat(token);
-        return await axios.get(url, { headers: { Authorization: AuthStr, contentType: 'application/json' }, responseType: 'arraybuffer' })
+        const url = 'https://graph.microsoft.com/v1.0/users/' + context.activity.from.aadObjectId;
+
+        return await axios.get(url, { headers: { Authorization: AuthStr, host: 'graph.microsoft.com', contentType: 'application/json' } })
             .then(response => {
                 return response.data;
             })
             .catch((error) => {
                 console.log('error ' + error);
             });
-
     }
 
     async getAuthenImage(context, url) {
