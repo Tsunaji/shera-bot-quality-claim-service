@@ -731,8 +731,15 @@ class MyBot {
                 }
             }
 
-            //get informer name
+            // get informer name
             user.name = step.context.activity.from.name;
+
+            // only channel Microsoft Teams
+            if (step.context.activity.channelId === 'msteams') {
+                // get Microsoft Graph user data
+                const graphUser = await services.getGraphUser(step.context);
+                user.email = graphUser.mail;
+            }
 
             await this.userProfile.set(step.context, user);
 
@@ -847,16 +854,6 @@ class MyBot {
 
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
-
-            const user = await services.getGraphUser(turnContext);
-
-            console.log(user);
-
-            // console.log(turnContext);
-
-            // console.log("tenant");
-
-            // console.log(turnContext.activity.channelData.tenant);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
