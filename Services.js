@@ -10,7 +10,7 @@ class Services {
 
     async getGraphUser(context) {
 
-        const host = 'https://login.microsoftonline.com/' + context.activity.channelData.tenant + '/oauth2/v2.0/token';
+        const host = 'https://login.microsoftonline.com/' + context.activity.channelData.tenant.id + '/oauth2/v2.0/token';
 
         console.log("host: " + host);
 
