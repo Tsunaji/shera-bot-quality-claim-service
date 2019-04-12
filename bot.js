@@ -857,7 +857,7 @@ class MyBot {
 
             const graphUser = await services.getGraphUser(step.context);
 
-            console.log(graphUser.mail);
+            console.log(graphUser);
 
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
