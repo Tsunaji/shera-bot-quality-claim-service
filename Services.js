@@ -12,6 +12,8 @@ class Services {
 
         const host = 'https://login.microsoftonline.com/' + context.activity.channelData.tenant + '/oauth2/v2.0/token';
 
+        console.log("host: " + host);
+
         const data = {
             grant_type: 'client_credentials',
             client_id: context.adapter.credentials.appId,
@@ -31,6 +33,8 @@ class Services {
         //get user data from Microsoft Graph
         const AuthStr = 'Bearer '.concat(token);
         const url = 'https://graph.microsoft.com/v1.0/users/' + context.activity.from.aadObjectId;
+
+        console.log("url: " + url)
 
         return await axios.get(url, { headers: { Authorization: AuthStr, host: 'graph.microsoft.com', contentType: 'application/json' } })
             .then(response => {
