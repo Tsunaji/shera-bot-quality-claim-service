@@ -848,7 +848,7 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            const user = await service.getGraphUser(turnContext);
+            const user = await services.getGraphUser(turnContext);
 
             console.log(user);
 
