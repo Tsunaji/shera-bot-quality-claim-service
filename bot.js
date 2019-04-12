@@ -743,6 +743,8 @@ class MyBot {
 
             await this.userProfile.set(step.context, user);
 
+            console.log(user);
+
             await step.context.sendActivity({
                 text: 'สรุปรายการแจ้งเคลมคุณภาพ',
                 attachments: [CardFactory.adaptiveCard(menu.summaryMenu(user))]
