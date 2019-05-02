@@ -58,7 +58,7 @@ class Services {
                 return response.data.access_token;
             })
             .catch((error) => {
-                console.log('error ' + error);
+                console.log('error get access token: ' + error);
             });
 
         //get binary image
@@ -68,7 +68,7 @@ class Services {
                 return response.data;
             })
             .catch((error) => {
-                console.log('error ' + error);
+                console.log('error get binary image: ' + error);
             });
     }
 
