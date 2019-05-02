@@ -858,6 +858,8 @@ class MyBot {
             // Create a dialog context object.
             const dc = await this.dialogs.createContext(turnContext);
 
+            console.log(turnContext.activity);
+
             const utterance = (turnContext.activity.text || '').trim().toLowerCase();
             console.log("utterance = " + utterance);
 
