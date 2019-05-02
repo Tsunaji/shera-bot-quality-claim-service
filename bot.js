@@ -793,6 +793,7 @@ class MyBot {
                         
                         // prepare contentUrl
                         const tempContentUrl = user.images[i].contentUrl.substr(0, user.images[i].contentUrl.lastIndexOf("views") + 1) + '\origunal';
+                        console.log("TEMP: "+tempContentUrl);
                         user.images[i].contentUrl = tempContentUrl;
 
                         const contentUrl = user.images[i].contentUrl;
