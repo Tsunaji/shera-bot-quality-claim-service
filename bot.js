@@ -792,7 +792,7 @@ class MyBot {
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
                         
                         // prepare contentUrl
-                        const tempContentUrl = user.images[i].contentUrl.substr(0, user.images[i].contentUrl.lastIndexOf("views") + 6) + '\origunal';
+                        const tempContentUrl = user.images[i].contentUrl.substr(0, user.images[i].contentUrl.lastIndexOf("views") + 6) + '\original';
                         console.log("TEMP: "+tempContentUrl);
                         user.images[i].contentUrl = tempContentUrl;
 
