@@ -789,13 +789,14 @@ class MyBot {
             console.log(user.images);
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
-                    console.log("1");
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
-                        console.log("2");
+                        
+                        // prepare contentUrl
+                        const tempContentUrl = user.images[i].contentUrl.substr(0, t.lastIndexOf("views") + 1) + '\origunal';
+                        user.images[i].contentUrl = tempContentUrl;
+
                         const contentUrl = user.images[i].contentUrl;
-                        console.log("3");
                         const imageData = await services.getAuthenImage(step.context, contentUrl);
-                        console.log("4");
                         const base64Image = Buffer.from(imageData).toString('base64');
 
                         var obj = {};
