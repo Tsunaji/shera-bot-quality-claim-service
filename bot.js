@@ -860,7 +860,7 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            if (turnContext.activity.channelId != 'teams') {
+            if (turnContext.activity.channelId !== 'teams') {
                 console.log(turnContext.activity.channelId);
 
                 // Create a dialog context object.
