@@ -790,10 +790,10 @@ class MyBot {
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
-                        
+
                         // prepare contentUrl
                         const tempContentUrl = user.images[i].contentUrl.substr(0, user.images[i].contentUrl.lastIndexOf("views") + 6) + '\original';
-                        console.log("TEMP: "+tempContentUrl);
+                        console.log("TEMP: " + tempContentUrl);
                         user.images[i].contentUrl = tempContentUrl;
 
                         const contentUrl = user.images[i].contentUrl;
@@ -860,50 +860,57 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            // Create a dialog context object.
-            const dc = await this.dialogs.createContext(turnContext);
+            if (turnContext.activity.channelId != 'teams') {
+                console.log(turnContext.activity.channelId);
 
-            const utterance = (turnContext.activity.text || '').trim().toLowerCase();
-            console.log("utterance = " + utterance);
+                // Create a dialog context object.
+                const dc = await this.dialogs.createContext(turnContext);
 
-            if (utterance === CANCEL) {
-                if (dc.activeDialog) {
-                    await dc.cancelAllDialogs();
-                    await dc.context.sendActivity(CANCEL_RESPONSE);
+                const utterance = (turnContext.activity.text || '').trim().toLowerCase();
+                console.log("utterance = " + utterance);
+
+                if (utterance === CANCEL) {
+                    if (dc.activeDialog) {
+                        await dc.cancelAllDialogs();
+                        await dc.context.sendActivity(CANCEL_RESPONSE);
+                        await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                    } else {
+                        await dc.context.sendActivity(CANCEL_NOTHING);
+                        await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                    }
+                } else if (utterance === MAIN_MENU) {
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
-                } else {
-                    await dc.context.sendActivity(CANCEL_NOTHING);
-                    await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                } else if (utterance === CALL_CENTER) {
+                    await dc.context.sendActivity(CALL_CENTER_RESPONSE);
+                } else if (utterance === QUALITY_CLAIM) {
+                    if (dc.activeDialog) {
+                        await dc.cancelAllDialogs();
+                        console.log("Cancel current dialog and start new claim.")
+                    }
+                    await dc.beginDialog(GET_CLAIM);
                 }
-            } else if (utterance === MAIN_MENU) {
-                await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
-            } else if (utterance === CALL_CENTER) {
-                await dc.context.sendActivity(CALL_CENTER_RESPONSE);
-            } else if (utterance === QUALITY_CLAIM) {
-                if (dc.activeDialog) {
-                    await dc.cancelAllDialogs();
-                    console.log("Cancel current dialog and start new claim.")
+
+                // Start the sample dialog in response to any other input.
+                if (!turnContext.responded) {
+                    if (dc.activeDialog) {
+                        // If the bot has not yet responded, continue processing the current dialog.
+                        await dc.continueDialog();
+                    }
+                    else {
+                        await dc.context.sendActivity(TEXT_NOTHING_MATCH);
+                        await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                    }
                 }
-                await dc.beginDialog(GET_CLAIM);
+
+                // Save state changes
+                await this.userState.saveChanges(turnContext);
+
+                // End this turn by saving changes to the conversation state.
+                await this.conversationState.saveChanges(turnContext);
+            } else {
+                await turnContext.sendActivity(`ระบบอยู่ในระหว่างการปรับปรุง กรุณาแจ้งเคลมไปที่ Line ของ Callcenter หรือโทร 02-289-9888 ขออภัยในความไม่สะดวก`);
             }
 
-            // Start the sample dialog in response to any other input.
-            if (!turnContext.responded) {
-                if (dc.activeDialog) {
-                    // If the bot has not yet responded, continue processing the current dialog.
-                    await dc.continueDialog();
-                }
-                else {
-                    await dc.context.sendActivity(TEXT_NOTHING_MATCH);
-                    await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
-                }
-            }
-
-            // Save state changes
-            await this.userState.saveChanges(turnContext);
-
-            // End this turn by saving changes to the conversation state.
-            await this.conversationState.saveChanges(turnContext);
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {
             // Send greeting when users are added to the conversation.
             await this.sendWelcomeMessage(turnContext);
