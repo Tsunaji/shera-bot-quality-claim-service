@@ -199,10 +199,17 @@ class MyMenu {
             { type: ActionTypes.ImBack, title: 'ติดต่อเจ้าหน้าที่', value: 'ติดต่อเจ้าหน้าที่' }
         ];
 
+        // return CardFactory.heroCard(
+        //     'SHERA CRM',
+        //     'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
+        //     [contentUrl],
+        //     buttons
+        // );
+
         return CardFactory.heroCard(
             'SHERA CRM',
             'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
-            [contentUrl],
+            '',
             buttons
         );
     }
