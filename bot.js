@@ -906,9 +906,7 @@ class MyBot {
         user.email = step.result;
 
         await this.userProfile.set(step.context, user);
-        await step.context.sendActivity(`บันทึกข้อมูลโปรไฟล์ให้แล้วค่ะ`);
-        await step.context.sendActivity(`ชื่อผู้แจ้งเคลม: ${user.name}`);
-        await step.context.sendActivity(`อีเมลผู้แจ้งเคลม: ${user.email}`);
+        await step.context.sendActivity(`บันทึกข้อมูลโปรไฟล์ให้แล้วค่ะ ชื่อผู้แจ้งเคลม: ${user.name} อีเมลผู้แจ้งเคลม: ${user.email}`);
         await step.endDialog();
         return await step.context.sendActivity({ attachments: [menu.mainMenu()] });
     }
@@ -947,10 +945,7 @@ class MyBot {
                     await dc.context.sendActivity(CALL_CENTER_RESPONSE);
                 } else if (utterance === UPDATE_PROFILE) {
                     if (user.name && user.email) {
-                        await dc.context.sendActivity(`ท่านมีโปรไฟล์อยู่แล้ว`);
-                        await dc.context.sendActivity(`ชื่อ: ${user.name}`);
-                        await dc.context.sendActivity(`อีเมล: ${user.email}`);
-                        await dc.context.sendActivity(`ถ้าหากท่านไม่ต้องการอัพเดทโปรไฟล์ สามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการอัพเดทโปรไฟล์`);
+                        await dc.context.sendActivity(`ท่านมีโปรไฟล์อยู่แล้ว ชื่อ: ${user.name} อีเมล: ${user.email} ถ้าหากท่านไม่ต้องการอัพเดทโปรไฟล์ สามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการอัพเดทโปรไฟล์`);
                     }
                     await dc.beginDialog(GET_PROFILE);
                 } else if (utterance === QUALITY_CLAIM) {
