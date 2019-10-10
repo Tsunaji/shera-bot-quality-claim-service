@@ -436,8 +436,7 @@ class MyBot {
 
     // step 1
     async promptForSapId(step) {
-        await step.context.sendActivity(`ระหว่างกระบวนการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า`);
-        await step.context.sendActivity(`และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
+        await step.context.sendActivity(`ระหว่างกระบวนการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
             {
                 prompt: 'ขอทราบ รหัสลูกค้าใน SAP ของร้านค้าหลักค่ะ',
@@ -470,9 +469,7 @@ class MyBot {
 
         await this.userProfile.set(step.context, user);
 
-        await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + user.customerName);
-        await step.context.sendActivity(`ที่อยู่ของร้านค้าหลักคือ ` + user.customerAddress);
-
+        await step.context.sendActivity(`ชื่อร้านค้าหลักคือ ` + user.customerName + `, ที่อยู่ของร้านค้าหลักคือ ` + user.customerAddress);
         return await step.prompt(SUB_CUST_NAME_PROMPT, `ขอทราบ ชื่อร้านค้าย่อย ค่ะ`);
     }
 
