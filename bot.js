@@ -19,6 +19,7 @@ const USER_PROFILE_PROPERTY = 'userProfile';
 
 //waterfall flow
 const GET_CLAIM = 'get_claim';
+const GET_PROFILE = 'get_profile';
 const REPEAT_SUB_CUST_NAME = 'repeat_sub_cust_name';
 const REPEAT_CONTACT_NAME = 'repeat_contact_name';
 const REPEAT_PHONE = 'repeat_phone';
@@ -48,12 +49,15 @@ const WHEN_INSTALL_PROMPT = 'when_install_promt';
 const PROBLEM_PROMPT = 'problem_promt';
 const IMAGES_PROMPT = 'images_prompt';
 const MORE_INFORMATION_PROMPT = 'more_information_prompt';
+const USER_NAME_PROMPT = 'user_name';
+const USER_EMAIL_PROMPT = 'user_email';
 const CHOICE_PROMPT = 'choice_prompt';
 
 //menu text
 const MAIN_MENU = "เมนูหลัก";
 const CALL_CENTER = "ติดต่อเจ้าหน้าที่";
 const QUALITY_CLAIM = "เคลมคุณภาพ"
+const UPDATE_PROFILE = "อัพเดทโปรไฟล์";
 const CANCEL = 'ยกเลิก';
 const EDIT = 'แก้ไข';
 const YES = 'ใช่';
@@ -66,6 +70,9 @@ const CALL_CENTER_RESPONSE = "ติดต่อที่เบอร์โท�
 const CANCEL_RESPONSE = 'ยกเลิกให้แล้วค่ะ';
 const CANCEL_NOTHING = 'ไม่มีอะไรให้ยกเลิกค่ะ';
 const TEXT_NOTHING_MATCH = "สวัสดีค่ะ มีอะไรให้ช่วยเหลือ ลองเลือกในเมนูข้างล่างได้เลยค่ะ";
+const ADD_PROFILE_BEFORE_CLAIM = "สวัสดีค่ะ กรุณาบันทึกโปรไฟล์ ชื่อและอีเมล ก่อนการแจ้งเคลมตามขั้นตอนด้วยค่ะ";
+const MSTEAMS_RESPONSE = `แจ้งเคลมผ่าน Microsoft Teams อยู่ในระหว่างการปรับปรุง` +
+    ` กรุณาแจ้งเคลมไปที่ Line ของ Callcenter หรือโทร 02-289-9888 ขออภัยในความไม่สะดวก`;
 
 class MyBot {
 
@@ -190,6 +197,8 @@ class MyBot {
             }
             return false;
         }));
+        this.dialogs.add(new TextPrompt(USER_NAME_PROMPT));
+        this.dialogs.add(new TextPrompt(USER_EMAIL_PROMPT));
         this.dialogs.add(new TextPrompt(MORE_INFORMATION_PROMPT));
         this.dialogs.add(new ChoicePrompt(CHOICE_PROMPT));
         this.dialogs.add(new AttachmentPrompt(IMAGES_PROMPT));
@@ -214,6 +223,12 @@ class MyBot {
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
+        ]));
+
+        this.dialogs.add(new WaterfallDialog(GET_PROFILE, [
+            this.promptForUserName.bind(this),
+            this.promptForUserEmail.bind(this),
+            this.promptForSummaryProfile.bind(this),
         ]));
 
         this.dialogs.add(new WaterfallDialog(REPEAT_SUB_CUST_NAME, [
@@ -380,6 +395,27 @@ class MyBot {
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
         ]));
+
+        // this.dialogs.add(new WaterfallDialog(REPEAT_USER_NAME, [
+        //     this.promptForUserName.bind(this),
+        //     this.promptForUserEmail.bind(this),
+        //     this.promptForMoreInformation.bind(this),
+        //     this.promptConfirmForm.bind(this),
+        //     this.promptForImages.bind(this),
+        //     this.promptConfirmImages.bind(this),
+        //     this.summaryClaim.bind(this),
+        //     this.submitClaim.bind(this)
+        // ]));
+
+        // this.dialogs.add(new WaterfallDialog(REPEAT_USER_EMAIL, [
+        //     this.promptForUserEmail.bind(this),
+        //     this.promptForMoreInformation.bind(this),
+        //     this.promptConfirmForm.bind(this),
+        //     this.promptForImages.bind(this),
+        //     this.promptConfirmImages.bind(this),
+        //     this.summaryClaim.bind(this),
+        //     this.submitClaim.bind(this)
+        // ]));
 
         this.dialogs.add(new WaterfallDialog(REPEAT_MORE_INFORMATION, [
             this.promptForMoreInformation.bind(this),
@@ -691,7 +727,6 @@ class MyBot {
 
     //step 13
     async promptForMoreInformation(step) {
-
         let user = await this.userProfile.get(step.context, {});
 
         if (empty(step.result)) { // update data from previous dialog
@@ -710,6 +745,7 @@ class MyBot {
         }
 
         await this.userProfile.set(step.context, user);
+
 
         return await step.prompt(MORE_INFORMATION_PROMPT, `ขอทราบ ข้อมูลเพิ่มเติม ที่ท่านต้องการแจ้งค่ะ`);
     }
@@ -731,14 +767,14 @@ class MyBot {
                 }
             }
 
-            // get informer name
-            user.name = step.context.activity.from.name;
-
             // only channel Microsoft Teams
             if (step.context.activity.channelId === 'msteams') {
                 // get Microsoft Graph user data
                 const graphUser = await services.getGraphUser(step.context);
                 user.email = graphUser.mail;
+
+                // get informer name
+                user.name = step.context.activity.from.name;
             }
 
             await this.userProfile.set(step.context, user);
@@ -851,6 +887,32 @@ class MyBot {
         return await step.endDialog();
     }
 
+    async promptForUserName(step) {
+        return await step.prompt(USER_NAME_PROMPT, `ขอทราบ ชื่อ-นามสกุล ผู้แจ้งเคลมด้วยค่ะ (ภาษาอังกฤษ ตัวอย่าง John Mayer)`);
+    }
+
+    async promptForUserEmail(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        user.name = step.result;
+
+        await this.userProfile.set(step.context, user);
+        return await step.prompt(USER_EMAIL_PROMPT, `ขอทราบ อีเมล ผู้แจ้งเคลมด้วยค่ะ (ตัวอย่าง it_shera@shera.com)`);
+    }
+
+    async promptForSummaryProfile(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        user.email = step.result;
+
+        await this.userProfile.set(step.context, user);
+        await step.context.sendActivity(`บันทึกข้อมูลโปรไฟล์ให้แล้วค่ะ`);
+        await step.context.sendActivity(`ชื่อผู้แจ้งเคลม: ${user.name}`);
+        await step.context.sendActivity(`อีเมลผู้แจ้งเคลม: ${user.email}`);
+        await step.endDialog();
+        return await step.context.sendActivity({ attachments: [menu.mainMenu()] });
+    }
+
     /**
      *
      * @param {TurnContext} turnContext turn context object.
@@ -860,10 +922,9 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            console.log('channel: '+turnContext.activity.channelId);
-
             if (turnContext.activity.channelId !== 'msteams') {
-                console.log(turnContext.activity.channelId);
+
+                let user = await this.userProfile.get(turnContext, {});
 
                 // Create a dialog context object.
                 const dc = await this.dialogs.createContext(turnContext);
@@ -884,12 +945,25 @@ class MyBot {
                     await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
                 } else if (utterance === CALL_CENTER) {
                     await dc.context.sendActivity(CALL_CENTER_RESPONSE);
+                } else if (utterance === UPDATE_PROFILE) {
+                    if (user.name && user.email) {
+                        await dc.context.sendActivity(`ท่านมีโปรไฟล์อยู่แล้ว`);
+                        await dc.context.sendActivity(`ชื่อ: ${user.name}`);
+                        await dc.context.sendActivity(`อีเมล: ${user.email}`);
+                        await dc.context.sendActivity(`ถ้าหากท่านไม่ต้องการอัพเดทโปรไฟล์ สามารถพิมพ์ "ยกเลิก" เพื่อยกเลิกการอัพเดทโปรไฟล์`);
+                    }
+                    await dc.beginDialog(GET_PROFILE);
                 } else if (utterance === QUALITY_CLAIM) {
                     if (dc.activeDialog) {
                         await dc.cancelAllDialogs();
                         console.log("Cancel current dialog and start new claim.")
                     }
-                    await dc.beginDialog(GET_CLAIM);
+                    if (user.name && user.email) {
+                        await dc.beginDialog(GET_CLAIM);
+                    } else {
+                        await dc.context.sendActivity(ADD_PROFILE_BEFORE_CLAIM);
+                        await dc.beginDialog(GET_PROFILE);
+                    }
                 }
 
                 // Start the sample dialog in response to any other input.
@@ -899,8 +973,12 @@ class MyBot {
                         await dc.continueDialog();
                     }
                     else {
-                        await dc.context.sendActivity(TEXT_NOTHING_MATCH);
-                        await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                        if (user.name && user.email) {
+                            await dc.context.sendActivity(TEXT_NOTHING_MATCH);
+                            await dc.context.sendActivity({ attachments: [menu.mainMenu()] });
+                        } else { //get name & email first
+                            await dc.beginDialog(GET_PROFILE);
+                        }
                     }
                 }
 
@@ -909,8 +987,9 @@ class MyBot {
 
                 // End this turn by saving changes to the conversation state.
                 await this.conversationState.saveChanges(turnContext);
+
             } else {
-                await turnContext.sendActivity(`ระบบอยู่ในระหว่างการปรับปรุง กรุณาแจ้งเคลมไปที่ Line ของ Callcenter หรือโทร 02-289-9888 ขออภัยในความไม่สะดวก`);
+                await turnContext.sendActivity(MSTEAMS_RESPONSE);
             }
 
         } else if (turnContext.activity.type === ActivityTypes.ConversationUpdate) {

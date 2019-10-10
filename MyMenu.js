@@ -196,7 +196,8 @@ class MyMenu {
 
         const buttons = [
             { type: ActionTypes.ImBack, title: 'เคลมคุณภาพ', value: 'เคลมคุณภาพ' },
-            { type: ActionTypes.ImBack, title: 'ติดต่อเจ้าหน้าที่', value: 'ติดต่อเจ้าหน้าที่' }
+            { type: ActionTypes.ImBack, title: 'ติดต่อเจ้าหน้าที่', value: 'ติดต่อเจ้าหน้าที่' },
+            { type: ActionTypes.ImBack, title: 'อัพเดทโปรไฟล์', value: 'อัพเดทโปรไฟล์' }
         ];
 
         // return CardFactory.heroCard(
