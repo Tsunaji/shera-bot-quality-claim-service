@@ -14,6 +14,7 @@ class Helpers {
         const mailCC = user.email !== undefined ? user.email : '';
 
         const message = "ชื่อผู้แจ้ง: " + user.name + "\n"
+            + "อีเมลผู้แจ้ง: " + user.email + "\n"
             + "รหัสร้านค้าหลัก: " + user.email + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"
             + "ชื่อร้านค้าหลัก: " + user.customerName + "\n"

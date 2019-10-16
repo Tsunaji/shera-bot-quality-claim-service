@@ -235,6 +235,10 @@ class MyMenu {
                                 },
                                 {
                                     "type": "TextBlock",
+                                    "text": "อีเมลผู้แจ้ง"
+                                },
+                                {
+                                    "type": "TextBlock",
                                     "text": "รหัสร้านค้าหลัก"
                                 },
                                 {
@@ -294,6 +298,11 @@ class MyMenu {
                                 {
                                     "type": "TextBlock",
                                     "text": user.name,
+                                    "isSubtle": true
+                                },
+                                {
+                                    "type": "TextBlock",
+                                    "text": user.email,
                                     "isSubtle": true
                                 },
                                 {

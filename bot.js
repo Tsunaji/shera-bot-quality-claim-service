@@ -885,7 +885,7 @@ class MyBot {
     }
 
     async promptForUserName(step) {
-        return await step.prompt(USER_NAME_PROMPT, `ขอทราบ ชื่อ-นามสกุล ผู้แจ้งเคลมด้วยค่ะ (ภาษาอังกฤษ ตัวอย่าง John Mayer)`);
+        return await step.prompt(USER_NAME_PROMPT, `ขอทราบ ชื่อ-นามสกุล ด้วยค่ะ (ภาษาอังกฤษ ตัวอย่าง John Mayer)`);
     }
 
     async promptForUserEmail(step) {
@@ -894,7 +894,7 @@ class MyBot {
         user.name = step.result;
 
         await this.userProfile.set(step.context, user);
-        return await step.prompt(USER_EMAIL_PROMPT, `ขอทราบ อีเมล ผู้แจ้งเคลมด้วยค่ะ (ตัวอย่าง it_shera@shera.com)`);
+        return await step.prompt(USER_EMAIL_PROMPT, `ขอทราบ อีเมล ด้วยค่ะ (ตัวอย่าง it_shera@shera.com)`);
     }
 
     async promptForSummaryProfile(step) {
@@ -903,7 +903,7 @@ class MyBot {
         user.email = step.result;
 
         await this.userProfile.set(step.context, user);
-        await step.context.sendActivity(`บันทึกข้อมูลโปรไฟล์ให้แล้วค่ะ ชื่อผู้แจ้งเคลม: ${user.name} อีเมลผู้แจ้งเคลม: ${user.email}`);
+        await step.context.sendActivity(`บันทึกข้อมูลโปรไฟล์ให้แล้วค่ะ ชื่อ: ${user.name} อีเมล: ${user.email}`);
         await step.endDialog();
         return await step.context.sendActivity({ attachments: [menu.mainMenu()] });
     }
