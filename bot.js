@@ -396,27 +396,6 @@ class MyBot {
             this.submitClaim.bind(this)
         ]));
 
-        // this.dialogs.add(new WaterfallDialog(REPEAT_USER_NAME, [
-        //     this.promptForUserName.bind(this),
-        //     this.promptForUserEmail.bind(this),
-        //     this.promptForMoreInformation.bind(this),
-        //     this.promptConfirmForm.bind(this),
-        //     this.promptForImages.bind(this),
-        //     this.promptConfirmImages.bind(this),
-        //     this.summaryClaim.bind(this),
-        //     this.submitClaim.bind(this)
-        // ]));
-
-        // this.dialogs.add(new WaterfallDialog(REPEAT_USER_EMAIL, [
-        //     this.promptForUserEmail.bind(this),
-        //     this.promptForMoreInformation.bind(this),
-        //     this.promptConfirmForm.bind(this),
-        //     this.promptForImages.bind(this),
-        //     this.promptConfirmImages.bind(this),
-        //     this.summaryClaim.bind(this),
-        //     this.submitClaim.bind(this)
-        // ]));
-
         this.dialogs.add(new WaterfallDialog(REPEAT_MORE_INFORMATION, [
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
@@ -436,6 +415,10 @@ class MyBot {
 
     // step 1
     async promptForSapId(step) {
+
+        //Clear Image Cash
+        user.images = [];
+
         await step.context.sendActivity(`ระหว่างกระบวนการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
             {
@@ -814,11 +797,11 @@ class MyBot {
             }
         }
 
-        const attachmentsImages = [];
+        // const attachmentsImages = [];
 
         if (user.images.length > 0) {
 
-            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
+            // await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
             console.log(user.images);
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
@@ -836,16 +819,16 @@ class MyBot {
                         var obj = {};
                         obj.contentType = 'image/png';
                         obj.contentUrl = `data:image/png;base64,${base64Image}`
-                        attachmentsImages.push(obj);
+                        user.images.push(obj);
                     } else {
                         var obj = {};
                         obj.contentType = user.images[i].contentType;
                         obj.contentUrl = user.images[i].contentUrl;
-                        attachmentsImages.push(obj);
+                        user.images.push(obj);
                     }
                 }
             }
-            user.images = attachmentsImages;
+            // user.images = attachmentsImages;
         }
 
         await step.context.sendActivity({
@@ -860,6 +843,10 @@ class MyBot {
     // step 17
     async summaryClaim(step) {
         if (step.result && step.result.value === YES) {
+            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
+            await step.context.sendActivity({
+                attachments: user.images
+            });
             return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
         } else {
             const user = await this.userProfile.get(step.context, {});
