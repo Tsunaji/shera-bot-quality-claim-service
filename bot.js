@@ -833,9 +833,9 @@ class MyBot {
             // user.images = attachmentsImages;
         }
 
-        await step.context.sendActivity({
-            attachments: user.images
-        });
+        // await step.context.sendActivity({
+        //     attachments: user.images
+        // });
 
         await this.userProfile.set(step.context, user);
 
@@ -844,6 +844,9 @@ class MyBot {
 
     // step 17
     async summaryClaim(step) {
+
+        const user = await this.userProfile.get(step.context, {});
+
         if (step.result && step.result.value === YES) {
             await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
             await step.context.sendActivity({
@@ -851,7 +854,6 @@ class MyBot {
             });
             return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
         } else {
-            const user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(REPEAT_IMAGES, user);
         }
     }
