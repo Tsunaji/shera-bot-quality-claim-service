@@ -416,6 +416,8 @@ class MyBot {
     // step 1
     async promptForSapId(step) {
 
+        let user = await this.userProfile.get(step.context, {});
+
         //Clear Image Cash
         user.images = [];
 
