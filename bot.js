@@ -799,6 +799,9 @@ class MyBot {
             }
         }
 
+        console.log("current image:");
+        console.log(user.images);
+
         // const attachmentsImages = [];
 
         if (user.images.length > 0) {
