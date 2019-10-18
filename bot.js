@@ -917,6 +917,8 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
+            console.log(turnContext.activity);
+
             if (turnContext.activity.channelId !== 'msteams') {
 
                 let user = await this.userProfile.get(turnContext, {});
