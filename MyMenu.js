@@ -9,11 +9,21 @@ class MyMenu {
             {
                 name: "LWR",
                 product: [
-                    "ไตรลอน",
-                    "ลอนคู่",
-                    "ลอนเล็ก",
-                    "ครอบและอุปกรณ์ประกอบ",
-                    "Coner Piece"
+                    "Accessories",
+                    "Barge",
+                    "Conner Press",
+                    "Corroshield",
+                    "Ridge",
+                    "RT 3.3 MM",
+                    "RT 4 MM",
+                    "RT 5 MM",
+                    "RT 6 MM",
+                    "Small Corrugated",
+                    "TL-G",
+                    "Trilon",
+                    "Trilon 5 MM",
+                    "Trilon 6 MM",
+                    "Trilon Lite"
                 ],
                 problem: {
                     before_installing: [
@@ -45,16 +55,19 @@ class MyMenu {
             {
                 name: "Villa Roof",
                 product: [
-                    "Magma",
+                    "Accessories",
+                    "Barge",
                     "Granada",
-                    "Shingle",
-                    "U Slate",
+                    "Log Ridge",
+                    "Magma",
+                    "Mini C Slate",
                     "Mini U Slate",
                     "Mini V Slate",
-                    "Mini C Slate",
-                    "Zedar Shake",
-                    "ไม่ปิดสัน Zedar",
-                    "ครอบและอุปกรณ์ประกอบ"
+                    "Ridge",
+                    "Shingle",
+                    "U Slate",
+                    "Zedar",
+                    "V Slate"
                 ],
                 problem: {
                     before_installing: [
@@ -85,12 +98,17 @@ class MyMenu {
                 }
             },
             {
-                name: "Board",
+                name: "SHERA",
                 product: [
-                    "บอร์ดฝ้า",
-                    "บอร์ดผนัง",
-                    "บอร์ดพื้น",
-                    "อุปกรณ์ประกอบ"
+                    "Accessories",
+                    "Board - Ceiling",
+                    "Board - Flooring",
+                    "Board - Walling",
+                    "Door",
+                    "Infillwall",
+                    "Ply",
+                    "Trim",
+                    "Wood"
                 ],
                 problem: {
                     before_installing: [
@@ -120,56 +138,11 @@ class MyMenu {
                 }
             },
             {
-                name: "Wood",
+                name: "SHERA Paint",
                 product: [
-                    "ไม้ฝา/ไม้สแปลนติด",
-                    "ไม้มอบ/ไม้บัว",
-                    "ไม้เชิงชาย",
-                    "ไม้ปิดกันนก",
-                    "ไม้ระแนง",
-                    "ไม้พื้น",
-                    "ไม้บันใด",
-                    "ไม้ตกแต่ง",
-                    "ไม้ริ้ว",
-                    "ไม้กันตก",
-                    "ฉลุช่องลม",
-                    "เชิงชายน้ำหยก/น้ำย้อย",
-                    "ประตู/วงกบ",
-                    "อุปกรณ์ประกอบ"
-                ],
-                problem: {
-                    before_installing: [
-                        "แตกร้าว/บิ่น/เปราะ",
-                        "โก่งตัว/บิดงอ",
-                        "สีซีดจาง/สีด่าง/สีไม่เหมือน-เพี้ยน",
-                        "ตำหนิผิวหน้า/รอยขูดขีด",
-                        "คราบน้ำบนผิวหน้า",
-                        "ลายไม่ชัด/ลายไม่เหมือน",
-                        "หนา-บาง /ไม่ได้ขนาด",
-                        "สินค้าขาด/ไม่ครบจำนวน",
-                        "สินค้าผิด/สี-ขนาด-ลายไม่ตรงกับที่สั่ง",
-                        "สภาพ Packaging ไม่เรียบร้อย",
-                        "สภาพสินค้าเก่า/ไม่พร้อมใช้งาน"
-                    ],
-                    after_installing: [
-                        "แตกร้าว/หัก/เปราะ",
-                        "โก่งตัว/แอ่น/บิดเบี้ยว",
-                        "ติดตั้งไม่ได้แนว-ระนาบ",
-                        "สีซีดจาง/สีด่าง/สีไม่เหมือน-เพี้ยน",
-                        "สีหลุดล่อน-ลอก",
-                        "ตำหนิผิวหน้า/รอยขูดขีด",
-                        "ลายไม่ชัด/ลายไม่เหมือน/ลายสึก",
-                        "หนา-บาง /ไม่ได้ขนาด",
-                        "สกรูปีกไม่สลัด/เจาะยึดไม่ได้"
-                    ]
-                }
-            },
-            {
-                name: "Paint",
-                product: [
-                    "สี Shera Paint",
-                    "กาว Shera Fix",
-                    "กาว Shera Bond"
+                    "Bond",
+                    "Fix",
+                    "Paint"
                 ],
                 problem: {
                     before_installing: [
