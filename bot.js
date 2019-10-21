@@ -220,6 +220,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -246,6 +247,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -265,6 +267,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -283,6 +286,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -300,6 +304,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -316,6 +321,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -331,6 +337,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -345,6 +352,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -358,6 +366,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -370,6 +379,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -381,6 +391,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -391,6 +402,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -400,6 +412,7 @@ class MyBot {
             this.promptForMoreInformation.bind(this),
             this.promptConfirmForm.bind(this),
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -407,6 +420,7 @@ class MyBot {
 
         this.dialogs.add(new WaterfallDialog(REPEAT_IMAGES, [
             this.promptForImages.bind(this),
+            this.promptForMoreImages.bind(this),
             this.promptConfirmImages.bind(this),
             this.summaryClaim.bind(this),
             this.submitClaim.bind(this)
@@ -418,8 +432,8 @@ class MyBot {
 
         let user = await this.userProfile.get(step.context, {});
 
-        //Clear Image Cash
-        user.images = [];
+        //Clear Image Cach
+        user.imagesResult = [];
 
         await step.context.sendActivity(`ระหว่างกระบวนการแจ้งเคลม ท่านสามารถพิมพ์ "แก้ไข" เพื่อแก้ไขข้อมูลก่อนหน้า และพิมพ์ "ยกเลิก" เพื่อยกเลิกการแจ้งเคลมได้ค่ะ`);
         return await step.prompt(SAP_ID_PROMPT,
@@ -785,9 +799,7 @@ class MyBot {
         }
     }
 
-    // step 16
-    async promptConfirmImages(step) {
-
+    async promptForMoreImages(step) {
         let user = await this.userProfile.get(step.context, {});
 
         if (empty(step.options)) {
@@ -799,15 +811,7 @@ class MyBot {
             }
         }
 
-        console.log("current image:");
-        console.log(user.images);
-
-        // const attachmentsImages = [];
-
         if (user.images.length > 0) {
-
-            // await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
-            console.log(user.images);
             for (var i in user.images) {
                 if (user.images[i].contentType.match("image")) {
                     if (step.context.activity.channelId === 'skype' || step.context.activity.channelId === 'msteams') {
@@ -824,25 +828,35 @@ class MyBot {
                         var obj = {};
                         obj.contentType = 'image/png';
                         obj.contentUrl = `data:image/png;base64,${base64Image}`
-                        user.images.push(obj);
+                        user.imagesResult.push(obj);
                     } else {
                         var obj = {};
                         obj.contentType = user.images[i].contentType;
                         obj.contentUrl = user.images[i].contentUrl;
-                        user.images.push(obj);
+                        user.imagesResult.push(obj);
                     }
                 }
             }
-            // user.images = attachmentsImages;
         }
-
-        // await step.context.sendActivity({
-        //     attachments: user.images
-        // });
-
         await this.userProfile.set(step.context, user);
 
-        return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+        return await step.prompt(CHOICE_PROMPT, 'ต้องการเพิ่มรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+    }
+
+    // step 16
+    async promptConfirmImages(step) {
+
+        const user = await this.userProfile.get(step.context, {});
+
+        if (step.result && step.result.value === YES) {
+            return await step.replaceDialog(REPEAT_IMAGES, user);
+        } else {
+            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
+            await step.context.sendActivity({
+                attachments: user.imagesResult
+            });
+            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+        }
     }
 
     // step 17
@@ -851,12 +865,9 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
 
         if (step.result && step.result.value === YES) {
-            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
-            await step.context.sendActivity({
-                attachments: user.images
-            });
             return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
         } else {
+            user.imagesResult = [];
             return await step.replaceDialog(REPEAT_IMAGES, user);
         }
     }
@@ -911,7 +922,7 @@ class MyBot {
         // See https://aka.ms/about-bot-activity-message to learn more about the message and other activity types.
         if (turnContext.activity.type === ActivityTypes.Message) {
 
-            console.log(turnContext.activity);
+            // console.log(turnContext.activity);
 
             if (turnContext.activity.channelId !== 'msteams') {
 

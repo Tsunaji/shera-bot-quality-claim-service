@@ -31,11 +31,11 @@ class Helpers {
 
         const attachmentsImages = [];
 
-        if (user.images.length > 0) {
-            for (var i in user.images) {
+        if (user.imagesResult.length > 0) {
+            for (var i in user.imagesResult) {
                 var obj = {};
-                obj.contentType = user.images[i].contentType;
-                obj.path = user.images[i].contentUrl;
+                obj.contentType = user.imagesResult[i].contentType;
+                obj.path = user.imagesResult[i].contentUrl;
                 attachmentsImages.push(obj);
             }
         }
