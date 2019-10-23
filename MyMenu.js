@@ -19,8 +19,7 @@ class MyMenu {
                     "RT 5 MM",
                     "RT 6 MM",
                     "Small Corrugated",
-                    "TL-G",
-                    "Trilon",
+                    "TrilonL-G",
                     "Trilon 5 MM",
                     "Trilon 6 MM",
                     "Trilon Lite"
