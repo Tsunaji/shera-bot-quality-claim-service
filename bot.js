@@ -792,8 +792,8 @@ class MyBot {
         } else {
             return await step.prompt(IMAGES_PROMPT,
                 {
-                    prompt: 'กรุณาอัพโหลดรูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (Line สามารถอัพโหลดได้ทีละรูป ตามขั้นตอนค่ะ)',
-                    retryPrompt: 'ขอโทษค่ะ จำเป็นต้องใช้รูปภาพเพื่อประกอบการแจ้งเคลม กรุณาอัพโหลดรูปภาพใหม่อีกครั้งค่ะ'
+                    prompt: 'กรุณาอัพโหลด รูปภาพ เพื่อประกอบการแจ้งเคลมค่ะ (Line สามารถอัพโหลดได้ทีละรูป ตามขั้นตอนค่ะ)',
+                    retryPrompt: 'ขอโทษค่ะ จำเป็นต้องใช้ รูปภาพ เพื่อประกอบการแจ้งเคลม กรุณาอัพโหลด รูปภาพ ใหม่อีกครั้งค่ะ'
                 }
             );
         }
@@ -840,7 +840,7 @@ class MyBot {
         }
         await this.userProfile.set(step.context, user);
 
-        return await step.prompt(CHOICE_PROMPT, 'ต้องการเพิ่มรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+        return await step.prompt(CHOICE_PROMPT, 'ต้องการเพิ่ม รูปภาพ หรือไม่ ?', ['ใช่', 'ไม่']);
     }
 
     // step 16
@@ -851,11 +851,11 @@ class MyBot {
         if (step.result && step.result.value === YES) {
             return await step.replaceDialog(REPEAT_IMAGES, user);
         } else {
-            await step.context.sendActivity(`สรุปรายการรูปภาพที่คุณอัพโหลด`);
+            await step.context.sendActivity(`สรุปรายการ รูปภาพ ที่คุณอัพโหลด`);
             await step.context.sendActivity({
                 attachments: user.imagesResult
             });
-            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการอัพโหลดรูปภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+            return await step.prompt(CHOICE_PROMPT, 'ยืนยัน การอัพโหลดรูปภาพ หรือไม่ ?', ['ใช่', 'ไม่']);
         }
     }
 
@@ -865,7 +865,7 @@ class MyBot {
         const user = await this.userProfile.get(step.context, {});
 
         if (step.result && step.result.value === YES) {
-            return await step.prompt(CHOICE_PROMPT, 'ยืนยันการแจ้งเคลมคุณภาพหรือไม่ ?', ['ใช่', 'ไม่']);
+            return await step.prompt(CHOICE_PROMPT, 'ยืนยัน การแจ้งเคลมคุณภาพ หรือไม่ ?', ['ใช่', 'ไม่']);
         } else {
             user.imagesResult = [];
             return await step.replaceDialog(REPEAT_IMAGES, user);

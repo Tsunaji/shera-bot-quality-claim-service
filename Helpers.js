@@ -27,7 +27,8 @@ class Helpers {
             + "สีผลิตภัณฑ์: " + user.color + "\n"
             + "จำนวนสินค้าที่มีปัญหา: " + user.qty + "\n"
             + "ปัญหาที่เกิด: " + user.problem + " เกิด" + user.whenInstall + "\n"
-            + "ข้อมูลเพิ่มเติม: " + user.moreInformation;
+            + "ข้อมูลเพิ่มเติม: " + user.moreInformation + "\n"
+            + "แจ้งผ่าน: Chatbot";
 
         const attachmentsImages = [];
 
