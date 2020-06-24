@@ -168,11 +168,12 @@ class MyMenu {
         const contentUrl = `data:image/png;base64,${base64Image}`;
 
         const buttons = [
-            { type: ActionTypes.ImBack, title: 'เคลมคุณภาพ', value: 'เคลมคุณภาพ' },
-            { type: ActionTypes.ImBack, title: 'ติดต่อเจ้าหน้าที่', value: 'ติดต่อเจ้าหน้าที่' },
-            { type: ActionTypes.ImBack, title: 'อัพเดทโปรไฟล์', value: 'อัพเดทโปรไฟล์' }
+            { type: ActionTypes.ImBack, title: 'Quality Claim', value: 'Quality Claim' },
+            { type: ActionTypes.ImBack, title: 'Call Center', value: 'Call Center' },
+            { type: ActionTypes.ImBack, title: 'Update Profile', value: 'Update Profile' }
         ];
 
+        // not support line channel.
         // return CardFactory.heroCard(
         //     'SHERA CRM',
         //     'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
@@ -182,7 +183,7 @@ class MyMenu {
 
         return CardFactory.heroCard(
             'SHERA CRM',
-            'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
+            'Welcome to quality claim services by Chatbot',
             '',
             buttons
         );

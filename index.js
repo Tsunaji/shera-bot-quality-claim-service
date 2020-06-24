@@ -7,7 +7,7 @@ const restify = require('restify');
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const { BotFrameworkAdapter, MemoryStorage, ConversationState, UserState } = require('botbuilder');
+const { BotFrameworkAdapter, ConversationState, InputHints, MemoryStorage, UserState } = require('botbuilder');
 const { BlobStorage } = require('botbuilder-azure');
 
 // Import required bot configuration.
@@ -15,6 +15,11 @@ const { BotConfiguration } = require('botframework-config');
 
 // This bot's main dialog.
 const { MyBot } = require('./bot');
+
+// Import our custom bot class that provides a turn handling function.
+const { DialogBot } = require('./bots/dialogBot');
+const { UserProfileDialog } = require('./dialogs/userProfileDialog');
+const { MainDialog } = require('./dialogs/mainDialog');
 
 // Read botFilePath and botFileSecret from .env file
 // Note: Ensure you have a .env file and include botFilePath and botFileSecret.
@@ -65,11 +70,27 @@ const adapter = new BotFrameworkAdapter({
 });
 
 // Catch-all for errors.
-adapter.onTurnError = async (context, error) => {
+const onTurnErrorHandler = async (context, error) => {
     // This check writes out errors to console log .vs. app insights.
-    console.error(`\n [onTurnError]: ${error}`);
+    // NOTE: In production environment, you should consider logging this to Azure
+    //       application insights.
+    console.error(`\n [onTurnError] unhandled error: ${error}`);
+
+    // Send a trace activity, which will be displayed in Bot Framework Emulator
+    await context.sendTraceActivity(
+        'OnTurnError Trace',
+        `${error}`,
+        'https://www.botframework.com/schemas/error',
+        'TurnError'
+    );
+
     // Send a message to the user
-    await context.sendActivity(`Oops. Something went wrong!`);
+    let onTurnErrorMessage = 'The bot encountered an error or bug.';
+    await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
+    onTurnErrorMessage = 'To continue to run this bot, please fix the bot source code.';
+    await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
+    // Clear out state
+    await conversationState.delete(context);
 };
 
 // Define a state store for your bot.
@@ -87,12 +108,19 @@ const conversationState = new ConversationState(memoryStorage);
 const userState = new UserState(memoryStorage);
 
 // Create the main dialog.
+// const dialog = new UserProfileDialog(userState);
+const dialog = new MainDialog(userState);
+const bot = new DialogBot(conversationState, userState, dialog);
+
+// Create the main dialog.
 const myBot = new MyBot(conversationState, userState);
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
     adapter.processActivity(req, res, async (context) => {
         // Route to main dialog.
-        await myBot.onTurn(context);
+        // await myBot.onTurn(context);
+
+        await bot.run(context);
     });
 });

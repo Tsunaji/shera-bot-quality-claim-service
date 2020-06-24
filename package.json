@@ -18,9 +18,9 @@
     "dependencies": {
         "async": "^2.6.2",
         "blob": "0.0.5",
-        "botbuilder": "^4.2.0",
+        "botbuilder": "^4.9.2",
         "botbuilder-azure": "^4.2.0",
-        "botbuilder-dialogs": "^4.2.0",
+        "botbuilder-dialogs": "^4.9.2",
         "botframework-config": "^4.2.0",
         "dotenv": "^6.2.0",
         "fs": "0.0.1-security",
