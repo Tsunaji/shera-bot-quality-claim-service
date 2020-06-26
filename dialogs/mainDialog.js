@@ -6,6 +6,7 @@ const {
 } = require('botbuilder-dialogs');
 const { UserProfileDialog, USER_PROFILE_DIALOG } = require('./userProfileDialog');
 const { ClaimInterDialog, CLAIM_INTER_DIALOG } = require('./claimInterDialog');
+const { ClaimDomesticDialog, CLAIM_DOMESTIC_DIALOG } = require('./claimDomesticDialog');
 const { InterrupDialog } = require('./interrupDialog');
 
 const { MyMenu } = require('../MyMenu');
@@ -35,6 +36,7 @@ class MainDialog extends InterrupDialog {
 
         this.addDialog(new TextPrompt(MENU_PROMPT));
         this.addDialog(new UserProfileDialog(this.userProfile));
+        this.addDialog(new ClaimDomesticDialog(this.userProfile));
         this.addDialog(new ClaimInterDialog(this.userProfile));
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.introStep.bind(this),
@@ -84,6 +86,8 @@ class MainDialog extends InterrupDialog {
         let user = await this.userProfile.get(step.context, {});
         console.log(`main dialog`);
 
+        console.log(user);
+
         if (!user.profile) {
             console.log(!user.profile);
             console.log('create user profile');
@@ -108,9 +112,11 @@ class MainDialog extends InterrupDialog {
                 return await step.beginDialog(USER_PROFILE_DIALOG);
             }
             case QUALITY_CLAIM: {
-                if (user.profile.slaesArea === 'A1') {
+                console.log(user.profile.salesArea == 'A1');
+                console.log(user.profile.salesArea === 'A1');
+                if (user.profile.salesArea === 'A1') {
                     console.log(`domestic claim`);
-                    // await dialogContext.beginDialog(GET_CLAIM);
+                    return await step.beginDialog(CLAIM_DOMESTIC_DIALOG);
                 } else {
                     console.log(`inter claim`);
                     return await step.beginDialog(CLAIM_INTER_DIALOG);

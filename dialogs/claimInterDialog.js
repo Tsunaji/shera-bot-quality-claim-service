@@ -16,6 +16,7 @@ const { Services } = require('../Services');
 
 const menu = new MyMenu();
 const services = new Services();
+const helpers = new Helpers();
 
 // main dialog prompt
 const DISTRIBUTOR_CODE_PROMPT = 'DISTRIBUTOR_CODE_PROMPT';
@@ -65,7 +66,29 @@ class ClaimInterDialog extends InterrupDialog {
 
         this.userProfile = userProfile;
 
-        this.addDialog(new TextPrompt(DISTRIBUTOR_CODE_PROMPT));
+        this.addDialog(new TextPrompt(DISTRIBUTOR_CODE_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+
+                let id = prompt.recognized.value;
+
+                //convert to string type if customer code not number
+                if (isNaN(id)) {
+                    id = "'" + id + "'";
+                }
+
+                const customerInfo = await services.getCustomerById(id);
+
+                if (customerInfo.length > 0 && id !== 0) {
+                    const user = await this.userProfile.get(prompt.context, {});
+                    user.customerInfo = customerInfo;
+                    await this.userProfile.set(prompt.context, user);
+                    return true;
+                }
+
+            }
+
+            return false;
+        }));
         this.addDialog(new TextPrompt(RETAILER_NAME_PROMPT));
         this.addDialog(new TextPrompt(NAME_OF_CONTACT_PERSON_PROMPT));
         this.addDialog(new TextPrompt(TELEPHONE_NUMBER_PROMPT));
@@ -150,15 +173,17 @@ class ClaimInterDialog extends InterrupDialog {
 
     // step 2
     async retailerNameStep(step) {
-        step.values.claimInterInfo.distributorName = step.result;
+        step.values.claimInterInfo.distributorCode = step.result;
 
-        // let user = await this.userProfile.get(step.context, {});
-        // user.claimInterInfo = step.values.claimInterInfo;
-        // console.log(user);
-        // await this.userProfile.set(step.context, user);
+        let user = await this.userProfile.get(step.context, {});
 
-        // let user2 = await this.userProfile.get(step.context, {});
-        // console.log(user2);
+        //save customer data
+        let customer = user.customerInfo[0];
+        step.values.claimInterInfo.distributorCode = customer.KUNNR;
+        step.values.claimInterInfo.distributorName = customer.TITLE_MEDI + " " + customer.NAME1;
+        step.values.claimInterInfo.distributorAddress = customer.FULLADR;
+
+        await step.context.sendActivity(`Distributor name is ${step.values.claimInterInfo.distributorName}\n\nDistributor address is ${step.values.claimInterInfo.distributorAddress}`);
 
         const promptOptions = { prompt: 'Please enter retailer name.' };
 
@@ -176,7 +201,7 @@ class ClaimInterDialog extends InterrupDialog {
 
     // step 4
     async telephoneNumberStep(step) {
-        step.values.claimInterInfo.nameOfContact = step.result;
+        step.values.claimInterInfo.nameOfContactPerson = step.result;
 
         const promptOptions = { prompt: 'Please enter telephone number.' };
 
@@ -228,7 +253,7 @@ class ClaimInterDialog extends InterrupDialog {
 
     // step 10
     async batchNoStep(step) {
-        step.values.claimInterInfo.prodcutColor = step.result;
+        step.values.claimInterInfo.productColor = step.result;
 
         const promptOptions = { prompt: 'Please enter batch number.' };
 
@@ -387,7 +412,31 @@ class ClaimInterDialog extends InterrupDialog {
     async confirmBeforeStep(step) {
         step.values.beforeInstallationProblem.problemWhileUnloadingOrMovingPicture = step.result;
 
+        let user = await this.userProfile.get(step.context, {});
+
         // show summary data
+        let msg = `--Summary Claim--\n\n`;
+        msg = msg + `Distributor code: ${user.claimInterInfo.distributorCode}\n\n`;
+        msg = msg + `Distributor name: ${user.claimInterInfo.distributorName}\n\n`;
+        msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;
+        msg = msg + `Retailer name: ${user.claimInterInfo.retailerName}\n\n`;
+        msg = msg + `Contact person name: ${user.claimInterInfo.nameOfContactPerson}\n\n`;
+        msg = msg + `Telephone number: ${user.claimInterInfo.telephoneNumber}\n\n`;
+        msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
+        msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
+        msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
+        msg = msg + `Product size: ${user.claimInterInfo.productSize}\n\n`;
+        msg = msg + `Product color: ${user.claimInterInfo.productColor}\n\n`;
+        msg = msg + `Batch no.: ${user.claimInterInfo.batchNo}\n\n`;
+        msg = msg + `Invoice / SO number: ${user.claimInterInfo.invoiceSoNumber}\n\n`;
+        msg = msg + `Defect Problem: ${user.claimInterInfo.defectProblem}\n\n`;
+        // msg = msg + `: ${user.claimInterInfo.defectPicture}\n\n`;
+        msg = msg + `QTY of defect: ${user.claimInterInfo.qtyOfDefect}\n\n`;
+        msg = msg + `QTY in sale order: ${user.claimInterInfo.qtyInSaleOrder}\n\n`;
+        msg = msg + `Claim cost: ${user.claimInterInfo.claimCost}\n\n`;
+        msg = msg + `Before or After Installation problem: ${user.claimInterInfo.beforeOrAfterInstalltaionProblem}`;
+
+        await step.context.sendActivity(msg);
 
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'Confirm claim ?'
@@ -398,9 +447,12 @@ class ClaimInterDialog extends InterrupDialog {
     async summaryBeforeStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
+
             user.claimInterInfo.beforeInstallationProblem = step.values.beforeInstallationProblem;
             await this.userProfile.set(step.context, user);
             await step.context.sendActivity('Claim success !');
+
+            helpers.sendMailTest(user);
         } else {
             await step.context.sendActivity('Your claim will not be kept.');
         }
@@ -466,7 +518,31 @@ class ClaimInterDialog extends InterrupDialog {
     async confirmAfterStep(step) {
         step.values.afterInstallationProblem.installationArea = step.result;
 
+        let user = await this.userProfile.get(step.context, {});
+
         // show summary data
+        let msg = `--Summary Claim--\n\n`;
+        msg = msg + `Distributor code: ${user.claimInterInfo.distributorCode}\n\n`;
+        msg = msg + `Distributor name: ${user.claimInterInfo.distributorCode}\n\n`;
+        msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;
+        msg = msg + `Retailer name: ${user.claimInterInfo.retailerName}\n\n`;
+        msg = msg + `Contact person name: ${user.claimInterInfo.nameOfContactPerson}\n\n`;
+        msg = msg + `Telephone number: ${user.claimInterInfo.telephoneNumber}\n\n`;
+        msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
+        msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
+        msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
+        msg = msg + `Product size: ${user.claimInterInfo.productSize}\n\n`;
+        msg = msg + `Product color: ${user.claimInterInfo.productColor}\n\n`;
+        msg = msg + `Batch no.: ${user.claimInterInfo.batchNo}\n\n`;
+        msg = msg + `Invoice / SO number: ${user.claimInterInfo.invoiceSoNumber}\n\n`;
+        msg = msg + `Defect Problem: ${user.claimInterInfo.defectProblem}\n\n`;
+        // msg = msg + `: ${user.claimInterInfo.defectPicture}\n\n`;
+        msg = msg + `QTY of defect: ${user.claimInterInfo.qtyOfDefect}\n\n`;
+        msg = msg + `QTY in sale order: ${user.claimInterInfo.qtyInSaleOrder}\n\n`;
+        msg = msg + `Claim cost: ${user.claimInterInfo.claimCost}\n\n`;
+        msg = msg + `Before or After Installation problem: ${user.claimInterInfo.beforeOrAfterInstalltaionProblem}`;
+
+        await step.context.sendActivity(msg);
 
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'Confirm claim ?'
@@ -480,6 +556,8 @@ class ClaimInterDialog extends InterrupDialog {
             user.claimInterInfo.afterInstallationProblem = step.values.afterInstallationProblem;
             await this.userProfile.set(step.context, user);
             await step.context.sendActivity('Claim success !');
+
+            helpers.sendMailTest(user);
         } else {
             await step.context.sendActivity('Your claim will not be kept.');
         }
