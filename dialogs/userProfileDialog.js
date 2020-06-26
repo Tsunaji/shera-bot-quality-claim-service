@@ -1,9 +1,7 @@
 const {
     ChoiceFactory,
     ChoicePrompt,
-    ComponentDialog,
     ConfirmPrompt,
-    DialogSet,
     DialogTurnStatus,
     TextPrompt,
     WaterfallDialog
@@ -25,7 +23,6 @@ class UserProfileDialog extends InterrupDialog {
 
         this.userProfile = userProfile;
 
-        console.log(`1`);
         this.addDialog(new TextPrompt(EMAIL_PROMPT, this.emailPromptValidator));
         this.addDialog(new TextPrompt(NAME_PROMPT, this.namePromptValidator));
         this.addDialog(new ChoicePrompt(SALESAREA_PROMPT));
@@ -39,11 +36,9 @@ class UserProfileDialog extends InterrupDialog {
         ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
-        console.log('2');
     }
 
     async nameStep(step) {
-        console.log('3');
         step.values.userInfo = new UserProfileModel();
         return await step.prompt(NAME_PROMPT, 'กรุณากรอก ชื่อ-นามสกุล (ภาษาอังกฤษ)\n\nPlease enter your first name & last name.');
     }
@@ -70,7 +65,6 @@ class UserProfileDialog extends InterrupDialog {
     }
 
     async summaryStep(step) {
-
         let user = await this.userProfile.get(step.context, {});
         user.profile = step.values.userInfo;
 
@@ -84,13 +78,11 @@ class UserProfileDialog extends InterrupDialog {
             return await step.replaceDialog(USER_PROFILE_DIALOG);
         }
 
-        // WaterfallStep always finishes with the end of the Waterfall or with another dialog; here it is the end.
         await this.userProfile.set(step.context, user);
-        return await step.endDialog(user);
+        return await step.endDialog();
     }
 
     async namePromptValidator(promptContext) {
-
         if (promptContext.recognized.succeeded && promptContext.recognized.value !== 'image') {
             return true;
         }
@@ -99,7 +91,6 @@ class UserProfileDialog extends InterrupDialog {
     }
 
     async emailPromptValidator(promptContext) {
-
         var mailformat = /^\w+([\.-]?\w+)*@\w+([\.-]?\w+)*(\.\w{2,3})+$/;
 
         if (promptContext.recognized.succeeded && promptContext.recognized.value.match(mailformat)) {

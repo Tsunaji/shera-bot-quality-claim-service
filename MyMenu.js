@@ -363,7 +363,7 @@ class MyMenu {
         });
 
         return CardFactory.heroCard(
-            'กรุณาเลือก Division ของผลิตภัณฑ์ค่ะ',
+            'Please select Division.',
             '',
             [],
             division
@@ -386,7 +386,7 @@ class MyMenu {
         });
 
         return CardFactory.heroCard(
-            `กรุณาเลือกผลิตภัณฑ์ ${division} ค่ะ`,
+            `Please select product of ${division}.`,
             '',
             [],
             products

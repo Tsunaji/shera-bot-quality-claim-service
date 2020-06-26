@@ -82,8 +82,7 @@ class MainDialog extends InterrupDialog {
 
     async actStep(step) {
         let user = await this.userProfile.get(step.context, {});
-
-        console.log(user);
+        console.log(`main dialog`);
 
         if (!user.profile) {
             console.log(!user.profile);
@@ -110,8 +109,10 @@ class MainDialog extends InterrupDialog {
             }
             case QUALITY_CLAIM: {
                 if (user.profile.slaesArea === 'A1') {
+                    console.log(`domestic claim`);
                     // await dialogContext.beginDialog(GET_CLAIM);
                 } else {
+                    console.log(`inter claim`);
                     return await step.beginDialog(CLAIM_INTER_DIALOG);
                 }
             }
