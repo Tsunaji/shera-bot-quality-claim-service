@@ -69,8 +69,6 @@ class MainDialog extends InterrupDialog {
     async introStep(step) {
         const channel = step.context.activity.channelId;
 
-        console.log(`channel: ${step.context.activity.channelId}`);
-
         if (channel === 'msteams') {
             console.log('catch msteams');
             await step.context.sendActivity(MSTEAMS_RESPONSE);
@@ -112,8 +110,6 @@ class MainDialog extends InterrupDialog {
                 return await step.beginDialog(USER_PROFILE_DIALOG);
             }
             case QUALITY_CLAIM: {
-                console.log(user.profile.salesArea == 'A1');
-                console.log(user.profile.salesArea === 'A1');
                 if (user.profile.salesArea === 'A1') {
                     console.log(`domestic claim`);
                     return await step.beginDialog(CLAIM_DOMESTIC_DIALOG);
