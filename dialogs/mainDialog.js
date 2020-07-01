@@ -69,6 +69,8 @@ class MainDialog extends InterrupDialog {
     async introStep(step) {
         const channel = step.context.activity.channelId;
 
+        console.log(step.context.activity);
+
         if (channel === 'msteams') {
             console.log('catch msteams');
             await step.context.sendActivity(MSTEAMS_RESPONSE);

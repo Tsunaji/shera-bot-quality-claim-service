@@ -26,6 +26,7 @@ const TELEPHONE_NUMBER_PROMPT = 'TELEPHONE_NUMBER_PROMPT';
 const CUSTOMER_ADDRESS_PROMPT = 'CUSTOMER_ADDRESS_PROMPT';
 const DIVISION_PROMPT = 'DIVISION_PROMPT';
 const PRODUCT_NAME_PROMPT = 'PRODUCT_NAME_PROMPT';
+const PRODUCT_GROUP_PROMPT = 'PRODUCT_GROUP_PROMPT';
 const PRODUCT_SIZE_PROMPT = 'PRODUCT_SIZE_PROMPT';
 const PRODUCT_COLOR_PROMPT = 'PRODUCT_COLOR_PROMPT';
 const BATCH_NO_PROMPT = 'BATCH_NO_PROMPT';
@@ -37,6 +38,7 @@ const QTY_IN_SALE_ORDER_PROMPT = 'QTY_IN_SALE_ORDER_PROMPT';
 const CLAIM_COST_PROMPT = 'CLAIM_COST_PROMPT';
 const LABEL_PICTURE_PROMPT = 'LABEL_PICTURE_PROMPT';
 const BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT = 'BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT';
+const REMARKS_PROMPT = 'REMARKS_PROMPT';
 
 // before installation problem dialog prompt
 const PROBLEM_IN_CONTAINER_PICTURE_PROMPT = 'PROBLEM_IN_CONTAINER_PICTURE_PROMPT';
@@ -95,6 +97,7 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(CUSTOMER_ADDRESS_PROMPT));
         this.addDialog(new TextPrompt(DIVISION_PROMPT));
         this.addDialog(new TextPrompt(PRODUCT_NAME_PROMPT));
+        this.addDialog(new TextPrompt(PRODUCT_GROUP_PROMPT));
         this.addDialog(new TextPrompt(PRODUCT_SIZE_PROMPT));
         this.addDialog(new TextPrompt(PRODUCT_COLOR_PROMPT));
         this.addDialog(new TextPrompt(BATCH_NO_PROMPT));
@@ -106,6 +109,7 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(CLAIM_COST_PROMPT));
         this.addDialog(new AttachmentPrompt(LABEL_PICTURE_PROMPT));
         this.addDialog(new ChoicePrompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT));
+        this.addDialog(new TextPrompt(REMARKS_PROMPT));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT));
         this.addDialog(new AttachmentPrompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT));
@@ -255,10 +259,23 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     // step 8
-    async productSizeStep(step) {
+    async productGroupStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
         user.claimInterInfo.productName = step.result;
+
+        await this.userProfile.set(step.context, user);
+
+        const promptOptions = { prompt: 'Please enter product group (Floor plank, Plank, Eave or ...etc)' };
+
+        return await step.prompt(PRODUCT_GROUP_PROMPT, promptOptions);
+    }
+
+    // step 9
+    async productSizeStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        user.claimInterInfo.productGroup = step.result;
 
         await this.userProfile.set(step.context, user);
 
@@ -267,7 +284,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(PRODUCT_SIZE_PROMPT, promptOptions);
     }
 
-    // step 9
+    // step 10
     async productColorStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -280,7 +297,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(PRODUCT_COLOR_PROMPT, promptOptions);
     }
 
-    // step 10
+    // step 11
     async batchNoStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -293,7 +310,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(BATCH_NO_PROMPT, promptOptions);
     }
 
-    // step 11
+    // step 12
     async invoiceSoNumberStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -306,7 +323,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INVOICE_SO_NUMBER_PROMPT, promptOptions);
     }
 
-    // step 12
+    // step 13
     async defectProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -319,7 +336,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(DEFECT_PROBLEM_PROMPT, promptOptions);
     }
 
-    // step 13
+    // step 14
     async defectPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -332,7 +349,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(DEFECT_PICTURE_PROMPT, promptOptions);
     }
 
-    // step 14
+    // step 15
     async qtyOfDefectStep(step) {
         let defectPicture = step.result[0];
 
@@ -351,7 +368,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(QTY_OF_DEFECT_PROMPT, promptOptions);
     }
 
-    // step 15
+    // step 16
     async qtyInSaleOrderStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -364,7 +381,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(QTY_IN_SALE_ORDER_PROMPT, promptOptions);
     }
 
-    // step 16
+    // step 17
     async claimCostStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -377,7 +394,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(CLAIM_COST_PROMPT, promptOptions);
     }
 
-    // step 17
+    // step 18
     async labelPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -390,7 +407,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(LABEL_PICTURE_PROMPT, promptOptions);
     }
 
-    // step 18
+    // step 19
     async beforeOrAfterInstallationProblemStep(step) {
         let labelPicture = step.result[0];
 
@@ -410,7 +427,7 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19
+    // step 20
     async beforeOrAfterInstallationActStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.beforeOrAfterInstalltaionProblem = step.result.value;
@@ -426,7 +443,7 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    // step 19.1.1.1
+    // step 20.1.1.1
     async problemInContainerPictureConfirmStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.beforeInstallationProblem = new BeforeInstallationProblemModel();
@@ -437,7 +454,7 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19.1.1.2
+    // step 20.1.1.2
     async problemInContainerPictureStep(step) {
         if (step.result) {
             const promptOptions = { prompt: 'Please upload problem in container picture.' };
@@ -447,7 +464,7 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    // step 19.1.2.1
+    // step 20.1.2.1
     async problemInWarehousePictureConfirmStep(step) {
         if (step.result) {
             let problemInContainerPicture = step.result[0];
@@ -465,7 +482,7 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19.1.2.2
+    // step 20.1.2.2
     async problemInWarehousePictureStep(step) {
         if (step.result) {
             const promptOptions = { prompt: 'Please upload problem in warehouse picture.' };
@@ -475,7 +492,7 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    // step 19.1.3.1
+    // step 20.1.3.1
     async problemWhileUnloadOrMovingPictureConfirmStep(step) {
         if (step.result) {
             let problemInWarehousePicture = step.result[0];
@@ -493,7 +510,7 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19.1.3.2
+    // step 20.1.3.2
     async problemWhileUnloadOrMovingPictureStep(step) {
         if (step.result) {
             const promptOptions = { prompt: 'Please upload problem while unload / moving picture.' };
@@ -503,10 +520,8 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    // step 19.1.4
-    async summaryBeforeStep(step) {
-        let user = await this.userProfile.get(step.context, {});
-
+    // step 20.1.4
+    async remarksBeforeStep(step) {
         if (step.result) {
             let problemWhileUnloadingOrMovingPicture = step.result[0];
             var str = problemWhileUnloadingOrMovingPicture.name;
@@ -515,6 +530,17 @@ class ClaimInterDialog extends InterrupDialog {
 
             user.claimInterInfo.beforeInstallationProblem.problemWhileUnloadingOrMovingPicture = problemWhileUnloadingOrMovingPicture;
         }
+
+        const promptOptions = { prompt: 'Please enter remarks information (if no please enter "-").' };
+
+        return await step.prompt(REMARKS_PROMPT, promptOptions);
+    }
+
+    // step 20.1.5
+    async summaryBeforeStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        user.claimInterInfo.remarks = step.result;
 
         //Clear Image Cach
         user.claimInterInfo.imagesResult = [];
@@ -555,6 +581,7 @@ class ClaimInterDialog extends InterrupDialog {
         msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
         msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
         msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
+        msg = msg + `Product group: ${user.claimInterInfo.productGroup}\n\n`;
         msg = msg + `Product size: ${user.claimInterInfo.productSize}\n\n`;
         msg = msg + `Product color: ${user.claimInterInfo.productColor}\n\n`;
         msg = msg + `Batch no.: ${user.claimInterInfo.batchNo}\n\n`;
@@ -563,7 +590,8 @@ class ClaimInterDialog extends InterrupDialog {
         msg = msg + `QTY of defect: ${user.claimInterInfo.qtyOfDefect}\n\n`;
         msg = msg + `QTY in sale order: ${user.claimInterInfo.qtyInSaleOrder}\n\n`;
         msg = msg + `Claim cost: ${user.claimInterInfo.claimCost}\n\n`;
-        msg = msg + `Before or After Installation problem: ${user.claimInterInfo.beforeOrAfterInstalltaionProblem}`;
+        msg = msg + `Before or After Installation problem: ${user.claimInterInfo.beforeOrAfterInstalltaionProblem}\n\n`;
+        msg = msg + `Remarks: ${user.claimInterInfo.remarks}`;
 
         await step.context.sendActivity(msg);
         await step.context.sendActivity({
@@ -575,7 +603,7 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19.1.5
+    // step 20.1.6
     async submitBeforeStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
@@ -588,7 +616,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.endDialog();
     }
 
-    // step 19.2.1
+    // step 20.2.1
     async installationMethodStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem = new AfterInstallationProblemModel();
@@ -599,7 +627,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INSTALLATION_METHOD_PROMPT, promptOptions);
     }
 
-    // step 19.2.2
+    // step 20.2.2
     async equipmentTypeStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.installationMethod = step.result;
@@ -610,7 +638,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(EQUIPMENT_TYPE_PROMPT, promptOptions);
     }
 
-    // step 19.2.3
+    // step 20.2.3
     async environmentInstallationStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.equipmentType = step.result;
@@ -621,7 +649,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(ENVIRONMENT_INSTALLATION_PROMPT, promptOptions);
     }
 
-    // step 19.2.4
+    // step 20.2.4
     async whenInstallationProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.environmentInstallation = step.result;
@@ -632,7 +660,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(WHEN_INSTALLATION_PROBLEM_PROMPT, promptOptions);
     }
 
-    // step 19.2.5
+    // step 20.2.5
     async keepFinishedGoodsStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.whenInstallationProblem = step.result;
@@ -643,7 +671,7 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(KEEP_FINISHED_GOODS_PROMPT, promptOptions);
     }
 
-    // step 19.2.6
+    // step 20.2.6
     async installationAreaStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.keepFinishedGoods = step.result;
@@ -654,10 +682,22 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INSTALLATION_AREA_PROMPT, promptOptions);
     }
 
-    // step 19.2.7
-    async summaryAfterStep(step) {
+    // step 20.2.7
+    async remarksAfterStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.installationArea = step.result;
+        await this.userProfile.set(step.context, user);
+
+        const promptOptions = { prompt: 'Please enter remarks information (if no please enter "-").' };
+
+        return await step.prompt(REMARKS_PROMPT, promptOptions);
+    }
+
+    // step 20.2.8
+    async summaryAfterStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        user.claimInterInfo.remarks = step.result;
 
         //Clear Image Cach
         user.claimInterInfo.imagesResult = [];
@@ -686,6 +726,7 @@ class ClaimInterDialog extends InterrupDialog {
         msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
         msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
         msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
+        msg = msg + `Product group: ${user.claimInterInfo.productGroup}\n\n`;
         msg = msg + `Product size: ${user.claimInterInfo.productSize}\n\n`;
         msg = msg + `Product color: ${user.claimInterInfo.productColor}\n\n`;
         msg = msg + `Batch no.: ${user.claimInterInfo.batchNo}\n\n`;
@@ -701,6 +742,7 @@ class ClaimInterDialog extends InterrupDialog {
         msg = msg + `When the problem occurred after installed: ${user.claimInterInfo.afterInstallationProblem.whenInstallationProblem}\n\n`;
         msg = msg + `How to keep the Finished goods before or during installation: ${user.claimInterInfo.afterInstallationProblem.keepFinishedGoods}\n\n`;
         msg = msg + `Environment around using area or installation area: ${user.claimInterInfo.afterInstallationProblem.installationArea}\n\n`;
+        msg = msg + `Remarks: ${user.claimInterInfo.remarks}`;
 
         await step.context.sendActivity(msg);
         await step.context.sendActivity({
@@ -716,6 +758,7 @@ class ClaimInterDialog extends InterrupDialog {
     async submitAfterStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
+
             await step.context.sendActivity('Claim success !');
 
             helpers.sendMailAfterInter(user);
@@ -725,20 +768,6 @@ class ClaimInterDialog extends InterrupDialog {
 
         return await step.endDialog();
     }
-
-    async summaryStep(step) {
-        var msg = `Your customer is ${step.result}`
-
-        step.values.claimInterInfo.customerCode = step.result;
-
-        let user = await this.userProfile.get(step.context, {});
-        user.claimInter = step.values.claimInterInfo;
-
-        await step.context.sendActivity(msg);
-
-        return await step.endDialog(user.claimInter);
-    }
-
 }
 
 module.exports.ClaimInterDialog = ClaimInterDialog;
