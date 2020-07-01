@@ -129,6 +129,7 @@ class ClaimInterDialog extends InterrupDialog {
             this.customerAddressStep.bind(this),
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
             this.productSizeStep.bind(this),
             this.productColorStep.bind(this),
             this.batchNoStep.bind(this),
@@ -149,6 +150,7 @@ class ClaimInterDialog extends InterrupDialog {
             this.problemInWarehousePictureStep.bind(this),
             this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
             this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.remarksBeforeStep.bind(this),
             this.summaryBeforeStep.bind(this),
             this.submitBeforeStep.bind(this)
         ]));
@@ -159,6 +161,7 @@ class ClaimInterDialog extends InterrupDialog {
             this.whenInstallationProblemStep.bind(this),
             this.keepFinishedGoodsStep.bind(this),
             this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
             this.summaryAfterStep.bind(this),
             this.submitAfterStep.bind(this)
         ]));
@@ -410,6 +413,8 @@ class ClaimInterDialog extends InterrupDialog {
     // step 19
     async beforeOrAfterInstallationProblemStep(step) {
         let labelPicture = step.result[0];
+
+        console.log(step.result);
 
         var str = labelPicture.name;
         var arr = str.split(".");
