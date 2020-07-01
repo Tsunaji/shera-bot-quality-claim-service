@@ -356,6 +356,8 @@ class ClaimInterDialog extends InterrupDialog {
     async qtyOfDefectStep(step) {
         let defectPicture = step.result[0];
 
+        console.log(step.result);
+
         var str = defectPicture.name;
         var arr = str.split(".");
         defectPicture.name = `defectPicture.${arr[1]}`
@@ -413,8 +415,6 @@ class ClaimInterDialog extends InterrupDialog {
     // step 19
     async beforeOrAfterInstallationProblemStep(step) {
         let labelPicture = step.result[0];
-
-        console.log(step.result);
 
         var str = labelPicture.name;
         var arr = str.split(".");
