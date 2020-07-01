@@ -356,11 +356,13 @@ class ClaimInterDialog extends InterrupDialog {
     async qtyOfDefectStep(step) {
         let defectPicture = step.result[0];
 
-        console.log(step.result);
-
-        var str = defectPicture.name;
-        var arr = str.split(".");
-        defectPicture.name = `defectPicture.${arr[1]}`
+        if (defectPicture.name) {
+            var str = defectPicture.name;
+            var arr = str.split(".");
+            defectPicture.name = `defectPicture.${arr[1]}`;
+        } else {
+            defectPicture.name = `defectPicture.jpeg`;
+        }
 
         let user = await this.userProfile.get(step.context, {});
 
@@ -416,9 +418,13 @@ class ClaimInterDialog extends InterrupDialog {
     async beforeOrAfterInstallationProblemStep(step) {
         let labelPicture = step.result[0];
 
-        var str = labelPicture.name;
-        var arr = str.split(".");
-        labelPicture.name = `labelPicture.${arr[1]}`
+        if (labelPicture.name) {
+            var str = labelPicture.name;
+            var arr = str.split(".");
+            labelPicture.name = `labelPicture.${arr[1]}`;
+        } else {
+            labelPicture.name = `labelPicture.jpeg`;
+        }
 
         let user = await this.userProfile.get(step.context, {});
 
@@ -473,9 +479,14 @@ class ClaimInterDialog extends InterrupDialog {
     async problemInWarehousePictureConfirmStep(step) {
         if (step.result) {
             let problemInContainerPicture = step.result[0];
-            var str = problemInContainerPicture.name;
-            var arr = str.split(".");
-            problemInContainerPicture.name = `problemInContainerPicture.${arr[1]}`
+
+            if (problemInContainerPicture.name) {
+                var str = problemInContainerPicture.name;
+                var arr = str.split(".");
+                problemInContainerPicture.name = `problemInContainerPicture.${arr[1]}`;
+            } else {
+                problemInContainerPicture.name = `problemInContainerPicture.jpeg`;
+            }
 
             let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.beforeInstallationProblem.problemInContainerPicture = problemInContainerPicture;
@@ -501,9 +512,14 @@ class ClaimInterDialog extends InterrupDialog {
     async problemWhileUnloadOrMovingPictureConfirmStep(step) {
         if (step.result) {
             let problemInWarehousePicture = step.result[0];
-            var str = problemInWarehousePicture.name;
-            var arr = str.split(".");
-            problemInWarehousePicture.name = `problemInWarehousePicture.${arr[1]}`
+
+            if (problemInWarehousePicture.name) {
+                var str = problemInWarehousePicture.name;
+                var arr = str.split(".");
+                problemInWarehousePicture.name = `problemInWarehousePicture.${arr[1]}`;
+            } else {
+                problemInWarehousePicture.name = `problemInWarehousePicture.jpeg`;
+            }
 
             let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.beforeInstallationProblem.problemInWarehousePicture = problemInWarehousePicture;
@@ -529,9 +545,14 @@ class ClaimInterDialog extends InterrupDialog {
     async remarksBeforeStep(step) {
         if (step.result) {
             let problemWhileUnloadingOrMovingPicture = step.result[0];
-            var str = problemWhileUnloadingOrMovingPicture.name;
-            var arr = str.split(".");
-            problemWhileUnloadingOrMovingPicture.name = `problemWhileUnloadingOrMovingPicture.${arr[1]}`
+
+            if (problemWhileUnloadingOrMovingPicture.name) {
+                var str = problemWhileUnloadingOrMovingPicture.name;
+                var arr = str.split(".");
+                problemWhileUnloadingOrMovingPicture.name = `problemWhileUnloadingOrMovingPicture.${arr[1]}`;
+            } else {
+                problemWhileUnloadingOrMovingPicture.name = `problemWhileUnloadingOrMovingPicture.jpeg`;
+            }
 
             user.claimInterInfo.beforeInstallationProblem.problemWhileUnloadingOrMovingPicture = problemWhileUnloadingOrMovingPicture;
         }
