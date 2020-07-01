@@ -543,6 +543,8 @@ class ClaimInterDialog extends InterrupDialog {
 
     // step 20.1.4
     async remarksBeforeStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
         if (step.result) {
             let problemWhileUnloadingOrMovingPicture = step.result[0];
 
@@ -556,6 +558,8 @@ class ClaimInterDialog extends InterrupDialog {
 
             user.claimInterInfo.beforeInstallationProblem.problemWhileUnloadingOrMovingPicture = problemWhileUnloadingOrMovingPicture;
         }
+
+        await this.userProfile.set(step.context, user);
 
         const promptOptions = { prompt: 'Please enter remarks information (if no please enter "-").' };
 
