@@ -25,8 +25,7 @@ class InterrupDialog extends ComponentDialog {
                 case 'ช่วยเหลือ':
                 case 'help':
                 case '?': {
-                    const helpMessageText = `พิมพ์ 'ยกเลิก' เพื่อเริ่มใหม่นะคะ\n\n
-                                            Type 'cancel' for reset chatbot`;
+                    const helpMessageText = `พิมพ์ 'ยกเลิก' เพื่อเริ่มใหม่นะคะ\n\nType 'cancel' for reset chatbot`;
                     await innerDc.context.sendActivity(helpMessageText, helpMessageText, InputHints.ExpectingInput);
                     return { status: DialogTurnStatus.waiting };
                 }

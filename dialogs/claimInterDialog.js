@@ -18,6 +18,9 @@ const menu = new MyMenu();
 const services = new Services();
 const helpers = new Helpers();
 
+// text
+const EDIT = 'edit';
+
 // main dialog prompt
 const DISTRIBUTOR_CODE_PROMPT = 'DISTRIBUTOR_CODE_PROMPT';
 const RETAILER_NAME_PROMPT = 'RETAILER_NAME_PROMPT';
@@ -95,8 +98,42 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(NAME_OF_CONTACT_PERSON_PROMPT));
         this.addDialog(new TextPrompt(TELEPHONE_NUMBER_PROMPT));
         this.addDialog(new TextPrompt(CUSTOMER_ADDRESS_PROMPT));
-        this.addDialog(new TextPrompt(DIVISION_PROMPT));
-        this.addDialog(new TextPrompt(PRODUCT_NAME_PROMPT));
+        this.addDialog(new TextPrompt(DIVISION_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+                if (prompt.recognized.value === EDIT.trim().toLowerCase()) {
+                    return true;
+                }
+                const productInfo = menu.productsInfo();
+                for (let i = 0; i < productInfo.length; i++) {
+                    if (prompt.recognized.value === productInfo[i].name) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }));
+        this.addDialog(new TextPrompt(PRODUCT_NAME_PROMPT, async (prompt) => {
+            if (prompt.recognized.succeeded) {
+                if (prompt.recognized.value === EDIT.trim().toLowerCase()) {
+                    return true;
+                }
+
+                const productInfo = menu.productsInfo();
+                const user = await this.userProfile.get(prompt.context, {});
+                const division = user.claimInterInfo.division;
+
+                for (let i = 0; i < productInfo.length; i++) {
+                    if (division === productInfo[i].name) {
+                        for (let j = 0; j < productInfo[i].product.length; j++) {
+                            if (prompt.recognized.value === productInfo[i].product[j]) {
+                                return true;
+                            }
+                        }
+                    }
+                }
+            }
+            return false;
+        }));
         this.addDialog(new TextPrompt(PRODUCT_GROUP_PROMPT));
         this.addDialog(new TextPrompt(PRODUCT_SIZE_PROMPT));
         this.addDialog(new TextPrompt(PRODUCT_COLOR_PROMPT));
@@ -171,7 +208,10 @@ class ClaimInterDialog extends InterrupDialog {
 
     // step 1
     async distributorCodeStep(step) {
-        const promptOptions = { prompt: 'Please enter distributor code.' };
+        const promptOptions = {
+            prompt: 'Please enter distributor code.',
+            retryPrompt: 'Sorry, wrong code or not found.\n\nPlease try again or contact to Admin to load distributor data.'
+        };
 
         return await step.prompt(DISTRIBUTOR_CODE_PROMPT, promptOptions);
     }
@@ -185,7 +225,7 @@ class ClaimInterDialog extends InterrupDialog {
         //save customer data
         let customer = user.customerInfo[0];
         user.claimInterInfo.distributorCode = customer.KUNNR;
-        user.claimInterInfo.distributorName = customer.TITLE_MEDI + " " + customer.NAME1;
+        user.claimInterInfo.distributorName = customer.NAME1;
         user.claimInterInfo.distributorAddress = customer.FULLADR;
 
         await this.userProfile.set(step.context, user);
@@ -246,7 +286,10 @@ class ClaimInterDialog extends InterrupDialog {
 
 
         await step.context.sendActivity({ attachments: [menu.divisionMenu()] });
-        return await step.prompt(DIVISION_PROMPT);
+        return await step.prompt(DIVISION_PROMPT,
+            {
+                retryPrompt: 'Sorry, please select division in the list.'
+            });
     }
 
     // step 7
@@ -258,7 +301,10 @@ class ClaimInterDialog extends InterrupDialog {
         await this.userProfile.set(step.context, user);
 
         await step.context.sendActivity({ attachments: [menu.productsMenu(user.claimInterInfo.division)] });
-        return await step.prompt(PRODUCT_NAME_PROMPT);
+        return await step.prompt(PRODUCT_NAME_PROMPT,
+            {
+                retryPrompt: 'Sorry, please select product in the list.'
+            });
     }
 
     // step 8
@@ -347,7 +393,7 @@ class ClaimInterDialog extends InterrupDialog {
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload defect picture.' };
+        const promptOptions = { prompt: 'Please upload defect picture. ()' };
 
         return await step.prompt(DEFECT_PICTURE_PROMPT, promptOptions);
     }
@@ -637,8 +683,10 @@ class ClaimInterDialog extends InterrupDialog {
     async submitBeforeStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
+
             await step.context.sendActivity('Claim success !');
-            helpers.sendMailTest(user);
+
+            helpers.sendMailBeforeInter(user);
         } else {
             await step.context.sendActivity('Your claim will not be kept.');
         }

@@ -103,7 +103,8 @@ class MainDialog extends InterrupDialog {
                 return step.next();
             }
             case CALL_CENTER: {
-                return await step.context.sendActivity(CALL_CENTER_RESPONSE);
+                await step.context.sendActivity(CALL_CENTER_RESPONSE);
+                return step.next();
             }
             case UPDATE_PROFILE: {
                 if (user.profile.name) {
