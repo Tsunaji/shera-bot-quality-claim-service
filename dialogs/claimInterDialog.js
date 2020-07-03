@@ -13,6 +13,7 @@ const { InterrupDialog } = require('./interrupDialog');
 const { MyMenu } = require('../MyMenu');
 const { Helpers } = require('../Helpers');
 const { Services } = require('../Services');
+const empty = require('is-empty');
 
 const menu = new MyMenu();
 const services = new Services();
@@ -36,17 +37,22 @@ const BATCH_NO_PROMPT = 'BATCH_NO_PROMPT';
 const INVOICE_SO_NUMBER_PROMPT = 'INVOICE_SO_NUMBER_PROMPT';
 const DEFECT_PROBLEM_PROMPT = 'DEFECT_PROBLEM_PROMPT';
 const DEFECT_PICTURE_PROMPT = 'DEFECT_PICTURE_PROMPT';
+const DEFECT_PICTURE_MORE_PROMPT = 'DEFECT_PICTURE_MORE_PROMPT';
 const QTY_OF_DEFECT_PROMPT = 'QTY_OF_DEFECT_PROMPT';
 const QTY_IN_SALE_ORDER_PROMPT = 'QTY_IN_SALE_ORDER_PROMPT';
 const CLAIM_COST_PROMPT = 'CLAIM_COST_PROMPT';
 const LABEL_PICTURE_PROMPT = 'LABEL_PICTURE_PROMPT';
+const LABEL_PICTURE_MORE_PROMPT = 'LABEL_PICTURE_MORE_PROMPT';
 const BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT = 'BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT';
 const REMARKS_PROMPT = 'REMARKS_PROMPT';
 
 // before installation problem dialog prompt
 const PROBLEM_IN_CONTAINER_PICTURE_PROMPT = 'PROBLEM_IN_CONTAINER_PICTURE_PROMPT';
+const PROBLEM_IN_CONTAINER_PICTURE_MORE_PROMPT = 'PROBLEM_IN_CONTAINER_PICTURE_MORE_PROMPT';
 const PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT = 'PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT';
+const PROBLEM_IN_WAREHOUSE_PICTURE_MORE_PROMPT = 'PROBLEM_IN_WAREHOUSE_PICTURE_MORE_PROMPT';
 const PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT = 'PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT';
+const PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_MORE_PROMPT = 'PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_MORE_PROMPT';
 
 // after installation problem dialog prompt
 const INSTALLATION_METHOD_PROMPT = 'INSTALLATION_METHOD_PROMPT';
@@ -56,14 +62,22 @@ const WHEN_INSTALLATION_PROBLEM_PROMPT = 'WHEN_INSTALLATION_PROBLEM_PROMPT';
 const KEEP_FINISHED_GOODS_PROMPT = 'KEEP_FINISHED_GOODS_PROMPT';
 const INSTALLATION_AREA_PROMPT = 'INSTALLATION_AREA_PROMPT';
 
-// general dialog
+// general prompt
 const CHOICE_PROMPT = 'CHOICE_PROMPT';
 const CONFIRM_PROMPT = 'CONFIRM_PROMPT';
 
+// dialog
 const CLAIM_INTER_DIALOG = 'CLAIM_INTER_DIALOG';
 const BEFORE_INSTALLTAION_PROBLEM_DIALOG = 'BEFORE_INSTALLTAION_PROBLEM_DIALOG';
 const AFTER_INSTALLTAION_PROBLEM_DIALOG = 'AFTER_INSTALLTAION_PROBLEM_DIALOG';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
+
+// repeat dialog
+const LOOP_DEFECT_PICTURE_DIALOG = 'LOOP_DEFECT_PICTURE_DIALOG';
+const LOOP_LABEL_PICTURE_DIALOG = 'LOOP_LABEL_PICTURE_DIALOG';
+const LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG = 'LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG';
+const LOOP_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG = 'LOOP_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG';
+const LOOP_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG = 'LOOP_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG';
 
 class ClaimInterDialog extends InterrupDialog {
     constructor(userProfile) {
@@ -173,6 +187,7 @@ class ClaimInterDialog extends InterrupDialog {
             this.invoiceSoNumberStep.bind(this),
             this.defectProblemStep.bind(this),
             this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
             this.qtyOfDefectStep.bind(this),
             this.qtyInSaleOrderStep.bind(this),
             this.claimCostStep.bind(this),
@@ -202,11 +217,20 @@ class ClaimInterDialog extends InterrupDialog {
             this.summaryAfterStep.bind(this),
             this.submitAfterStep.bind(this)
         ]));
+        this.addDialog(new WaterfallDialog(LOOP_DEFECT_PICTURE_DIALOG, [
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
     }
 
-    // step 1
     async distributorCodeStep(step) {
         const promptOptions = {
             prompt: 'Please enter distributor code.',
@@ -216,7 +240,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(DISTRIBUTOR_CODE_PROMPT, promptOptions);
     }
 
-    // step 2
     async retailerNameStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -237,7 +260,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(RETAILER_NAME_PROMPT, promptOptions);
     }
 
-    // step 3
     async nameOfContactPersonStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -250,7 +272,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
     }
 
-    // step 4
     async telephoneNumberStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -263,7 +284,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
     }
 
-    // step 5
     async customerAddressStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -276,7 +296,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
     }
 
-    // step 6
     async divisionStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -292,7 +311,6 @@ class ClaimInterDialog extends InterrupDialog {
             });
     }
 
-    // step 7
     async productNameStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -307,7 +325,6 @@ class ClaimInterDialog extends InterrupDialog {
             });
     }
 
-    // step 8
     async productGroupStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -320,7 +337,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(PRODUCT_GROUP_PROMPT, promptOptions);
     }
 
-    // step 9
     async productSizeStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -333,7 +349,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(PRODUCT_SIZE_PROMPT, promptOptions);
     }
 
-    // step 10
     async productColorStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -346,7 +361,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(PRODUCT_COLOR_PROMPT, promptOptions);
     }
 
-    // step 11
     async batchNoStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -359,7 +373,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(BATCH_NO_PROMPT, promptOptions);
     }
 
-    // step 12
     async invoiceSoNumberStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -372,7 +385,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INVOICE_SO_NUMBER_PROMPT, promptOptions);
     }
 
-    // step 13
     async defectProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -385,21 +397,29 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(DEFECT_PROBLEM_PROMPT, promptOptions);
     }
 
-    // step 14
     async defectPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.defectProblem = step.result;
+        console.log(step.result);
+
+        user.claimInterInfo.defectProblem = step.result || user.claimInterInfo.defectProblem;
+
+        // declare images array to object if come from previous step
+        if (step.result || step.options) {
+            console.log(true);
+            user.claimInterInfo.imagesResult = [];
+        }
+
+        console.log(user.claimInterInfo.imagesResult);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload defect picture. ()' };
+        const promptOptions = { prompt: 'Please upload defect picture. (1 image per times)' };
 
         return await step.prompt(DEFECT_PICTURE_PROMPT, promptOptions);
     }
 
-    // step 15
-    async qtyOfDefectStep(step) {
+    async defectPictureMoreStep(step) {
         let defectPicture = step.result[0];
 
         if (defectPicture.name) {
@@ -410,18 +430,29 @@ class ClaimInterDialog extends InterrupDialog {
             defectPicture.name = `defectPicture.jpeg`;
         }
 
+        defectPicture.tag = `defectPicture`;
+
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.defectPicture = defectPicture;
+        user.claimInterInfo.imagesResult.push(defectPicture);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please enter qty of defect. (Pcs.)' };
-
-        return await step.prompt(QTY_OF_DEFECT_PROMPT, promptOptions);
+        return await step.prompt(CONFIRM_PROMPT, {
+            prompt: 'Upload more defect picture ?'
+        });
     }
 
-    // step 16
+    async qtyOfDefectStep(step) {
+        if (step.result) {
+            return await step.replaceDialog(LOOP_DEFECT_PICTURE_DIALOG);
+        } else {
+            const promptOptions = { prompt: 'Please enter qty of defect. (Pcs.)' };
+
+            return await step.prompt(QTY_OF_DEFECT_PROMPT, promptOptions);
+        }
+    }
+
     async qtyInSaleOrderStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -434,7 +465,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(QTY_IN_SALE_ORDER_PROMPT, promptOptions);
     }
 
-    // step 17
     async claimCostStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -447,21 +477,23 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(CLAIM_COST_PROMPT, promptOptions);
     }
 
-    // step 18
     async labelPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.claimCost = step.result;
+        user.claimInterInfo.claimCost = step.result || user.claimInterInfo.claimCost;
+
+        if (step.result || step.options) {
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `labelPicture`);
+        }
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture.' };
+        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture. (1 image per times)' };
 
         return await step.prompt(LABEL_PICTURE_PROMPT, promptOptions);
     }
 
-    // step 19
-    async beforeOrAfterInstallationProblemStep(step) {
+    async labelPictureMoreStep(step) {
         let labelPicture = step.result[0];
 
         if (labelPicture.name) {
@@ -471,20 +503,30 @@ class ClaimInterDialog extends InterrupDialog {
         } else {
             labelPicture.name = `labelPicture.jpeg`;
         }
+        labelPicture.tag = `labelPicture`;
 
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.labelPicture = labelPicture;
+        user.claimInterInfo.imagesResult.push(labelPicture);
 
         await this.userProfile.set(step.context, user);
 
-        return await step.prompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT, {
-            prompt: 'Found problem before or after installation.',
-            choices: ChoiceFactory.toChoices(['before', 'after'])
+        return await step.prompt(CONFIRM_PROMPT, {
+            prompt: 'Upload more The white Label/Stamping batch/Inkjet picture ?'
         });
     }
 
-    // step 20
+    async beforeOrAfterInstallationProblemStep(step) {
+        if (step.result) {
+            return step.replaceDialog(LOOP_LABEL_PICTURE_DIALOG);
+        } else {
+            return await step.prompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT, {
+                prompt: 'Found problem before or after installation.',
+                choices: ChoiceFactory.toChoices(['before', 'after'])
+            });
+        }
+    }
+
     async beforeOrAfterInstallationActStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.beforeOrAfterInstalltaionProblem = step.result.value;
@@ -500,7 +542,6 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    // step 20.1.1.1
     async problemInContainerPictureConfirmStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.beforeInstallationProblem = new BeforeInstallationProblemModel();
@@ -511,18 +552,21 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 20.1.1.2
     async problemInContainerPictureStep(step) {
-        if (step.result) {
-            const promptOptions = { prompt: 'Please upload problem in container picture.' };
+        if (step.result || empty(step.options)) {
+            if (step.options) {
+                let user = await this.userProfile.get(step.context, {});
+                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
+                await this.userProfile.set(step.context, user);
+            }
+            const promptOptions = { prompt: 'Please upload problem in container picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
         }
     }
 
-    // step 20.1.2.1
-    async problemInWarehousePictureConfirmStep(step) {
+    async problemInContainerPictureMoreStep(step) {
         if (step.result) {
             let problemInContainerPicture = step.result[0];
 
@@ -533,28 +577,64 @@ class ClaimInterDialog extends InterrupDialog {
             } else {
                 problemInContainerPicture.name = `problemInContainerPicture.jpeg`;
             }
+            problemInContainerPicture.tag = `problemInContainerPicture`;
 
             let user = await this.userProfile.get(step.context, {});
-            user.claimInterInfo.beforeInstallationProblem.problemInContainerPicture = problemInContainerPicture;
+            user.claimInterInfo.imagesResult.push(problemInContainerPicture);
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
             await this.userProfile.set(step.context, user);
         }
+
+        return await step.prompt(CONFIRM_PROMPT, {
+            prompt: 'Upload more problem in container picture ?'
+        });
+    }
+
+    async problemInWarehousePictureConfirmStep(step) {
 
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'Found problem in warehouse ?'
         });
     }
 
-    // step 20.1.2.2
     async problemInWarehousePictureStep(step) {
-        if (step.result) {
-            const promptOptions = { prompt: 'Please upload problem in warehouse picture.' };
+        if (step.result || empty(step.options)) {
+            if (step.options) {
+                let user = await this.userProfile.get(step.context, {});
+                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
+                await this.userProfile.set(step.context, user);
+            }
+            const promptOptions = { prompt: 'Please upload problem in warehouse picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
         }
     }
 
-    // step 20.1.3.1
+    async problemInWarehousePictureMoreStep(step) {
+        if (step.result) {
+            let problemInContainerPicture = step.result[0];
+
+            if (problemInContainerPicture.name) {
+                var str = problemInContainerPicture.name;
+                var arr = str.split(".");
+                problemInContainerPicture.name = `problemInContainerPicture.${arr[1]}`;
+            } else {
+                problemInContainerPicture.name = `problemInContainerPicture.jpeg`;
+            }
+            problemInContainerPicture.tag = `problemInContainerPicture`;
+
+            let user = await this.userProfile.get(step.context, {});
+            user.claimInterInfo.imagesResult.push(problemInContainerPicture);
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
+            await this.userProfile.set(step.context, user);
+        }
+
+        return await step.prompt(CONFIRM_PROMPT, {
+            prompt: 'Upload more problem in warehouse picture ?'
+        });
+    }
+
     async problemWhileUnloadOrMovingPictureConfirmStep(step) {
         if (step.result) {
             let problemInWarehousePicture = step.result[0];
@@ -566,9 +646,11 @@ class ClaimInterDialog extends InterrupDialog {
             } else {
                 problemInWarehousePicture.name = `problemInWarehousePicture.jpeg`;
             }
+            problemInWarehousePicture.tag = `problemInWarehousePicture`;
 
             let user = await this.userProfile.get(step.context, {});
-            user.claimInterInfo.beforeInstallationProblem.problemInWarehousePicture = problemInWarehousePicture;
+            user.claimInterInfo.imagesResult.push(problemInWarehousePicture);
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemWhileUnloadingOrMovingPicture`);
             await this.userProfile.set(step.context, user);
         }
 
@@ -577,17 +659,15 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 20.1.3.2
     async problemWhileUnloadOrMovingPictureStep(step) {
         if (step.result) {
-            const promptOptions = { prompt: 'Please upload problem while unload / moving picture.' };
+            const promptOptions = { prompt: 'Please upload problem while unload / moving picture. (1 image per times)' };
             return await step.prompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
         }
     }
 
-    // step 20.1.4
     async remarksBeforeStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
@@ -601,8 +681,9 @@ class ClaimInterDialog extends InterrupDialog {
             } else {
                 problemWhileUnloadingOrMovingPicture.name = `problemWhileUnloadingOrMovingPicture.jpeg`;
             }
+            problemWhileUnloadingOrMovingPicture.tag = `problemWhileUnloadingOrMovingPicture`;
 
-            user.claimInterInfo.beforeInstallationProblem.problemWhileUnloadingOrMovingPicture = problemWhileUnloadingOrMovingPicture;
+            user.claimInterInfo.imagesResult.push(problemWhileUnloadingOrMovingPicture);
         }
 
         await this.userProfile.set(step.context, user);
@@ -612,38 +693,11 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(REMARKS_PROMPT, promptOptions);
     }
 
-    // step 20.1.5
     async summaryBeforeStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
         user.claimInterInfo.remarks = step.result;
 
-        //Clear Image Cach
-        user.claimInterInfo.imagesResult = [];
-
-        // collect images from standard flow
-        for (const prop in user.claimInterInfo) {
-            if (user.claimInterInfo[prop].name) {
-                var obj = {};
-                obj.name = user.claimInterInfo[prop].name;
-                obj.contentType = user.claimInterInfo[prop].contentType;
-                obj.contentUrl = user.claimInterInfo[prop].contentUrl;
-                user.claimInterInfo.imagesResult.push(obj);
-            }
-        }
-
-        // collect images from before installation problem flow
-        for (const prop in user.claimInterInfo.beforeInstallationProblem) {
-            if (user.claimInterInfo.beforeInstallationProblem[prop].name) {
-                var obj = {};
-                obj.name = user.claimInterInfo.beforeInstallationProblem[prop].name;
-                obj.contentType = user.claimInterInfo.beforeInstallationProblem[prop].contentType;
-                obj.contentUrl = user.claimInterInfo.beforeInstallationProblem[prop].contentUrl;
-                user.claimInterInfo.imagesResult.push(obj);
-            }
-        }
-
-        // save
         await this.userProfile.set(step.context, user);
 
         // show summary data
@@ -679,7 +733,6 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 20.1.6
     async submitBeforeStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
@@ -694,7 +747,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.endDialog();
     }
 
-    // step 20.2.1
     async installationMethodStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem = new AfterInstallationProblemModel();
@@ -705,7 +757,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INSTALLATION_METHOD_PROMPT, promptOptions);
     }
 
-    // step 20.2.2
     async equipmentTypeStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.installationMethod = step.result;
@@ -716,7 +767,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(EQUIPMENT_TYPE_PROMPT, promptOptions);
     }
 
-    // step 20.2.3
     async environmentInstallationStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.equipmentType = step.result;
@@ -727,7 +777,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(ENVIRONMENT_INSTALLATION_PROMPT, promptOptions);
     }
 
-    // step 20.2.4
     async whenInstallationProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.environmentInstallation = step.result;
@@ -738,7 +787,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(WHEN_INSTALLATION_PROBLEM_PROMPT, promptOptions);
     }
 
-    // step 20.2.5
     async keepFinishedGoodsStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.whenInstallationProblem = step.result;
@@ -749,7 +797,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(KEEP_FINISHED_GOODS_PROMPT, promptOptions);
     }
 
-    // step 20.2.6
     async installationAreaStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.keepFinishedGoods = step.result;
@@ -760,7 +807,6 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(INSTALLATION_AREA_PROMPT, promptOptions);
     }
 
-    // step 20.2.7
     async remarksAfterStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem.installationArea = step.result;
@@ -771,25 +817,10 @@ class ClaimInterDialog extends InterrupDialog {
         return await step.prompt(REMARKS_PROMPT, promptOptions);
     }
 
-    // step 20.2.8
     async summaryAfterStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
         user.claimInterInfo.remarks = step.result;
-
-        //Clear Image Cach
-        user.claimInterInfo.imagesResult = [];
-
-        // collect images from standard flow
-        for (const prop in user.claimInterInfo) {
-            if (user.claimInterInfo[prop].name) {
-                var obj = {};
-                obj.name = user.claimInterInfo[prop].name;
-                obj.contentType = user.claimInterInfo[prop].contentType;
-                obj.contentUrl = user.claimInterInfo[prop].contentUrl;
-                user.claimInterInfo.imagesResult.push(obj);
-            }
-        }
 
         await this.userProfile.set(step.context, user);
 
@@ -832,7 +863,6 @@ class ClaimInterDialog extends InterrupDialog {
         });
     }
 
-    // step 19.2.8
     async submitAfterStep(step) {
         if (step.result) {
             let user = await this.userProfile.get(step.context, {});
