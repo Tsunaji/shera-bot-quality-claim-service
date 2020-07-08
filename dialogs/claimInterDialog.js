@@ -21,6 +21,9 @@ const helpers = new Helpers();
 
 // text
 const EDIT = 'edit';
+const LOOP = 'loop';
+const YES = 'yes';
+const NO = 'no';
 
 // main dialog prompt
 const DISTRIBUTOR_CODE_PROMPT = 'DISTRIBUTOR_CODE_PROMPT';
@@ -37,22 +40,17 @@ const BATCH_NO_PROMPT = 'BATCH_NO_PROMPT';
 const INVOICE_SO_NUMBER_PROMPT = 'INVOICE_SO_NUMBER_PROMPT';
 const DEFECT_PROBLEM_PROMPT = 'DEFECT_PROBLEM_PROMPT';
 const DEFECT_PICTURE_PROMPT = 'DEFECT_PICTURE_PROMPT';
-const DEFECT_PICTURE_MORE_PROMPT = 'DEFECT_PICTURE_MORE_PROMPT';
 const QTY_OF_DEFECT_PROMPT = 'QTY_OF_DEFECT_PROMPT';
 const QTY_IN_SALE_ORDER_PROMPT = 'QTY_IN_SALE_ORDER_PROMPT';
 const CLAIM_COST_PROMPT = 'CLAIM_COST_PROMPT';
 const LABEL_PICTURE_PROMPT = 'LABEL_PICTURE_PROMPT';
-const LABEL_PICTURE_MORE_PROMPT = 'LABEL_PICTURE_MORE_PROMPT';
 const BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT = 'BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT';
 const REMARKS_PROMPT = 'REMARKS_PROMPT';
 
 // before installation problem dialog prompt
 const PROBLEM_IN_CONTAINER_PICTURE_PROMPT = 'PROBLEM_IN_CONTAINER_PICTURE_PROMPT';
-const PROBLEM_IN_CONTAINER_PICTURE_MORE_PROMPT = 'PROBLEM_IN_CONTAINER_PICTURE_MORE_PROMPT';
 const PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT = 'PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT';
-const PROBLEM_IN_WAREHOUSE_PICTURE_MORE_PROMPT = 'PROBLEM_IN_WAREHOUSE_PICTURE_MORE_PROMPT';
 const PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT = 'PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT';
-const PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_MORE_PROMPT = 'PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_MORE_PROMPT';
 
 // after installation problem dialog prompt
 const INSTALLATION_METHOD_PROMPT = 'INSTALLATION_METHOD_PROMPT';
@@ -192,16 +190,50 @@ class ClaimInterDialog extends InterrupDialog {
             this.qtyInSaleOrderStep.bind(this),
             this.claimCostStep.bind(this),
             this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
             this.beforeOrAfterInstallationProblemStep.bind(this),
             this.beforeOrAfterInstallationActStep.bind(this)
         ]));
         this.addDialog(new WaterfallDialog(BEFORE_INSTALLTAION_PROBLEM_DIALOG, [
             this.problemInContainerPictureConfirmStep.bind(this),
             this.problemInContainerPictureStep.bind(this),
+            this.problemInContainerPictureMoreStep.bind(this),
             this.problemInWarehousePictureConfirmStep.bind(this),
             this.problemInWarehousePictureStep.bind(this),
+            this.problemInWarehousePictureMoreStep.bind(this),
             this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
             this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG, [
+            this.problemInContainerPictureStep.bind(this),
+            this.problemInContainerPictureMoreStep.bind(this),
+            this.problemInWarehousePictureConfirmStep.bind(this),
+            this.problemInWarehousePictureStep.bind(this),
+            this.problemInWarehousePictureMoreStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(LOOP_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG, [
+            this.problemInWarehousePictureStep.bind(this),
+            this.problemInWarehousePictureMoreStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(LOOP_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG, [
+            this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
             this.remarksBeforeStep.bind(this),
             this.summaryBeforeStep.bind(this),
             this.submitBeforeStep.bind(this)
@@ -224,6 +256,13 @@ class ClaimInterDialog extends InterrupDialog {
             this.qtyInSaleOrderStep.bind(this),
             this.claimCostStep.bind(this),
             this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(LOOP_LABEL_PICTURE_DIALOG, [
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
             this.beforeOrAfterInstallationProblemStep.bind(this),
             this.beforeOrAfterInstallationActStep.bind(this)
         ]));
@@ -232,6 +271,10 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async distributorCodeStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+        user.claimInterInfo = new ClaimInterModel();
+        await this.userProfile.set(step.context, user);
+
         const promptOptions = {
             prompt: 'Please enter distributor code.',
             retryPrompt: 'Sorry, wrong code or not found.\n\nPlease try again or contact to Admin to load distributor data.'
@@ -242,8 +285,6 @@ class ClaimInterDialog extends InterrupDialog {
 
     async retailerNameStep(step) {
         let user = await this.userProfile.get(step.context, {});
-
-        user.claimInterInfo = new ClaimInterModel();
 
         //save customer data
         let customer = user.customerInfo[0];
@@ -400,17 +441,13 @@ class ClaimInterDialog extends InterrupDialog {
     async defectPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        console.log(step.result);
-
         user.claimInterInfo.defectProblem = step.result || user.claimInterInfo.defectProblem;
 
         // declare images array to object if come from previous step
-        if (step.result || step.options) {
-            console.log(true);
+        if (step.result || user.status === EDIT) {
             user.claimInterInfo.imagesResult = [];
+            user.status = '';
         }
-
-        console.log(user.claimInterInfo.imagesResult);
 
         await this.userProfile.set(step.context, user);
 
@@ -438,6 +475,8 @@ class ClaimInterDialog extends InterrupDialog {
 
         await this.userProfile.set(step.context, user);
 
+        console.log(user.claimInterInfo.imagesResult);
+
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'Upload more defect picture ?'
         });
@@ -445,10 +484,10 @@ class ClaimInterDialog extends InterrupDialog {
 
     async qtyOfDefectStep(step) {
         if (step.result) {
+            let user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(LOOP_DEFECT_PICTURE_DIALOG);
         } else {
             const promptOptions = { prompt: 'Please enter qty of defect. (Pcs.)' };
-
             return await step.prompt(QTY_OF_DEFECT_PROMPT, promptOptions);
         }
     }
@@ -482,7 +521,7 @@ class ClaimInterDialog extends InterrupDialog {
 
         user.claimInterInfo.claimCost = step.result || user.claimInterInfo.claimCost;
 
-        if (step.result || step.options) {
+        if (step.result || !empty(step.options)) {
             user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `labelPicture`);
         }
 
@@ -553,12 +592,16 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemInContainerPictureStep(step) {
-        if (step.result || empty(step.options)) {
-            if (step.options) {
-                let user = await this.userProfile.get(step.context, {});
+        let user = await this.userProfile.get(step.context, {});
+
+        if (step.result || user.status === EDIT || user.status === LOOP) {
+            if (step.result || user.status === EDIT) {
                 user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
+                user.status = '';
                 await this.userProfile.set(step.context, user);
             }
+
+            await this.userProfile.set(step.context, user);
             const promptOptions = { prompt: 'Please upload problem in container picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, promptOptions);
         } else {
@@ -581,29 +624,40 @@ class ClaimInterDialog extends InterrupDialog {
 
             let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemInContainerPicture);
-            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
             await this.userProfile.set(step.context, user);
+
+            return await step.prompt(CONFIRM_PROMPT, {
+                prompt: 'Upload more problem in container picture ?'
+            });
         }
 
-        return await step.prompt(CONFIRM_PROMPT, {
-            prompt: 'Upload more problem in container picture ?'
-        });
+        return await step.next();
     }
 
     async problemInWarehousePictureConfirmStep(step) {
-
-        return await step.prompt(CONFIRM_PROMPT, {
-            prompt: 'Found problem in warehouse ?'
-        });
+        if (step.result) {
+            let user = await this.userProfile.get(step.context, {});
+            user.status = LOOP;
+            await this.userProfile.set(step.context, user);
+            return step.replaceDialog(LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG);
+        } else {
+            return await step.prompt(CONFIRM_PROMPT, {
+                prompt: 'Found problem in warehouse ?'
+            });
+        }
     }
 
     async problemInWarehousePictureStep(step) {
-        if (step.result || empty(step.options)) {
-            if (step.options) {
-                let user = await this.userProfile.get(step.context, {});
-                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
+        let user = await this.userProfile.get(step.context, {});
+
+        if (step.result || user.status === EDIT || user.status === LOOP) {
+            if (step.result || user.status === EDIT) {
+                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
+                user.status = '';
                 await this.userProfile.set(step.context, user);
             }
+
+            await this.userProfile.set(step.context, user);
             const promptOptions = { prompt: 'Please upload problem in warehouse picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, promptOptions);
         } else {
@@ -612,30 +666,6 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemInWarehousePictureMoreStep(step) {
-        if (step.result) {
-            let problemInContainerPicture = step.result[0];
-
-            if (problemInContainerPicture.name) {
-                var str = problemInContainerPicture.name;
-                var arr = str.split(".");
-                problemInContainerPicture.name = `problemInContainerPicture.${arr[1]}`;
-            } else {
-                problemInContainerPicture.name = `problemInContainerPicture.jpeg`;
-            }
-            problemInContainerPicture.tag = `problemInContainerPicture`;
-
-            let user = await this.userProfile.get(step.context, {});
-            user.claimInterInfo.imagesResult.push(problemInContainerPicture);
-            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
-            await this.userProfile.set(step.context, user);
-        }
-
-        return await step.prompt(CONFIRM_PROMPT, {
-            prompt: 'Upload more problem in warehouse picture ?'
-        });
-    }
-
-    async problemWhileUnloadOrMovingPictureConfirmStep(step) {
         if (step.result) {
             let problemInWarehousePicture = step.result[0];
 
@@ -650,17 +680,40 @@ class ClaimInterDialog extends InterrupDialog {
 
             let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemInWarehousePicture);
-            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemWhileUnloadingOrMovingPicture`);
             await this.userProfile.set(step.context, user);
+
+            return await step.prompt(CONFIRM_PROMPT, {
+                prompt: 'Upload more problem in warehouse picture ?'
+            });
         }
 
-        return await step.prompt(CONFIRM_PROMPT, {
-            prompt: 'Found problem while unload / moving ?'
-        });
+        return await step.next();
+    }
+
+    async problemWhileUnloadOrMovingPictureConfirmStep(step) {
+        if (step.result) {
+            let user = await this.userProfile.get(step.context, {});
+            user.status = LOOP;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(LOOP_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG);
+        } else {
+            return await step.prompt(CONFIRM_PROMPT, {
+                prompt: 'Found problem while unload / moving ?'
+            });
+        }
     }
 
     async problemWhileUnloadOrMovingPictureStep(step) {
-        if (step.result) {
+        let user = await this.userProfile.get(step.context, {});
+
+        if (step.result || user.status === EDIT || user.status === LOOP) {
+            if (step.result || user.status === EDIT) {
+                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemWhileUnloadingOrMovingPicture`);
+                user.status = '';
+                await this.userProfile.set(step.context, user);
+            }
+
+            await this.userProfile.set(step.context, user);
             const promptOptions = { prompt: 'Please upload problem while unload / moving picture. (1 image per times)' };
             return await step.prompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, promptOptions);
         } else {
@@ -668,9 +721,7 @@ class ClaimInterDialog extends InterrupDialog {
         }
     }
 
-    async remarksBeforeStep(step) {
-        let user = await this.userProfile.get(step.context, {});
-
+    async problemWhileUnloadOrMovingPictureMoreStep(step) {
         if (step.result) {
             let problemWhileUnloadingOrMovingPicture = step.result[0];
 
@@ -683,14 +734,28 @@ class ClaimInterDialog extends InterrupDialog {
             }
             problemWhileUnloadingOrMovingPicture.tag = `problemWhileUnloadingOrMovingPicture`;
 
+            let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemWhileUnloadingOrMovingPicture);
+            await this.userProfile.set(step.context, user);
+
+            return await step.prompt(CONFIRM_PROMPT, {
+                prompt: 'Upload more problem while unload / moving picture ?'
+            });
         }
 
-        await this.userProfile.set(step.context, user);
+        return await step.next();
+    }
 
-        const promptOptions = { prompt: 'Please enter remarks information (if no please enter "-").' };
-
-        return await step.prompt(REMARKS_PROMPT, promptOptions);
+    async remarksBeforeStep(step) {
+        if (step.result) {
+            let user = await this.userProfile.get(step.context, {});
+            user.status = LOOP;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(LOOP_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG);
+        } else {
+            const promptOptions = { prompt: 'Please enter remarks information (if no please enter "-").' };
+            return await step.prompt(REMARKS_PROMPT, promptOptions);
+        }
     }
 
     async summaryBeforeStep(step) {
