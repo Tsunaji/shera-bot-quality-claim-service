@@ -71,6 +71,36 @@ const AFTER_INSTALLTAION_PROBLEM_DIALOG = 'AFTER_INSTALLTAION_PROBLEM_DIALOG';
 const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 
 // repeat dialog
+const REPEAT_RETAILER_NAME_DIALOG = 'REPEAT_RETAILER_NAME_DIALOG';
+const REPEAT_NAME_OF_CONTACT_PERSON_DIALOG = 'REPEAT_NAME_OF_CONTACT_PERSON_DIALOG';
+const REPEAT_TELEPHONE_NUMBER_DIALOG = 'REPEAT_TELEPHONE_NUMBER_DIALOG';
+const REPEAT_CUSTOMER_ADDRESS_DIALOG = 'REPEAT_CUSTOMER_ADDRESS_DIALOG';
+const REPEAT_DIVISION_DIALOG = 'REPEAT_DIVISION_DIALOG';
+const REPEAT_PRODUCT_NAME_DIALOG = 'REPEAT_PRODUCT_NAME_DIALOG';
+const REPEAT_PRODUCT_GROUP_DIALOG = 'REPEAT_PRODUCT_GROUP_DIALOG';
+const REPEAT_PRODUCT_SIZE_DIALOG = 'REPEAT_PRODUCT_SIZE_DIALOG';
+const REPEAT_PRODUCT_COLOR_DIALOG = 'REPEAT_PRODUCT_COLOR_DIALOG';
+const REPEAT_BATCH_NO_DIALOG = 'REPEAT_BATCH_NO_DIALOG';
+const REPEAT_INVOICE_SO_NUMBER_DIALOG = 'REPEAT_INVOICE_SO_NUMBER_DIALOG';
+const REPEAT_DEFECT_PROBLEM_DIALOG = 'REPEAT_DEFECT_PROBLEM_DIALOG';
+const REPEAT_DEFECT_PICTURE_DIALOG = 'REPEAT_DEFECT_PICTURE_DIALOG';
+const REPEAT_QTY_OF_DEFECT_DIALOG = 'REPEAT_QTY_OF_DEFECT_DIALOG';
+const REPEAT_QTY_IN_SALE_ORDER_DIALOG = 'REPEAT_QTY_IN_SALE_ORDER_DIALOG';
+const REPEAT_CLAIM_COST_DIALOG = 'REPEAT_CLAIM_COST_DIALOG';
+const REPEAT_LABEL_PICTURE_DIALOG = 'REPEAT_LABEL_PICTURE_DIALOG';
+const REPEAT_BEFORE_OR_AFTER_INSTALLATION_PROBLEM_DIALOG = 'REPEAT_BEFORE_OR_AFTER_INSTALLATION_PROBLEM_DIALOG';
+const REPEAT_REMARKS_BEFORE_DIALOG = 'REPEAT_REMARKS_BEFORE_DIALOG';
+const REPEAT_REMARKS_AFTER_DIALOG = 'REPEAT_REMARKS_AFTER_DIALOG';
+const REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG = 'REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG';
+const REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG = 'REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG';
+const REPEAT_INSTALLATION_METHOD_DIALOG = 'REPEAT_INSTALLATION_METHOD_DIALOG';
+const REPEAT_EQUIPMENT_TYPE_DIALOG = 'REPEAT_EQUIPMENT_TYPE_DIALOG';
+const REPEAT_ENVIRONMENT_INSTALLATION_DIALOG = 'REPEAT_ENVIRONMENT_INSTALLATION_DIALOG';
+const REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG = 'REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG';
+const REPEAT_KEEP_FINISHED_GOODS_DIALOG = 'REPEAT_KEEP_FINISHED_GOODS_DIALOG';
+const REPEAT_INSTALLATION_AREA_DIALOG = 'REPEAT_INSTALLATION_AREA_DIALOG    ';
+
+// loop images dialog
 const LOOP_DEFECT_PICTURE_DIALOG = 'LOOP_DEFECT_PICTURE_DIALOG';
 const LOOP_LABEL_PICTURE_DIALOG = 'LOOP_LABEL_PICTURE_DIALOG';
 const LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG = 'LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG';
@@ -152,24 +182,56 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(BATCH_NO_PROMPT));
         this.addDialog(new TextPrompt(INVOICE_SO_NUMBER_PROMPT));
         this.addDialog(new TextPrompt(DEFECT_PROBLEM_PROMPT));
-        this.addDialog(new AttachmentPrompt(DEFECT_PICTURE_PROMPT));
+        this.addDialog(new AttachmentPrompt(DEFECT_PICTURE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
         this.addDialog(new TextPrompt(QTY_OF_DEFECT_PROMPT));
         this.addDialog(new TextPrompt(QTY_IN_SALE_ORDER_PROMPT));
         this.addDialog(new TextPrompt(CLAIM_COST_PROMPT));
-        this.addDialog(new AttachmentPrompt(LABEL_PICTURE_PROMPT));
-        this.addDialog(new ChoicePrompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT));
+        this.addDialog(new AttachmentPrompt(LABEL_PICTURE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
+        this.addDialog(new ChoicePrompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
         this.addDialog(new TextPrompt(REMARKS_PROMPT));
-        this.addDialog(new AttachmentPrompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT));
-        this.addDialog(new AttachmentPrompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT));
-        this.addDialog(new AttachmentPrompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT));
+        this.addDialog(new AttachmentPrompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
+        this.addDialog(new AttachmentPrompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
+        this.addDialog(new AttachmentPrompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
         this.addDialog(new TextPrompt(INSTALLATION_METHOD_PROMPT));
         this.addDialog(new TextPrompt(EQUIPMENT_TYPE_PROMPT));
         this.addDialog(new TextPrompt(ENVIRONMENT_INSTALLATION_PROMPT));
         this.addDialog(new TextPrompt(WHEN_INSTALLATION_PROBLEM_PROMPT));
         this.addDialog(new TextPrompt(KEEP_FINISHED_GOODS_PROMPT));
         this.addDialog(new TextPrompt(INSTALLATION_AREA_PROMPT));
-        this.addDialog(new ChoicePrompt(CHOICE_PROMPT));
-        this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT));
+        this.addDialog(new ChoicePrompt(CHOICE_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
+        this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT, async (prompt) => {
+            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+                return true;
+            }
+        }));
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.distributorCodeStep.bind(this),
             this.retailerNameStep.bind(this),
@@ -194,6 +256,263 @@ class ClaimInterDialog extends InterrupDialog {
             this.beforeOrAfterInstallationProblemStep.bind(this),
             this.beforeOrAfterInstallationActStep.bind(this)
         ]));
+
+        // repeat dialog
+        this.addDialog(new WaterfallDialog(REPEAT_RETAILER_NAME_DIALOG, [
+            this.retailerNameStep.bind(this),
+            this.nameOfContactPersonStep.bind(this),
+            this.telephoneNumberStep.bind(this),
+            this.customerAddressStep.bind(this),
+            this.divisionStep.bind(this),
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG, [
+            this.nameOfContactPersonStep.bind(this),
+            this.telephoneNumberStep.bind(this),
+            this.customerAddressStep.bind(this),
+            this.divisionStep.bind(this),
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_TELEPHONE_NUMBER_DIALOG, [
+            this.telephoneNumberStep.bind(this),
+            this.customerAddressStep.bind(this),
+            this.divisionStep.bind(this),
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG, [
+            this.customerAddressStep.bind(this),
+            this.divisionStep.bind(this),
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_DIVISION_DIALOG, [
+            this.divisionStep.bind(this),
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PRODUCT_NAME_DIALOG, [
+            this.productNameStep.bind(this),
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PRODUCT_GROUP_DIALOG, [
+            this.productGroupStep.bind(this),
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PRODUCT_SIZE_DIALOG, [
+            this.productSizeStep.bind(this),
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PRODUCT_COLOR_DIALOG, [
+            this.productColorStep.bind(this),
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_BATCH_NO_DIALOG, [
+            this.batchNoStep.bind(this),
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_INVOICE_SO_NUMBER_DIALOG, [
+            this.invoiceSoNumberStep.bind(this),
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_DEFECT_PROBLEM_DIALOG, [
+            this.defectProblemStep.bind(this),
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_DEFECT_PICTURE_DIALOG, [
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_QTY_OF_DEFECT_DIALOG, [
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_QTY_IN_SALE_ORDER_DIALOG, [
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_CLAIM_COST_DIALOG, [
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_LABEL_PICTURE_DIALOG, [
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_BEFORE_OR_AFTER_INSTALLATION_PROBLEM_DIALOG, [
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
         this.addDialog(new WaterfallDialog(BEFORE_INSTALLTAION_PROBLEM_DIALOG, [
             this.problemInContainerPictureConfirmStep.bind(this),
             this.problemInContainerPictureStep.bind(this),
@@ -207,6 +526,106 @@ class ClaimInterDialog extends InterrupDialog {
             this.remarksBeforeStep.bind(this),
             this.summaryBeforeStep.bind(this),
             this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG, [
+            this.problemInWarehousePictureConfirmStep.bind(this),
+            this.problemInWarehousePictureStep.bind(this),
+            this.problemInWarehousePictureMoreStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG, [
+            this.problemWhileUnloadOrMovingPictureConfirmStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureStep.bind(this),
+            this.problemWhileUnloadOrMovingPictureMoreStep.bind(this),
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_REMARKS_BEFORE_DIALOG, [
+            this.remarksBeforeStep.bind(this),
+            this.summaryBeforeStep.bind(this),
+            this.submitBeforeStep.bind(this)
+        ]));
+
+        this.addDialog(new WaterfallDialog(AFTER_INSTALLTAION_PROBLEM_DIALOG, [
+            this.installationMethodStep.bind(this),
+            this.equipmentTypeStep.bind(this),
+            this.environmentInstallationStep.bind(this),
+            this.whenInstallationProblemStep.bind(this),
+            this.keepFinishedGoodsStep.bind(this),
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_EQUIPMENT_TYPE_DIALOG, [
+            this.equipmentTypeStep.bind(this),
+            this.environmentInstallationStep.bind(this),
+            this.whenInstallationProblemStep.bind(this),
+            this.keepFinishedGoodsStep.bind(this),
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_ENVIRONMENT_INSTALLATION_DIALOG, [
+            this.environmentInstallationStep.bind(this),
+            this.whenInstallationProblemStep.bind(this),
+            this.keepFinishedGoodsStep.bind(this),
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG, [
+            this.whenInstallationProblemStep.bind(this),
+            this.keepFinishedGoodsStep.bind(this),
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_KEEP_FINISHED_GOODS_DIALOG, [
+            this.keepFinishedGoodsStep.bind(this),
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_INSTALLATION_AREA_DIALOG, [
+            this.installationAreaStep.bind(this),
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(REPEAT_REMARKS_AFTER_DIALOG, [
+            this.remarksAfterStep.bind(this),
+            this.summaryAfterStep.bind(this),
+            this.submitAfterStep.bind(this)
+        ]));
+
+        // loop get images
+        this.addDialog(new WaterfallDialog(LOOP_DEFECT_PICTURE_DIALOG, [
+            this.defectPictureStep.bind(this),
+            this.defectPictureMoreStep.bind(this),
+            this.qtyOfDefectStep.bind(this),
+            this.qtyInSaleOrderStep.bind(this),
+            this.claimCostStep.bind(this),
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
+        ]));
+        this.addDialog(new WaterfallDialog(LOOP_LABEL_PICTURE_DIALOG, [
+            this.labelPictureStep.bind(this),
+            this.labelPictureMoreStep.bind(this),
+            this.beforeOrAfterInstallationProblemStep.bind(this),
+            this.beforeOrAfterInstallationActStep.bind(this)
         ]));
         this.addDialog(new WaterfallDialog(LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG, [
             this.problemInContainerPictureStep.bind(this),
@@ -238,34 +657,6 @@ class ClaimInterDialog extends InterrupDialog {
             this.summaryBeforeStep.bind(this),
             this.submitBeforeStep.bind(this)
         ]));
-        this.addDialog(new WaterfallDialog(AFTER_INSTALLTAION_PROBLEM_DIALOG, [
-            this.installationMethodStep.bind(this),
-            this.equipmentTypeStep.bind(this),
-            this.environmentInstallationStep.bind(this),
-            this.whenInstallationProblemStep.bind(this),
-            this.keepFinishedGoodsStep.bind(this),
-            this.installationAreaStep.bind(this),
-            this.remarksAfterStep.bind(this),
-            this.summaryAfterStep.bind(this),
-            this.submitAfterStep.bind(this)
-        ]));
-        this.addDialog(new WaterfallDialog(LOOP_DEFECT_PICTURE_DIALOG, [
-            this.defectPictureStep.bind(this),
-            this.defectPictureMoreStep.bind(this),
-            this.qtyOfDefectStep.bind(this),
-            this.qtyInSaleOrderStep.bind(this),
-            this.claimCostStep.bind(this),
-            this.labelPictureStep.bind(this),
-            this.labelPictureMoreStep.bind(this),
-            this.beforeOrAfterInstallationProblemStep.bind(this),
-            this.beforeOrAfterInstallationActStep.bind(this)
-        ]));
-        this.addDialog(new WaterfallDialog(LOOP_LABEL_PICTURE_DIALOG, [
-            this.labelPictureStep.bind(this),
-            this.labelPictureMoreStep.bind(this),
-            this.beforeOrAfterInstallationProblemStep.bind(this),
-            this.beforeOrAfterInstallationActStep.bind(this)
-        ]));
 
         this.initialDialogId = WATERFALL_DIALOG;
     }
@@ -273,7 +664,15 @@ class ClaimInterDialog extends InterrupDialog {
     async distributorCodeStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo = new ClaimInterModel();
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         await this.userProfile.set(step.context, user);
+
+        await step.context.sendActivity(`You can enter "cancel" for reset conversation\n\n\
+or enter "edit" for change previous step.`);
 
         const promptOptions = {
             prompt: 'Please enter distributor code.',
@@ -304,7 +703,18 @@ class ClaimInterDialog extends InterrupDialog {
     async nameOfContactPersonStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.retailerName = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(WATERFALL_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.retailerName = step.result || user.claimInterInfo.retailerName;
 
         await this.userProfile.set(step.context, user);
 
@@ -316,7 +726,18 @@ class ClaimInterDialog extends InterrupDialog {
     async telephoneNumberStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.nameOfContactPerson = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.nameOfContactPerson = step.result || user.claimInterInfo.nameOfContactPerson;
 
         await this.userProfile.set(step.context, user);
 
@@ -328,7 +749,18 @@ class ClaimInterDialog extends InterrupDialog {
     async customerAddressStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.telephoneNumber = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.telephoneNumber = step.result || user.claimInterInfo.telephoneNumber;
 
         await this.userProfile.set(step.context, user);
 
@@ -340,7 +772,18 @@ class ClaimInterDialog extends InterrupDialog {
     async divisionStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.customerAddress = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_TELEPHONE_NUMBER_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.customerAddress = step.result || user.claimInterInfo.customerAddress;
 
         await this.userProfile.set(step.context, user);
 
@@ -355,7 +798,18 @@ class ClaimInterDialog extends InterrupDialog {
     async productNameStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.division = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.division = step.result || user.claimInterInfo.division;
 
         await this.userProfile.set(step.context, user);
 
@@ -369,7 +823,18 @@ class ClaimInterDialog extends InterrupDialog {
     async productGroupStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.productName = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_DIVISION_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.productName = step.result || user.claimInterInfo.productName;
 
         await this.userProfile.set(step.context, user);
 
@@ -381,7 +846,18 @@ class ClaimInterDialog extends InterrupDialog {
     async productSizeStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.productGroup = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PRODUCT_NAME_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.productGroup = step.result || user.claimInterInfo.productGroup;
 
         await this.userProfile.set(step.context, user);
 
@@ -393,7 +869,18 @@ class ClaimInterDialog extends InterrupDialog {
     async productColorStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.productSize = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PRODUCT_GROUP_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.productSize = step.result || user.claimInterInfo.productSize;
 
         await this.userProfile.set(step.context, user);
 
@@ -404,6 +891,17 @@ class ClaimInterDialog extends InterrupDialog {
 
     async batchNoStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PRODUCT_SIZE_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
 
         user.claimInterInfo.productColor = step.result;
 
@@ -417,7 +915,18 @@ class ClaimInterDialog extends InterrupDialog {
     async invoiceSoNumberStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.batchNo = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PRODUCT_COLOR_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.batchNo = step.result || user.claimInterInfo.batchNo;
 
         await this.userProfile.set(step.context, user);
 
@@ -429,7 +938,18 @@ class ClaimInterDialog extends InterrupDialog {
     async defectProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.invoiceSoNumber = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_BATCH_NO_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.invoiceSoNumber = step.result || user.claimInterInfo.invoiceSoNumber;
 
         await this.userProfile.set(step.context, user);
 
@@ -441,13 +961,19 @@ class ClaimInterDialog extends InterrupDialog {
     async defectPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.defectProblem = step.result || user.claimInterInfo.defectProblem;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_INVOICE_SO_NUMBER_DIALOG);
+        }
 
-        // declare images array to object if come from previous step
         if (step.result || user.status === EDIT) {
             user.claimInterInfo.imagesResult = [];
             user.status = '';
         }
+
+        user.claimInterInfo.defectProblem = step.result || user.claimInterInfo.defectProblem;
 
         await this.userProfile.set(step.context, user);
 
@@ -457,6 +983,15 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async defectPictureMoreStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_DEFECT_PROBLEM_DIALOG);
+        }
+
         let defectPicture = step.result[0];
 
         if (defectPicture.name) {
@@ -466,16 +1001,10 @@ class ClaimInterDialog extends InterrupDialog {
         } else {
             defectPicture.name = `defectPicture.jpeg`;
         }
-
         defectPicture.tag = `defectPicture`;
 
-        let user = await this.userProfile.get(step.context, {});
-
         user.claimInterInfo.imagesResult.push(defectPicture);
-
         await this.userProfile.set(step.context, user);
-
-        console.log(user.claimInterInfo.imagesResult);
 
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'Upload more defect picture ?'
@@ -483,10 +1012,23 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async qtyOfDefectStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_DEFECT_PICTURE_DIALOG);
+        }
+
         if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
             return await step.replaceDialog(LOOP_DEFECT_PICTURE_DIALOG);
         } else {
+            if (user.status === EDIT) {
+                user.status = '';
+            }
+            await this.userProfile.set(step.context, user);
             const promptOptions = { prompt: 'Please enter qty of defect. (Pcs.)' };
             return await step.prompt(QTY_OF_DEFECT_PROMPT, promptOptions);
         }
@@ -495,7 +1037,18 @@ class ClaimInterDialog extends InterrupDialog {
     async qtyInSaleOrderStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.qtyOfDefect = step.result;
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_DEFECT_PICTURE_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.qtyOfDefect = step.result || user.claimInterInfo.qtyOfDefect;
 
         await this.userProfile.set(step.context, user);
 
@@ -507,7 +1060,18 @@ class ClaimInterDialog extends InterrupDialog {
     async claimCostStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.qtyInSaleOrder = step.result;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_QTY_OF_DEFECT_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        user.claimInterInfo.qtyInSaleOrder = step.result || user.claimInterInfo.qtyInSaleOrder;
 
         await this.userProfile.set(step.context, user);
 
@@ -519,11 +1083,19 @@ class ClaimInterDialog extends InterrupDialog {
     async labelPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        user.claimInterInfo.claimCost = step.result || user.claimInterInfo.claimCost;
+        let utterance = step.result || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_QTY_IN_SALE_ORDER_DIALOG);
+        }
 
-        if (step.result || !empty(step.options)) {
+        if (step.result || user.status === EDIT) {
+            user.status = '';
             user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `labelPicture`);
         }
+
+        user.claimInterInfo.claimCost = step.result || user.claimInterInfo.claimCost;
 
         await this.userProfile.set(step.context, user);
 
@@ -533,6 +1105,15 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async labelPictureMoreStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_CLAIM_COST_DIALOG);
+        }
+
         let labelPicture = step.result[0];
 
         if (labelPicture.name) {
@@ -544,8 +1125,6 @@ class ClaimInterDialog extends InterrupDialog {
         }
         labelPicture.tag = `labelPicture`;
 
-        let user = await this.userProfile.get(step.context, {});
-
         user.claimInterInfo.imagesResult.push(labelPicture);
 
         await this.userProfile.set(step.context, user);
@@ -556,6 +1135,19 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async beforeOrAfterInstallationProblemStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_LABEL_PICTURE_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         if (step.result) {
             return step.replaceDialog(LOOP_LABEL_PICTURE_DIALOG);
         } else {
@@ -568,6 +1160,14 @@ class ClaimInterDialog extends InterrupDialog {
 
     async beforeOrAfterInstallationActStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_LABEL_PICTURE_DIALOG);
+        }
+
         user.claimInterInfo.beforeOrAfterInstalltaionProblem = step.result.value;
         await this.userProfile.set(step.context, user);
 
@@ -584,6 +1184,12 @@ class ClaimInterDialog extends InterrupDialog {
     async problemInContainerPictureConfirmStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.beforeInstallationProblem = new BeforeInstallationProblemModel();
+
+        if (step.result || user.status === EDIT) {
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
+            user.status = '';
+        }
+
         await this.userProfile.set(step.context, user);
 
         return await step.prompt(CONFIRM_PROMPT, {
@@ -594,14 +1200,15 @@ class ClaimInterDialog extends InterrupDialog {
     async problemInContainerPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        if (step.result || user.status === EDIT || user.status === LOOP) {
-            if (step.result || user.status === EDIT) {
-                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInContainerPicture`);
-                user.status = '';
-                await this.userProfile.set(step.context, user);
-            }
+        let utterance = step.context.activity.text || '';
 
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
             await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_BEFORE_OR_AFTER_INSTALLATION_PROBLEM_DIALOG);
+        }
+
+        if (step.result || user.status === LOOP) {
             const promptOptions = { prompt: 'Please upload problem in container picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, promptOptions);
         } else {
@@ -610,6 +1217,15 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemInContainerPictureMoreStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(BEFORE_INSTALLTAION_PROBLEM_DIALOG);
+        }
+
         if (step.result) {
             let problemInContainerPicture = step.result[0];
 
@@ -622,7 +1238,6 @@ class ClaimInterDialog extends InterrupDialog {
             }
             problemInContainerPicture.tag = `problemInContainerPicture`;
 
-            let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemInContainerPicture);
             await this.userProfile.set(step.context, user);
 
@@ -635,8 +1250,22 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemInWarehousePictureConfirmStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(BEFORE_INSTALLTAION_PROBLEM_DIALOG);
+        }
+
+        if (step.result || user.status === EDIT) {
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
+            user.status = '';
+            await this.userProfile.set(step.context, user);
+        }
+
         if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
             user.status = LOOP;
             await this.userProfile.set(step.context, user);
             return step.replaceDialog(LOOP_PROBLEM_IN_CONTAINER_PICTURE_DIALOG);
@@ -650,14 +1279,14 @@ class ClaimInterDialog extends InterrupDialog {
     async problemInWarehousePictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        if (step.result || user.status === EDIT || user.status === LOOP) {
-            if (step.result || user.status === EDIT) {
-                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemInWarehousePicture`);
-                user.status = '';
-                await this.userProfile.set(step.context, user);
-            }
-
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
             await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(BEFORE_INSTALLTAION_PROBLEM_DIALOG);
+        }
+
+        if (step.result || user.status === LOOP) {
             const promptOptions = { prompt: 'Please upload problem in warehouse picture. (1 image per times)' };
             return await step.prompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, promptOptions);
         } else {
@@ -666,6 +1295,15 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemInWarehousePictureMoreStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG);
+        }
+
         if (step.result) {
             let problemInWarehousePicture = step.result[0];
 
@@ -678,7 +1316,6 @@ class ClaimInterDialog extends InterrupDialog {
             }
             problemInWarehousePicture.tag = `problemInWarehousePicture`;
 
-            let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemInWarehousePicture);
             await this.userProfile.set(step.context, user);
 
@@ -691,8 +1328,22 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemWhileUnloadOrMovingPictureConfirmStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG);
+        }
+
+        if (step.result || user.status === EDIT) {
+            user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemWhileUnloadingOrMovingPicture`);
+            user.status = '';
+            await this.userProfile.set(step.context, user);
+        }
+
         if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
             user.status = LOOP;
             await this.userProfile.set(step.context, user);
             return await step.replaceDialog(LOOP_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG);
@@ -706,14 +1357,14 @@ class ClaimInterDialog extends InterrupDialog {
     async problemWhileUnloadOrMovingPictureStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
-        if (step.result || user.status === EDIT || user.status === LOOP) {
-            if (step.result || user.status === EDIT) {
-                user.claimInterInfo.imagesResult = user.claimInterInfo.imagesResult.filter(image => image.tag !== `problemWhileUnloadingOrMovingPicture`);
-                user.status = '';
-                await this.userProfile.set(step.context, user);
-            }
-
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
             await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG);
+        }
+
+        if (step.result || user.status === LOOP) {
             const promptOptions = { prompt: 'Please upload problem while unload / moving picture. (1 image per times)' };
             return await step.prompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, promptOptions);
         } else {
@@ -722,6 +1373,15 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async problemWhileUnloadOrMovingPictureMoreStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG);
+        }
+
         if (step.result) {
             let problemWhileUnloadingOrMovingPicture = step.result[0];
 
@@ -734,7 +1394,6 @@ class ClaimInterDialog extends InterrupDialog {
             }
             problemWhileUnloadingOrMovingPicture.tag = `problemWhileUnloadingOrMovingPicture`;
 
-            let user = await this.userProfile.get(step.context, {});
             user.claimInterInfo.imagesResult.push(problemWhileUnloadingOrMovingPicture);
             await this.userProfile.set(step.context, user);
 
@@ -747,8 +1406,20 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async remarksBeforeStep(step) {
+        let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
             user.status = LOOP;
             await this.userProfile.set(step.context, user);
             return await step.replaceDialog(LOOP_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG);
@@ -760,6 +1431,13 @@ class ClaimInterDialog extends InterrupDialog {
 
     async summaryBeforeStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG);
+        }
 
         user.claimInterInfo.remarks = step.result;
 
@@ -799,9 +1477,16 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async submitBeforeStep(step) {
-        if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
+        let user = await this.userProfile.get(step.context, {});
 
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_REMARKS_BEFORE_DIALOG);
+        }
+
+        if (step.result) {
             await step.context.sendActivity('Claim success !');
 
             helpers.sendMailBeforeInter(user);
@@ -815,6 +1500,11 @@ class ClaimInterDialog extends InterrupDialog {
     async installationMethodStep(step) {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo.afterInstallationProblem = new AfterInstallationProblemModel();
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         await this.userProfile.set(step.context, user);
 
         const promptOptions = { prompt: 'Please enter the installation method.' };
@@ -824,6 +1514,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async equipmentTypeStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_BEFORE_OR_AFTER_INSTALLATION_PROBLEM_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.installationMethod = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -834,6 +1536,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async environmentInstallationStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(AFTER_INSTALLTAION_PROBLEM_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.equipmentType = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -844,6 +1558,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async whenInstallationProblemStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_EQUIPMENT_TYPE_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.environmentInstallation = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -854,6 +1580,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async keepFinishedGoodsStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_ENVIRONMENT_INSTALLATION_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.whenInstallationProblem = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -864,6 +1602,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async installationAreaStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.keepFinishedGoods = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -874,6 +1624,18 @@ class ClaimInterDialog extends InterrupDialog {
 
     async remarksAfterStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_KEEP_FINISHED_GOODS_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         user.claimInterInfo.afterInstallationProblem.installationArea = step.result;
         await this.userProfile.set(step.context, user);
 
@@ -884,6 +1646,17 @@ class ClaimInterDialog extends InterrupDialog {
 
     async summaryAfterStep(step) {
         let user = await this.userProfile.get(step.context, {});
+
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_INSTALLATION_AREA_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
 
         user.claimInterInfo.remarks = step.result;
 
@@ -929,9 +1702,20 @@ class ClaimInterDialog extends InterrupDialog {
     }
 
     async submitAfterStep(step) {
-        if (step.result) {
-            let user = await this.userProfile.get(step.context, {});
+        let user = await this.userProfile.get(step.context, {});
 
+        let utterance = step.context.activity.text || '';
+        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+            user.status = EDIT;
+            await this.userProfile.set(step.context, user);
+            return await step.replaceDialog(REPEAT_REMARKS_AFTER_DIALOG);
+        }
+
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
+        if (step.result) {
             await step.context.sendActivity('Claim success !');
 
             helpers.sendMailAfterInter(user);

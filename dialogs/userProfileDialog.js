@@ -2,7 +2,6 @@ const {
     ChoiceFactory,
     ChoicePrompt,
     ConfirmPrompt,
-    DialogTurnStatus,
     TextPrompt,
     WaterfallDialog
 } = require('botbuilder-dialogs');
@@ -50,8 +49,15 @@ class UserProfileDialog extends InterrupDialog {
 
     async salesAreaStep(step) {
         step.values.userInfo.email = step.result;
+
+        let prompt = `กรุณาเลือกเขตการขาย\n\nPlease enter your sales area.\n\n`;
+        prompt = prompt + `A1 = Thailand, Laos\n\n`;
+        prompt = prompt + `A2 = Indonesia, Philippines, Malaysia\n\n`;
+        prompt = prompt + `A3 = Myanmar, Cambodia, Vietnam, Singapore, Brunie, New Zealand, Korea, Taiwan\n\n`;
+        prompt = prompt + `A4 = India, Pacific Island, Others in South Asia, Middle East, Africa, Europe`;
+
         return await step.prompt(SALESAREA_PROMPT, {
-            prompt: 'กรุณาเลือกเขตการขาย\n\nPlease enter your sales area.',
+            prompt: prompt,
             choices: ChoiceFactory.toChoices(['A1', 'A2', 'A3', 'A4'])
         });
     }
@@ -60,7 +66,7 @@ class UserProfileDialog extends InterrupDialog {
         step.values.userInfo.salesArea = step.result.value;
         return await step.prompt(CONFIRM_PROMPT, {
             prompt: 'ยืนยันข้อมูล ?\n\n' +
-                'Is this okay ?'
+                'Confirm ?'
         });
     }
 

@@ -69,8 +69,6 @@ class MainDialog extends InterrupDialog {
     async introStep(step) {
         const channel = step.context.activity.channelId;
 
-        console.log(step.context.activity);
-
         if (channel === 'msteams') {
             console.log('catch msteams');
             await step.context.sendActivity(MSTEAMS_RESPONSE);
@@ -84,12 +82,8 @@ class MainDialog extends InterrupDialog {
 
     async actStep(step) {
         let user = await this.userProfile.get(step.context, {});
-        console.log(`main dialog`);
-
-        console.log(user);
 
         if (!user.profile) {
-            console.log(!user.profile);
             console.log('create user profile');
             await step.context.sendActivity(`กรุณาสร้างโปรไฟล์ก่อนเริ่มใช้งานแชทบอทนะคะ\n\nPlease create profile before use Chatbot.`);
             return await step.beginDialog(USER_PROFILE_DIALOG);
