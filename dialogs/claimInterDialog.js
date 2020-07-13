@@ -141,7 +141,7 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(CUSTOMER_ADDRESS_PROMPT));
         this.addDialog(new TextPrompt(DIVISION_PROMPT, async (prompt) => {
             if (prompt.recognized.succeeded) {
-                if (prompt.recognized.value === EDIT.trim().toLowerCase()) {
+                if (prompt.recognized.value.trim().toLowerCase() === EDIT) {
                     return true;
                 }
                 const productInfo = menu.productsInfo();
@@ -155,7 +155,7 @@ class ClaimInterDialog extends InterrupDialog {
         }));
         this.addDialog(new TextPrompt(PRODUCT_NAME_PROMPT, async (prompt) => {
             if (prompt.recognized.succeeded) {
-                if (prompt.recognized.value === EDIT.trim().toLowerCase()) {
+                if (prompt.recognized.value.trim().toLowerCase() === EDIT) {
                     return true;
                 }
 
@@ -182,7 +182,7 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(INVOICE_SO_NUMBER_PROMPT));
         this.addDialog(new TextPrompt(DEFECT_PROBLEM_PROMPT));
         this.addDialog(new AttachmentPrompt(DEFECT_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -190,28 +190,28 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(QTY_IN_SALE_ORDER_PROMPT));
         this.addDialog(new TextPrompt(CLAIM_COST_PROMPT));
         this.addDialog(new AttachmentPrompt(LABEL_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new ChoicePrompt(BEFORE_OR_AFTER_INSTALLATION_PROBLEM_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new TextPrompt(REMARKS_PROMPT));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new AttachmentPrompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -222,12 +222,12 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(KEEP_FINISHED_GOODS_PROMPT));
         this.addDialog(new TextPrompt(INSTALLATION_AREA_PROMPT));
         this.addDialog(new ChoicePrompt(CHOICE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new ConfirmPrompt(CONFIRM_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text === EDIT || prompt.recognized.succeeded) {
+            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -846,10 +846,6 @@ or enter "edit" for change previous step.`);
 
         let utterance = step.result || '';
 
-        console.log(utterance);
-        console.log(user.status);
-        console.log(utterance.trim().toLowerCase() === EDIT && user.status === '');
-
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
@@ -1285,6 +1281,7 @@ or enter "edit" for change previous step.`);
         let user = await this.userProfile.get(step.context, {});
 
         let utterance = step.context.activity.text || '';
+
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
@@ -1305,6 +1302,7 @@ or enter "edit" for change previous step.`);
         let user = await this.userProfile.get(step.context, {});
 
         let utterance = step.context.activity.text || '';
+
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
@@ -1338,6 +1336,7 @@ or enter "edit" for change previous step.`);
         let user = await this.userProfile.get(step.context, {});
 
         let utterance = step.context.activity.text || '';
+
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);

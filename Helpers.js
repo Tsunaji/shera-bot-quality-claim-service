@@ -301,6 +301,24 @@ class Helpers {
         });
     }
 
+    getSalesAreaMail(user) {
+        let salesAreaMail = '';
+
+        switch (user.salesArea) {
+            case 'A2': {
+                salesAreaMail = 'crmclaim_a2@shera.com';
+            }
+            case 'A3': {
+                salesAreaMail = 'crmclaim_a3@shera.com';
+            }
+            case 'A4': {
+                salesAreaMail = 'crmclaim_a4@shera.com';
+            }
+        }
+
+        return salesAreaMail;
+    }
+
 }
 
 exports.Helpers = Helpers;
