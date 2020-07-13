@@ -93,7 +93,6 @@ const REPEAT_REMARKS_BEFORE_DIALOG = 'REPEAT_REMARKS_BEFORE_DIALOG';
 const REPEAT_REMARKS_AFTER_DIALOG = 'REPEAT_REMARKS_AFTER_DIALOG';
 const REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG = 'REPEAT_PROBLEM_IN_WAREHOUSE_PICTURE_DIALOG';
 const REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG = 'REPEAT_PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_DIALOG';
-const REPEAT_INSTALLATION_METHOD_DIALOG = 'REPEAT_INSTALLATION_METHOD_DIALOG';
 const REPEAT_EQUIPMENT_TYPE_DIALOG = 'REPEAT_EQUIPMENT_TYPE_DIALOG';
 const REPEAT_ENVIRONMENT_INSTALLATION_DIALOG = 'REPEAT_ENVIRONMENT_INSTALLATION_DIALOG';
 const REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG = 'REPEAT_WHEN_INSTALLATION_PROBLEM_DIALOG';
@@ -665,9 +664,8 @@ class ClaimInterDialog extends InterrupDialog {
         let user = await this.userProfile.get(step.context, {});
         user.claimInterInfo = new ClaimInterModel();
 
-        if (user.status === EDIT) {
-            user.status = '';
-        }
+        // initial
+        user.status = '';
 
         await this.userProfile.set(step.context, user);
 
@@ -847,6 +845,11 @@ or enter "edit" for change previous step.`);
         let user = await this.userProfile.get(step.context, {});
 
         let utterance = step.result || '';
+
+        console.log(utterance);
+        console.log(user.status);
+        console.log(utterance.trim().toLowerCase() === EDIT && user.status === '');
+
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
@@ -977,7 +980,7 @@ or enter "edit" for change previous step.`);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload defect picture. (1 image per times)' };
+        const promptOptions = { prompt: 'Please upload defect picture. (1 picture per times)' };
 
         return await step.prompt(DEFECT_PICTURE_PROMPT, promptOptions);
     }
@@ -1099,7 +1102,7 @@ or enter "edit" for change previous step.`);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture. (1 image per times)' };
+        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture. (1 picture per times)' };
 
         return await step.prompt(LABEL_PICTURE_PROMPT, promptOptions);
     }
@@ -1209,7 +1212,9 @@ or enter "edit" for change previous step.`);
         }
 
         if (step.result || user.status === LOOP) {
-            const promptOptions = { prompt: 'Please upload problem in container picture. (1 image per times)' };
+            user.status = '';
+            await this.userProfile.set(step.context, user);
+            const promptOptions = { prompt: 'Please upload problem in container picture. (1 picture per times)' };
             return await step.prompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
@@ -1287,7 +1292,9 @@ or enter "edit" for change previous step.`);
         }
 
         if (step.result || user.status === LOOP) {
-            const promptOptions = { prompt: 'Please upload problem in warehouse picture. (1 image per times)' };
+            user.status = '';
+            await this.userProfile.set(step.context, user);
+            const promptOptions = { prompt: 'Please upload problem in warehouse picture. (1 picture per times)' };
             return await step.prompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
@@ -1365,7 +1372,9 @@ or enter "edit" for change previous step.`);
         }
 
         if (step.result || user.status === LOOP) {
-            const promptOptions = { prompt: 'Please upload problem while unload / moving picture. (1 image per times)' };
+            user.status = '';
+            await this.userProfile.set(step.context, user);
+            const promptOptions = { prompt: 'Please upload problem while unload / moving picture. (1 picture per times)' };
             return await step.prompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, promptOptions);
         } else {
             return await step.next();
