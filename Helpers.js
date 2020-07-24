@@ -150,7 +150,10 @@ class Helpers {
         const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
         const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
-        // const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
+        // const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
+        // let mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        // const salesAreaMail = this.getSalesAreaMail(user);
+        // mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
         const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
         const mailCC = user.profile.email !== undefined ? user.profile.email : '';
 
@@ -179,17 +182,7 @@ class Helpers {
             + "Channel: Chatbot";
 
         // reobject name for mail lib
-        let attachmentsImages = [];
-
-        if (user.claimInterInfo.imagesResult.length > 0) {
-            for (var i in user.claimInterInfo.imagesResult) {
-                var obj = {};
-                obj.filename = user.claimInterInfo.imagesResult[i].name;
-                obj.contentType = user.claimInterInfo.imagesResult[i].contentType;
-                obj.path = user.claimInterInfo.imagesResult[i].contentUrl;
-                attachmentsImages.push(obj);
-            }
-        }
+        const attachmentsImages = this.getAttachmentForNodemailer(user);
 
         var transporter = nodemailer.createTransport({
             host: mailHost,
@@ -205,7 +198,7 @@ class Helpers {
         var mailOptions = {
             from: mailFrom,
             to: mailTo,
-            subject: '(TEST) CRM new case quality claim inter from ' + user.claimInterInfo.distributorName,
+            subject: `CRM new case quality claim inter ${user.salesArea} from ` + user.claimInterInfo.distributorName,
             text: message,
             cc: mailCC,
             attachments: attachmentsImages
@@ -225,7 +218,10 @@ class Helpers {
         const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
         const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
-        // const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
+        // const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
+        // let mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        // const salesAreaMail = this.getSalesAreaMail(user);
+        // mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
         const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
         const mailCC = user.profile.email !== undefined ? user.profile.email : '';
 
@@ -260,17 +256,7 @@ class Helpers {
             + "Channel: Chatbot";
 
         // reobject name for mail lib
-        let attachmentsImages = [];
-
-        if (user.claimInterInfo.imagesResult.length > 0) {
-            for (var i in user.claimInterInfo.imagesResult) {
-                var obj = {};
-                obj.filename = user.claimInterInfo.imagesResult[i].name;
-                obj.contentType = user.claimInterInfo.imagesResult[i].contentType;
-                obj.path = user.claimInterInfo.imagesResult[i].contentUrl;
-                attachmentsImages.push(obj);
-            }
-        }
+        const attachmentsImages = this.getAttachmentForNodemailer(user);
 
         var transporter = nodemailer.createTransport({
             host: mailHost,
@@ -286,7 +272,7 @@ class Helpers {
         var mailOptions = {
             from: mailFrom,
             to: mailTo,
-            subject: '(TEST) CRM new case quality claim inter from ' + user.claimInterInfo.distributorName,
+            subject: `CRM new case quality claim inter ${user.salesArea} from ` + user.claimInterInfo.distributorName,
             text: message,
             cc: mailCC,
             attachments: attachmentsImages
@@ -317,6 +303,22 @@ class Helpers {
         }
 
         return salesAreaMail;
+    }
+
+    getAttachmentForNodemailer(user) {
+        let attachmentsImages = [];
+
+        if (user.claimInterInfo.imagesResult.length > 0) {
+            for (var i in user.claimInterInfo.imagesResult) {
+                var obj = {};
+                obj.filename = user.claimInterInfo.imagesResult[i].name;
+                obj.contentType = user.claimInterInfo.imagesResult[i].contentType;
+                obj.path = user.claimInterInfo.imagesResult[i].contentUrl;
+                attachmentsImages.push(obj);
+            }
+        }
+
+        return attachmentsImages;
     }
 
 }

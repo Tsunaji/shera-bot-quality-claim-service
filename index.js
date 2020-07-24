@@ -70,25 +70,24 @@ const adapter = new BotFrameworkAdapter({
 });
 
 // Catch-all for errors.
-const onTurnErrorHandler = async (context, error) => {
+adapter.onTurnError = async (context, error) => {
     // This check writes out errors to console log .vs. app insights.
     // NOTE: In production environment, you should consider logging this to Azure
-    //       application insights.
-    console.error(`\n [onTurnError] unhandled error: ${error}`);
+    //       application insights. See https://aka.ms/bottelemetry for telemetry 
+    //       configuration instructions.
+    console.error(`\n [onTurnError] unhandled error: ${ error }`);
 
     // Send a trace activity, which will be displayed in Bot Framework Emulator
     await context.sendTraceActivity(
         'OnTurnError Trace',
-        `${error}`,
+        `${ error }`,
         'https://www.botframework.com/schemas/error',
         'TurnError'
     );
 
     // Send a message to the user
-    let onTurnErrorMessage = 'The bot encountered an error or bug.';
-    await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
-    onTurnErrorMessage = 'To continue to run this bot, please fix the bot source code.';
-    await context.sendActivity(onTurnErrorMessage, onTurnErrorMessage, InputHints.ExpectingInput);
+    await context.sendActivity('The bot encountered an error or bug.');
+    await context.sendActivity('To continue to run this bot, please fix the bot source code.');
     // Clear out state
     await conversationState.delete(context);
 };

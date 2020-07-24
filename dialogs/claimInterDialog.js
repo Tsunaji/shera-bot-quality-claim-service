@@ -234,9 +234,9 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.distributorCodeStep.bind(this),
             this.retailerNameStep.bind(this),
-            this.nameOfContactPersonStep.bind(this),
-            this.telephoneNumberStep.bind(this),
-            this.customerAddressStep.bind(this),
+            // this.nameOfContactPersonStep.bind(this),
+            // this.telephoneNumberStep.bind(this),
+            // this.customerAddressStep.bind(this),
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
             this.productGroupStep.bind(this),
@@ -259,9 +259,9 @@ class ClaimInterDialog extends InterrupDialog {
         // repeat dialog
         this.addDialog(new WaterfallDialog(REPEAT_RETAILER_NAME_DIALOG, [
             this.retailerNameStep.bind(this),
-            this.nameOfContactPersonStep.bind(this),
-            this.telephoneNumberStep.bind(this),
-            this.customerAddressStep.bind(this),
+            // this.nameOfContactPersonStep.bind(this),
+            // this.telephoneNumberStep.bind(this),
+            // this.customerAddressStep.bind(this),
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
             this.productGroupStep.bind(this),
@@ -280,69 +280,69 @@ class ClaimInterDialog extends InterrupDialog {
             this.beforeOrAfterInstallationProblemStep.bind(this),
             this.beforeOrAfterInstallationActStep.bind(this)
         ]));
-        this.addDialog(new WaterfallDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG, [
-            this.nameOfContactPersonStep.bind(this),
-            this.telephoneNumberStep.bind(this),
-            this.customerAddressStep.bind(this),
-            this.divisionStep.bind(this),
-            this.productNameStep.bind(this),
-            this.productGroupStep.bind(this),
-            this.productSizeStep.bind(this),
-            this.productColorStep.bind(this),
-            this.batchNoStep.bind(this),
-            this.invoiceSoNumberStep.bind(this),
-            this.defectProblemStep.bind(this),
-            this.defectPictureStep.bind(this),
-            this.defectPictureMoreStep.bind(this),
-            this.qtyOfDefectStep.bind(this),
-            this.qtyInSaleOrderStep.bind(this),
-            this.claimCostStep.bind(this),
-            this.labelPictureStep.bind(this),
-            this.labelPictureMoreStep.bind(this),
-            this.beforeOrAfterInstallationProblemStep.bind(this),
-            this.beforeOrAfterInstallationActStep.bind(this)
-        ]));
-        this.addDialog(new WaterfallDialog(REPEAT_TELEPHONE_NUMBER_DIALOG, [
-            this.telephoneNumberStep.bind(this),
-            this.customerAddressStep.bind(this),
-            this.divisionStep.bind(this),
-            this.productNameStep.bind(this),
-            this.productGroupStep.bind(this),
-            this.productSizeStep.bind(this),
-            this.productColorStep.bind(this),
-            this.batchNoStep.bind(this),
-            this.invoiceSoNumberStep.bind(this),
-            this.defectProblemStep.bind(this),
-            this.defectPictureStep.bind(this),
-            this.defectPictureMoreStep.bind(this),
-            this.qtyOfDefectStep.bind(this),
-            this.qtyInSaleOrderStep.bind(this),
-            this.claimCostStep.bind(this),
-            this.labelPictureStep.bind(this),
-            this.labelPictureMoreStep.bind(this),
-            this.beforeOrAfterInstallationProblemStep.bind(this),
-            this.beforeOrAfterInstallationActStep.bind(this)
-        ]));
-        this.addDialog(new WaterfallDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG, [
-            this.customerAddressStep.bind(this),
-            this.divisionStep.bind(this),
-            this.productNameStep.bind(this),
-            this.productGroupStep.bind(this),
-            this.productSizeStep.bind(this),
-            this.productColorStep.bind(this),
-            this.batchNoStep.bind(this),
-            this.invoiceSoNumberStep.bind(this),
-            this.defectProblemStep.bind(this),
-            this.defectPictureStep.bind(this),
-            this.defectPictureMoreStep.bind(this),
-            this.qtyOfDefectStep.bind(this),
-            this.qtyInSaleOrderStep.bind(this),
-            this.claimCostStep.bind(this),
-            this.labelPictureStep.bind(this),
-            this.labelPictureMoreStep.bind(this),
-            this.beforeOrAfterInstallationProblemStep.bind(this),
-            this.beforeOrAfterInstallationActStep.bind(this)
-        ]));
+        // this.addDialog(new WaterfallDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG, [
+        //     this.nameOfContactPersonStep.bind(this),
+        //     this.telephoneNumberStep.bind(this),
+        //     this.customerAddressStep.bind(this),
+        //     this.divisionStep.bind(this),
+        //     this.productNameStep.bind(this),
+        //     this.productGroupStep.bind(this),
+        //     this.productSizeStep.bind(this),
+        //     this.productColorStep.bind(this),
+        //     this.batchNoStep.bind(this),
+        //     this.invoiceSoNumberStep.bind(this),
+        //     this.defectProblemStep.bind(this),
+        //     this.defectPictureStep.bind(this),
+        //     this.defectPictureMoreStep.bind(this),
+        //     this.qtyOfDefectStep.bind(this),
+        //     this.qtyInSaleOrderStep.bind(this),
+        //     this.claimCostStep.bind(this),
+        //     this.labelPictureStep.bind(this),
+        //     this.labelPictureMoreStep.bind(this),
+        //     this.beforeOrAfterInstallationProblemStep.bind(this),
+        //     this.beforeOrAfterInstallationActStep.bind(this)
+        // ]));
+        // this.addDialog(new WaterfallDialog(REPEAT_TELEPHONE_NUMBER_DIALOG, [
+        //     this.telephoneNumberStep.bind(this),
+        //     this.customerAddressStep.bind(this),
+        //     this.divisionStep.bind(this),
+        //     this.productNameStep.bind(this),
+        //     this.productGroupStep.bind(this),
+        //     this.productSizeStep.bind(this),
+        //     this.productColorStep.bind(this),
+        //     this.batchNoStep.bind(this),
+        //     this.invoiceSoNumberStep.bind(this),
+        //     this.defectProblemStep.bind(this),
+        //     this.defectPictureStep.bind(this),
+        //     this.defectPictureMoreStep.bind(this),
+        //     this.qtyOfDefectStep.bind(this),
+        //     this.qtyInSaleOrderStep.bind(this),
+        //     this.claimCostStep.bind(this),
+        //     this.labelPictureStep.bind(this),
+        //     this.labelPictureMoreStep.bind(this),
+        //     this.beforeOrAfterInstallationProblemStep.bind(this),
+        //     this.beforeOrAfterInstallationActStep.bind(this)
+        // ]));
+        // this.addDialog(new WaterfallDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG, [
+        //     this.customerAddressStep.bind(this),
+        //     this.divisionStep.bind(this),
+        //     this.productNameStep.bind(this),
+        //     this.productGroupStep.bind(this),
+        //     this.productSizeStep.bind(this),
+        //     this.productColorStep.bind(this),
+        //     this.batchNoStep.bind(this),
+        //     this.invoiceSoNumberStep.bind(this),
+        //     this.defectProblemStep.bind(this),
+        //     this.defectPictureStep.bind(this),
+        //     this.defectPictureMoreStep.bind(this),
+        //     this.qtyOfDefectStep.bind(this),
+        //     this.qtyInSaleOrderStep.bind(this),
+        //     this.claimCostStep.bind(this),
+        //     this.labelPictureStep.bind(this),
+        //     this.labelPictureMoreStep.bind(this),
+        //     this.beforeOrAfterInstallationProblemStep.bind(this),
+        //     this.beforeOrAfterInstallationActStep.bind(this)
+        // ]));
         this.addDialog(new WaterfallDialog(REPEAT_DIVISION_DIALOG, [
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
@@ -698,74 +698,74 @@ or enter "edit" for change previous step.`);
         return await step.prompt(RETAILER_NAME_PROMPT, promptOptions);
     }
 
-    async nameOfContactPersonStep(step) {
-        let user = await this.userProfile.get(step.context, {});
+    // async nameOfContactPersonStep(step) {
+    //     let user = await this.userProfile.get(step.context, {});
 
-        let utterance = step.result || '';
-        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-            user.status = EDIT;
-            await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(WATERFALL_DIALOG);
-        }
+    //     let utterance = step.result || '';
+    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+    //         user.status = EDIT;
+    //         await this.userProfile.set(step.context, user);
+    //         return await step.replaceDialog(WATERFALL_DIALOG);
+    //     }
 
-        if (user.status === EDIT) {
-            user.status = '';
-        }
+    //     if (user.status === EDIT) {
+    //         user.status = '';
+    //     }
 
-        user.claimInterInfo.retailerName = step.result || user.claimInterInfo.retailerName;
+    //     user.claimInterInfo.retailerName = step.result || user.claimInterInfo.retailerName;
 
-        await this.userProfile.set(step.context, user);
+    //     await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please enter the name of the contact person.' };
+    //     const promptOptions = { prompt: 'Please enter the name of the contact person.' };
 
-        return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    }
+    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
+    // }
 
-    async telephoneNumberStep(step) {
-        let user = await this.userProfile.get(step.context, {});
+    // async telephoneNumberStep(step) {
+    //     let user = await this.userProfile.get(step.context, {});
 
-        let utterance = step.result || '';
-        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-            user.status = EDIT;
-            await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
-        }
+    //     let utterance = step.result || '';
+    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+    //         user.status = EDIT;
+    //         await this.userProfile.set(step.context, user);
+    //         return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
+    //     }
 
-        if (user.status === EDIT) {
-            user.status = '';
-        }
+    //     if (user.status === EDIT) {
+    //         user.status = '';
+    //     }
 
-        user.claimInterInfo.nameOfContactPerson = step.result || user.claimInterInfo.nameOfContactPerson;
+    //     user.claimInterInfo.nameOfContactPerson = step.result || user.claimInterInfo.nameOfContactPerson;
 
-        await this.userProfile.set(step.context, user);
+    //     await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please enter telephone number.' };
+    //     const promptOptions = { prompt: 'Please enter telephone number.' };
 
-        return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    }
+    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
+    // }
 
-    async customerAddressStep(step) {
-        let user = await this.userProfile.get(step.context, {});
+    // async customerAddressStep(step) {
+    //     let user = await this.userProfile.get(step.context, {});
 
-        let utterance = step.result || '';
-        if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-            user.status = EDIT;
-            await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG);
-        }
+    //     let utterance = step.result || '';
+    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
+    //         user.status = EDIT;
+    //         await this.userProfile.set(step.context, user);
+    //         return await step.replaceDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG);
+    //     }
 
-        if (user.status === EDIT) {
-            user.status = '';
-        }
+    //     if (user.status === EDIT) {
+    //         user.status = '';
+    //     }
 
-        user.claimInterInfo.telephoneNumber = step.result || user.claimInterInfo.telephoneNumber;
+    //     user.claimInterInfo.telephoneNumber = step.result || user.claimInterInfo.telephoneNumber;
 
-        await this.userProfile.set(step.context, user);
+    //     await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please enter customer address.' };
+    //     const promptOptions = { prompt: 'Please enter customer address.' };
 
-        return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    }
+    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
+    // }
 
     async divisionStep(step) {
         let user = await this.userProfile.get(step.context, {});
@@ -774,7 +774,8 @@ or enter "edit" for change previous step.`);
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(REPEAT_TELEPHONE_NUMBER_DIALOG);
+            // return await step.replaceDialog(REPEAT_TELEPHONE_NUMBER_DIALOG);
+            return await step.replaceDialog(WATERFALL_DIALOG);
         }
 
         if (user.status === EDIT) {
@@ -784,7 +785,6 @@ or enter "edit" for change previous step.`);
         user.claimInterInfo.customerAddress = step.result || user.claimInterInfo.customerAddress;
 
         await this.userProfile.set(step.context, user);
-
 
         await step.context.sendActivity({ attachments: [menu.divisionMenu()] });
         return await step.prompt(DIVISION_PROMPT,
@@ -800,7 +800,8 @@ or enter "edit" for change previous step.`);
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG);
+            // return await step.replaceDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG);
+            return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
         }
 
         if (user.status === EDIT) {
@@ -1537,7 +1538,7 @@ or enter "edit" for change previous step.`);
         user.claimInterInfo.afterInstallationProblem.installationMethod = step.result;
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please enter The equipment / tooling / Accessary (such as nailing type, screw type, compound type, color type, drilling type, etc)' };
+        const promptOptions = { prompt: 'Please enter The equipment / tooling / Accessory (such as nailing type, screw type, compound type, color type, drilling type, etc)' };
 
         return await step.prompt(EQUIPMENT_TYPE_PROMPT, promptOptions);
     }
@@ -1724,7 +1725,7 @@ or enter "edit" for change previous step.`);
         }
 
         if (step.result) {
-            await step.context.sendActivity('Claim success !');
+            await step.context.sendActivity('Claim submitted to CRM system. Please waiting for our feedback.');
 
             helpers.sendMailAfterInter(user);
         } else {
