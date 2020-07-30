@@ -7,18 +7,14 @@ const restify = require('restify');
 
 // Import required bot services.
 // See https://aka.ms/bot-services to learn more about the different parts of a bot.
-const { BotFrameworkAdapter, ConversationState, InputHints, MemoryStorage, UserState } = require('botbuilder');
+const { BotFrameworkAdapter, ConversationState, UserState } = require('botbuilder');
 const { BlobStorage } = require('botbuilder-azure');
 
 // Import required bot configuration.
 const { BotConfiguration } = require('botframework-config');
 
-// This bot's main dialog.
-const { MyBot } = require('./bot');
-
 // Import our custom bot class that provides a turn handling function.
 const { DialogBot } = require('./bots/dialogBot');
-const { UserProfileDialog } = require('./dialogs/userProfileDialog');
 const { MainDialog } = require('./dialogs/mainDialog');
 
 // Read botFilePath and botFileSecret from .env file
@@ -28,19 +24,11 @@ dotenv.config({ path: ENV_FILE });
 
 // bot endpoint name as defined in .bot file
 // See https://aka.ms/about-bot-file to learn more about .bot file its use and bot configuration.
-const DEV_ENVIRONMENT = 'development';
+const DEV_ENVIRONMENT = process.env.NODE_ENV || process.env.APPSETTING_NODE_ENV || 'development';
 
 // bot name as defined in .bot file
 // See https://aka.ms/about-bot-file to learn more about .bot file its use and bot configuration.
 const BOT_CONFIGURATION = (process.env.NODE_ENV || DEV_ENVIRONMENT);
-
-// Create HTTP server
-const server = restify.createServer();
-server.listen(process.env.port || process.env.PORT || 3978, () => {
-    console.log(`\n${server.name} listening to ${server.url}`);
-    console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
-    console.log(`\nTo talk to your bot, open shera-bot-quality-claim-service.bot file in the Emulator`);
-});
 
 // .bot file path
 const BOT_FILE = path.join(__dirname, (process.env.botFilePath || ''));
@@ -69,27 +57,34 @@ const adapter = new BotFrameworkAdapter({
     appPassword: endpointConfig.appPassword || process.env.microsoftAppPassword
 });
 
-// Catch-all for errors.
+// // Catch-all for errors.
+// adapter.onTurnError = async (context, error) => {
+//     // This check writes out errors to console log .vs. app insights.
+//     // NOTE: In production environment, you should consider logging this to Azure
+//     //       application insights. See https://aka.ms/bottelemetry for telemetry 
+//     //       configuration instructions.
+//     console.error(`\n [onTurnError] unhandled error: ${error}`);
+
+//     // Send a trace activity, which will be displayed in Bot Framework Emulator
+//     await context.sendTraceActivity(
+//         'OnTurnError Trace',
+//         `${error}`,
+//         'https://www.botframework.com/schemas/error',
+//         'TurnError'
+//     );
+
+//     // Send a message to the user
+//     await context.sendActivity('The bot encountered an error or bug.');
+//     await context.sendActivity('To continue to run this bot, please fix the bot source code.');
+//     // Clear out state
+//     await conversationState.delete(context);
+// };
+
 adapter.onTurnError = async (context, error) => {
-    // This check writes out errors to console log .vs. app insights.
-    // NOTE: In production environment, you should consider logging this to Azure
-    //       application insights. See https://aka.ms/bottelemetry for telemetry 
-    //       configuration instructions.
-    console.error(`\n [onTurnError] unhandled error: ${ error }`);
-
-    // Send a trace activity, which will be displayed in Bot Framework Emulator
-    await context.sendTraceActivity(
-        'OnTurnError Trace',
-        `${ error }`,
-        'https://www.botframework.com/schemas/error',
-        'TurnError'
-    );
-
+    console.error(`\n [onTurnError]: ${error}`);
+    
     // Send a message to the user
-    await context.sendActivity('The bot encountered an error or bug.');
-    await context.sendActivity('To continue to run this bot, please fix the bot source code.');
-    // Clear out state
-    await conversationState.delete(context);
+    await context.sendActivity(`Oops. Something went wrong!`);
 };
 
 // Define a state store for your bot.
@@ -111,15 +106,18 @@ const userState = new UserState(memoryStorage);
 const dialog = new MainDialog(userState);
 const bot = new DialogBot(conversationState, userState, dialog);
 
-// Create the main dialog.
-const myBot = new MyBot(conversationState, userState);
+// Create HTTP server
+const server = restify.createServer();
+server.listen(process.env.port || process.env.PORT || 3978, () => {
+    console.log(`\n${server.name} listening to ${server.url}`);
+    console.log(`\nGet Bot Framework Emulator: https://aka.ms/botframework-emulator`);
+    console.log(`\nTo talk to your bot, open shera-bot-quality-claim-service.bot file in the Emulator`);
+});
 
 // Listen for incoming requests.
 server.post('/api/messages', (req, res) => {
     adapter.processActivity(req, res, async (context) => {
         // Route to main dialog.
-        // await myBot.onTurn(context);
-
         await bot.run(context);
     });
 });
