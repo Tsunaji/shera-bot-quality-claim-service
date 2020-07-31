@@ -57,41 +57,33 @@ const adapter = new BotFrameworkAdapter({
     appPassword: endpointConfig.appPassword || process.env.microsoftAppPassword
 });
 
-// // Catch-all for errors.
-// adapter.onTurnError = async (context, error) => {
-//     // This check writes out errors to console log .vs. app insights.
-//     // NOTE: In production environment, you should consider logging this to Azure
-//     //       application insights. See https://aka.ms/bottelemetry for telemetry 
-//     //       configuration instructions.
-//     console.error(`\n [onTurnError] unhandled error: ${error}`);
-
-//     // Send a trace activity, which will be displayed in Bot Framework Emulator
-//     await context.sendTraceActivity(
-//         'OnTurnError Trace',
-//         `${error}`,
-//         'https://www.botframework.com/schemas/error',
-//         'TurnError'
-//     );
-
-//     // Send a message to the user
-//     await context.sendActivity('The bot encountered an error or bug.');
-//     await context.sendActivity('To continue to run this bot, please fix the bot source code.');
-//     // Clear out state
-//     await conversationState.delete(context);
-// };
-
+// Catch-all for errors.
 adapter.onTurnError = async (context, error) => {
-    console.error(`\n [onTurnError]: ${error}`);
-    
+    // This check writes out errors to console log .vs. app insights.
+    // NOTE: In production environment, you should consider logging this to Azure
+    //       application insights. See https://aka.ms/bottelemetry for telemetry 
+    //       configuration instructions.
+    console.error(`\n [onTurnError] unhandled error: ${error}`);
+
+    // Send a trace activity, which will be displayed in Bot Framework Emulator
+    await context.sendTraceActivity(
+        'OnTurnError Trace',
+        `${error}`,
+        'https://www.botframework.com/schemas/error',
+        'TurnError'
+    );
+
     // Send a message to the user
-    await context.sendActivity(`Oops. Something went wrong!`);
+    await context.sendActivity('The bot encountered an error or bug.');
+    await context.sendActivity('To continue to run this bot, please fix the bot source code.');
+    // Clear out state
+    await conversationState.delete(context);
 };
 
 // Define a state store for your bot.
 // See https://aka.ms/about-bot-state to learn more about using MemoryStorage.
 // A bot requires a state store to persist the dialog and user state between messages.
 // Create conversation and user state with in-memory storage provider.
-// const memoryStorage = new MemoryStorage();
 
 const memoryStorage = new BlobStorage({
     containerName: "sherabotcrmstrg",

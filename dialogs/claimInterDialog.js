@@ -72,9 +72,6 @@ const WATERFALL_DIALOG = 'WATERFALL_DIALOG';
 
 // repeat dialog
 const REPEAT_RETAILER_NAME_DIALOG = 'REPEAT_RETAILER_NAME_DIALOG';
-const REPEAT_NAME_OF_CONTACT_PERSON_DIALOG = 'REPEAT_NAME_OF_CONTACT_PERSON_DIALOG';
-const REPEAT_TELEPHONE_NUMBER_DIALOG = 'REPEAT_TELEPHONE_NUMBER_DIALOG';
-const REPEAT_CUSTOMER_ADDRESS_DIALOG = 'REPEAT_CUSTOMER_ADDRESS_DIALOG';
 const REPEAT_DIVISION_DIALOG = 'REPEAT_DIVISION_DIALOG';
 const REPEAT_PRODUCT_NAME_DIALOG = 'REPEAT_PRODUCT_NAME_DIALOG';
 const REPEAT_PRODUCT_GROUP_DIALOG = 'REPEAT_PRODUCT_GROUP_DIALOG';
@@ -182,7 +179,8 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(INVOICE_SO_NUMBER_PROMPT));
         this.addDialog(new TextPrompt(DEFECT_PROBLEM_PROMPT));
         this.addDialog(new AttachmentPrompt(DEFECT_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
+            const utterance = prompt.context.activity.text || '';
+            if (utterance.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -190,7 +188,8 @@ class ClaimInterDialog extends InterrupDialog {
         this.addDialog(new TextPrompt(QTY_IN_SALE_ORDER_PROMPT));
         this.addDialog(new TextPrompt(CLAIM_COST_PROMPT));
         this.addDialog(new AttachmentPrompt(LABEL_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
+            const utterance = prompt.context.activity.text || '';
+            if (utterance.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -201,17 +200,20 @@ class ClaimInterDialog extends InterrupDialog {
         }));
         this.addDialog(new TextPrompt(REMARKS_PROMPT));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_CONTAINER_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
+            const utterance = prompt.context.activity.text || '';
+            if (utterance.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new AttachmentPrompt(PROBLEM_IN_WAREHOUSE_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
+            const utterance = prompt.context.activity.text || '';
+            if (utterance.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
         this.addDialog(new AttachmentPrompt(PROBLEM_WHILE_UNLOAD_OR_MOVING_PICTURE_PROMPT, async (prompt) => {
-            if (prompt.context.activity.text.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
+            const utterance = prompt.context.activity.text || '';
+            if (utterance.trim().toLowerCase() === EDIT || prompt.recognized.succeeded) {
                 return true;
             }
         }));
@@ -231,12 +233,11 @@ class ClaimInterDialog extends InterrupDialog {
                 return true;
             }
         }));
+
+        // main dialog
         this.addDialog(new WaterfallDialog(WATERFALL_DIALOG, [
             this.distributorCodeStep.bind(this),
             this.retailerNameStep.bind(this),
-            // this.nameOfContactPersonStep.bind(this),
-            // this.telephoneNumberStep.bind(this),
-            // this.customerAddressStep.bind(this),
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
             this.productGroupStep.bind(this),
@@ -280,69 +281,6 @@ class ClaimInterDialog extends InterrupDialog {
             this.beforeOrAfterInstallationProblemStep.bind(this),
             this.beforeOrAfterInstallationActStep.bind(this)
         ]));
-        // this.addDialog(new WaterfallDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG, [
-        //     this.nameOfContactPersonStep.bind(this),
-        //     this.telephoneNumberStep.bind(this),
-        //     this.customerAddressStep.bind(this),
-        //     this.divisionStep.bind(this),
-        //     this.productNameStep.bind(this),
-        //     this.productGroupStep.bind(this),
-        //     this.productSizeStep.bind(this),
-        //     this.productColorStep.bind(this),
-        //     this.batchNoStep.bind(this),
-        //     this.invoiceSoNumberStep.bind(this),
-        //     this.defectProblemStep.bind(this),
-        //     this.defectPictureStep.bind(this),
-        //     this.defectPictureMoreStep.bind(this),
-        //     this.qtyOfDefectStep.bind(this),
-        //     this.qtyInSaleOrderStep.bind(this),
-        //     this.claimCostStep.bind(this),
-        //     this.labelPictureStep.bind(this),
-        //     this.labelPictureMoreStep.bind(this),
-        //     this.beforeOrAfterInstallationProblemStep.bind(this),
-        //     this.beforeOrAfterInstallationActStep.bind(this)
-        // ]));
-        // this.addDialog(new WaterfallDialog(REPEAT_TELEPHONE_NUMBER_DIALOG, [
-        //     this.telephoneNumberStep.bind(this),
-        //     this.customerAddressStep.bind(this),
-        //     this.divisionStep.bind(this),
-        //     this.productNameStep.bind(this),
-        //     this.productGroupStep.bind(this),
-        //     this.productSizeStep.bind(this),
-        //     this.productColorStep.bind(this),
-        //     this.batchNoStep.bind(this),
-        //     this.invoiceSoNumberStep.bind(this),
-        //     this.defectProblemStep.bind(this),
-        //     this.defectPictureStep.bind(this),
-        //     this.defectPictureMoreStep.bind(this),
-        //     this.qtyOfDefectStep.bind(this),
-        //     this.qtyInSaleOrderStep.bind(this),
-        //     this.claimCostStep.bind(this),
-        //     this.labelPictureStep.bind(this),
-        //     this.labelPictureMoreStep.bind(this),
-        //     this.beforeOrAfterInstallationProblemStep.bind(this),
-        //     this.beforeOrAfterInstallationActStep.bind(this)
-        // ]));
-        // this.addDialog(new WaterfallDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG, [
-        //     this.customerAddressStep.bind(this),
-        //     this.divisionStep.bind(this),
-        //     this.productNameStep.bind(this),
-        //     this.productGroupStep.bind(this),
-        //     this.productSizeStep.bind(this),
-        //     this.productColorStep.bind(this),
-        //     this.batchNoStep.bind(this),
-        //     this.invoiceSoNumberStep.bind(this),
-        //     this.defectProblemStep.bind(this),
-        //     this.defectPictureStep.bind(this),
-        //     this.defectPictureMoreStep.bind(this),
-        //     this.qtyOfDefectStep.bind(this),
-        //     this.qtyInSaleOrderStep.bind(this),
-        //     this.claimCostStep.bind(this),
-        //     this.labelPictureStep.bind(this),
-        //     this.labelPictureMoreStep.bind(this),
-        //     this.beforeOrAfterInstallationProblemStep.bind(this),
-        //     this.beforeOrAfterInstallationActStep.bind(this)
-        // ]));
         this.addDialog(new WaterfallDialog(REPEAT_DIVISION_DIALOG, [
             this.divisionStep.bind(this),
             this.productNameStep.bind(this),
@@ -689,6 +627,10 @@ or enter "edit" for change previous step.`);
         user.claimInterInfo.distributorName = customer.NAME1;
         user.claimInterInfo.distributorAddress = customer.FULLADR;
 
+        if (user.status === EDIT) {
+            user.status = '';
+        }
+
         await this.userProfile.set(step.context, user);
 
         await step.context.sendActivity(`Distributor name is ${user.claimInterInfo.distributorName}\n\nDistributor address is ${user.claimInterInfo.distributorAddress}`);
@@ -698,83 +640,14 @@ or enter "edit" for change previous step.`);
         return await step.prompt(RETAILER_NAME_PROMPT, promptOptions);
     }
 
-    // async nameOfContactPersonStep(step) {
-    //     let user = await this.userProfile.get(step.context, {});
-
-    //     let utterance = step.result || '';
-    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-    //         user.status = EDIT;
-    //         await this.userProfile.set(step.context, user);
-    //         return await step.replaceDialog(WATERFALL_DIALOG);
-    //     }
-
-    //     if (user.status === EDIT) {
-    //         user.status = '';
-    //     }
-
-    //     user.claimInterInfo.retailerName = step.result || user.claimInterInfo.retailerName;
-
-    //     await this.userProfile.set(step.context, user);
-
-    //     const promptOptions = { prompt: 'Please enter the name of the contact person.' };
-
-    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    // }
-
-    // async telephoneNumberStep(step) {
-    //     let user = await this.userProfile.get(step.context, {});
-
-    //     let utterance = step.result || '';
-    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-    //         user.status = EDIT;
-    //         await this.userProfile.set(step.context, user);
-    //         return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
-    //     }
-
-    //     if (user.status === EDIT) {
-    //         user.status = '';
-    //     }
-
-    //     user.claimInterInfo.nameOfContactPerson = step.result || user.claimInterInfo.nameOfContactPerson;
-
-    //     await this.userProfile.set(step.context, user);
-
-    //     const promptOptions = { prompt: 'Please enter telephone number.' };
-
-    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    // }
-
-    // async customerAddressStep(step) {
-    //     let user = await this.userProfile.get(step.context, {});
-
-    //     let utterance = step.result || '';
-    //     if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
-    //         user.status = EDIT;
-    //         await this.userProfile.set(step.context, user);
-    //         return await step.replaceDialog(REPEAT_NAME_OF_CONTACT_PERSON_DIALOG);
-    //     }
-
-    //     if (user.status === EDIT) {
-    //         user.status = '';
-    //     }
-
-    //     user.claimInterInfo.telephoneNumber = step.result || user.claimInterInfo.telephoneNumber;
-
-    //     await this.userProfile.set(step.context, user);
-
-    //     const promptOptions = { prompt: 'Please enter customer address.' };
-
-    //     return await step.prompt(NAME_OF_CONTACT_PERSON_PROMPT, promptOptions);
-    // }
-
     async divisionStep(step) {
         let user = await this.userProfile.get(step.context, {});
 
         let utterance = step.result || '';
+
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
-            // return await step.replaceDialog(REPEAT_TELEPHONE_NUMBER_DIALOG);
             return await step.replaceDialog(WATERFALL_DIALOG);
         }
 
@@ -800,7 +673,6 @@ or enter "edit" for change previous step.`);
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
-            // return await step.replaceDialog(REPEAT_CUSTOMER_ADDRESS_DIALOG);
             return await step.replaceDialog(REPEAT_RETAILER_NAME_DIALOG);
         }
 
@@ -836,6 +708,11 @@ or enter "edit" for change previous step.`);
         user.claimInterInfo.productName = step.result || user.claimInterInfo.productName;
 
         await this.userProfile.set(step.context, user);
+
+        // if product name is wood flow will pass product group step
+        if (utterance !== "Wood" && utterance !== "") {
+            return await step.next("-");
+        }
 
         const promptOptions = { prompt: 'Please enter product group (Floor plank, Plank, Eave or ...etc)' };
 
@@ -873,7 +750,14 @@ or enter "edit" for change previous step.`);
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
-            return await step.replaceDialog(REPEAT_PRODUCT_GROUP_DIALOG);
+            console.log(user.claimInterInfo.productName);
+            if (user.claimInterInfo.productName !== "Wood") {
+                console.log("1");
+                return await step.replaceDialog(REPEAT_PRODUCT_NAME_DIALOG);
+            } else {
+                console.log("2");
+                return await step.replaceDialog(REPEAT_PRODUCT_GROUP_DIALOG);
+            }
         }
 
         if (user.status === EDIT) {
@@ -977,15 +861,17 @@ or enter "edit" for change previous step.`);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload defect picture. (1 picture per times)' };
+        const promptOptions = { prompt: 'Please upload defect picture. (1 picture per times)\n\nIf there is no picture please upload any picture.' };
 
         return await step.prompt(DEFECT_PICTURE_PROMPT, promptOptions);
     }
 
     async defectPictureMoreStep(step) {
         let user = await this.userProfile.get(step.context, {});
-
+        console.log(`defectPictureMoreStep`);
+        console.log(`TEXT: ${step.context.activity.text}`);
         let utterance = step.context.activity.text || '';
+        console.log(utterance);
         if (utterance.trim().toLowerCase() === EDIT && user.status === '') {
             user.status = EDIT;
             await this.userProfile.set(step.context, user);
@@ -1099,7 +985,7 @@ or enter "edit" for change previous step.`);
 
         await this.userProfile.set(step.context, user);
 
-        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture. (1 picture per times)' };
+        const promptOptions = { prompt: 'Please upload The white Label/Stamping batch/Inkjet picture. (1 picture per times)\n\nIf there is no picture please upload any picture.' };
 
         return await step.prompt(LABEL_PICTURE_PROMPT, promptOptions);
     }
