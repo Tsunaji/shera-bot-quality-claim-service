@@ -1,14 +1,11 @@
 class ClaimInterModel {
-    constructor(distributorCode, distributorName, distributorAddress, retailerName, nameOfContactPerson, telephoneNumber, customerAddress,  
+    constructor(distributorCode, distributorName, distributorAddress, retailerName,  
         division, productName, productGroup, productSize, productColor, batchNo, invoiceSoNumber, defectProblem, defectPicture, 
         qtyOfDefect, qtyInSaleOrder, claimCost, labelPicture, beforeOrAfterInstalltaionProblem, remarks) {
         this.distributorCode = distributorCode;
         this.distributorName = distributorName;
         this.distributorAddress = distributorAddress;
         this.retailerName = retailerName;
-        this.nameOfContactPerson = nameOfContactPerson;
-        this.telephoneNumber = telephoneNumber;
-        this.customerAddress = customerAddress;
         this.division = division;
         this.productName = productName;
         this.productGroup= productGroup;

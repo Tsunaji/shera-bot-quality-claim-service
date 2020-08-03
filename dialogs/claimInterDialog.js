@@ -655,7 +655,7 @@ or enter "edit" for change previous step.`);
             user.status = '';
         }
 
-        user.claimInterInfo.customerAddress = step.result || user.claimInterInfo.customerAddress;
+        user.claimInterInfo.retailerName = step.result || user.claimInterInfo.retailerName;
 
         await this.userProfile.set(step.context, user);
 
@@ -1344,9 +1344,6 @@ or enter "edit" for change previous step.`);
         msg = msg + `Distributor name: ${user.claimInterInfo.distributorName}\n\n`;
         msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;
         msg = msg + `Retailer name: ${user.claimInterInfo.retailerName}\n\n`;
-        msg = msg + `Contact person name: ${user.claimInterInfo.nameOfContactPerson}\n\n`;
-        msg = msg + `Telephone number: ${user.claimInterInfo.telephoneNumber}\n\n`;
-        msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
         msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
         msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
         msg = msg + `Product group: ${user.claimInterInfo.productGroup}\n\n`;
@@ -1382,7 +1379,7 @@ or enter "edit" for change previous step.`);
         }
 
         if (step.result) {
-            await step.context.sendActivity('Claim success !');
+            await step.context.sendActivity('Claim submitted to CRM system. Please waiting for our feedback.');
 
             helpers.sendMailBeforeInter(user);
         } else {
@@ -1563,9 +1560,6 @@ or enter "edit" for change previous step.`);
         msg = msg + `Distributor name: ${user.claimInterInfo.distributorName}\n\n`;
         msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;
         msg = msg + `Retailer name: ${user.claimInterInfo.retailerName}\n\n`;
-        msg = msg + `Contact person name: ${user.claimInterInfo.nameOfContactPerson}\n\n`;
-        msg = msg + `Telephone number: ${user.claimInterInfo.telephoneNumber}\n\n`;
-        msg = msg + `Customer address: ${user.claimInterInfo.customerAddress}\n\n`;
         msg = msg + `Division: ${user.claimInterInfo.division}\n\n`;
         msg = msg + `Product name: ${user.claimInterInfo.productName}\n\n`;
         msg = msg + `Product group: ${user.claimInterInfo.productGroup}\n\n`;
