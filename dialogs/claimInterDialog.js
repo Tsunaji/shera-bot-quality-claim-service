@@ -1337,6 +1337,8 @@ or enter "edit" for change previous step.`);
 
         // show summary data
         let msg = `--Summary Claim--\n\n`;
+        msg = msg + `Sales name: ${user.profile.name}\n\n`;
+        msg = msg + `Sales email: ${user.profile.email}\n\n`;
         msg = msg + `Distributor code: ${user.claimInterInfo.distributorCode}\n\n`;
         msg = msg + `Distributor name: ${user.claimInterInfo.distributorName}\n\n`;
         msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;
@@ -1553,6 +1555,8 @@ or enter "edit" for change previous step.`);
 
         // show summary data
         let msg = `--Summary Claim--\n\n`;
+        msg = msg + `Sales name: ${user.profile.name}\n\n`;
+        msg = msg + `Sales email: ${user.profile.email}\n\n`;
         msg = msg + `Distributor code: ${user.claimInterInfo.distributorCode}\n\n`;
         msg = msg + `Distributor name: ${user.claimInterInfo.distributorName}\n\n`;
         msg = msg + `Distributor address: ${user.claimInterInfo.distributorAddress}\n\n`;

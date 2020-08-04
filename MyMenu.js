@@ -271,12 +271,12 @@ class MyMenu {
                             "items": [
                                 {
                                     "type": "TextBlock",
-                                    "text": user.name,
+                                    "text": user.profile.name,
                                     "isSubtle": true
                                 },
                                 {
                                     "type": "TextBlock",
-                                    "text": user.email,
+                                    "text": user.profile.email,
                                     "isSubtle": true
                                 },
                                 {

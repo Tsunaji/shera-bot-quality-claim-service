@@ -13,8 +13,8 @@ class Helpers {
         const mailTo = process.env.MAIL_TO || process.env.APPSETTING_MAIL_TO;
         const mailCC = user.email !== undefined ? user.email : '';
 
-        const message = "ชื่อผู้แจ้ง: " + user.name + "\n"
-            + "อีเมลผู้แจ้ง: " + user.email + "\n"
+        const message = "ชื่อผู้แจ้ง: " + user.profile.name + "\n"
+            + "อีเมลผู้แจ้ง: " + user.profile.email + "\n"
             + "รหัสร้านค้าหลัก: " + user.sapId + "\n"
             + "ชื่อร้านค้าหลัก: " + user.customerName + "\n"
             + "ที่อยู่ร้านค้า: " + user.customerAddress + "\n"

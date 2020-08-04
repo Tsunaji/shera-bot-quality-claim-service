@@ -730,10 +730,10 @@ class ClaimDomesticDialog extends InterrupDialog {
             if (step.context.activity.channelId === 'msteams') {
                 // get Microsoft Graph user data
                 const graphUser = await services.getGraphUser(step.context);
-                user.email = graphUser.mail;
+                user.profile.email = graphUser.mail;
 
                 // get informer name
-                user.name = step.context.activity.from.name;
+                user.profile.name = step.context.activity.from.name;
             }
 
             await this.userProfile.set(step.context, user);
