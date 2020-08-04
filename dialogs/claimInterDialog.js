@@ -13,7 +13,6 @@ const { InterrupDialog } = require('./interrupDialog');
 const { MyMenu } = require('../MyMenu');
 const { Helpers } = require('../Helpers');
 const { Services } = require('../Services');
-const empty = require('is-empty');
 
 const menu = new MyMenu();
 const services = new Services();
@@ -22,8 +21,6 @@ const helpers = new Helpers();
 // text
 const EDIT = 'edit';
 const LOOP = 'loop';
-const YES = 'yes';
-const NO = 'no';
 
 // main dialog prompt
 const DISTRIBUTOR_CODE_PROMPT = 'DISTRIBUTOR_CODE_PROMPT';

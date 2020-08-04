@@ -53,7 +53,7 @@ class UserProfileDialog extends InterrupDialog {
         let prompt = `กรุณาเลือกเขตการขาย\n\nPlease enter your sales area.\n\n`;
         prompt = prompt + `A1 = Thailand, Laos\n\n`;
         prompt = prompt + `A2 = Indonesia, Philippines\n\n`;
-        prompt = prompt + `A3 = Malaysia, Myanmar, Cambodia, Vietnam, Singapore, Brunie, New Zealand, Korea, Taiwan\n\n`;
+        prompt = prompt + `A3 = Malaysia, Myanmar, Cambodia, Vietnam, Singapore, Brunei, New Zealand, Korea, Taiwan\n\n`;
         prompt = prompt + `A4 = India, Pacific Island, Others in South Asia, Middle East, Africa, Europe`;
 
         return await step.prompt(SALESAREA_PROMPT, {
