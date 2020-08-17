@@ -844,10 +844,8 @@ class ClaimDomesticDialog extends InterrupDialog {
             helpers.sendMail(user);
 
             await step.context.sendActivity(`เราได้ส่งข้อมูลการแจ้งเคลมคุณภาพให้แล้วค่ะ`);
-            await step.context.sendActivity({ attachments: [menu.mainMenu()] });
         } else {
             await step.context.sendActivity(`ยกเลิกการแจ้งเคลมให้แล้วค่ะ`);
-            await step.context.sendActivity({ attachments: [menu.mainMenu()] });
         }
         return await step.endDialog();
     }

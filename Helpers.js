@@ -150,12 +150,12 @@ class Helpers {
         const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
         const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
-        // const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
-        // let mailCC = user.profile.email !== undefined ? user.profile.email : '';
-        // const salesAreaMail = this.getSalesAreaMail(user);
-        // mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
-        const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
-        const mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
+        let mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        const salesAreaMail = this.getSalesAreaMail(user);
+        mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
+        // const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
+        // const mailCC = user.profile.email !== undefined ? user.profile.email : '';
 
         const message = "Sales name: " + user.profile.name + "\n"
             + "Sales email: " + user.profile.email + "\n"
@@ -215,12 +215,12 @@ class Helpers {
         const mailAuthenUser = process.env.MAIL_AUTHEN_USER || process.env.APPSETTING_MAIL_AUTHEN_USER;
         const mailAuthenPass = process.env.MAIL_AUTHEN_PASSWORD || process.env.APPSETTING_MAIL_AUTHEN_PASSWORD;
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
-        // const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
-        // let mailCC = user.profile.email !== undefined ? user.profile.email : '';
-        // const salesAreaMail = this.getSalesAreaMail(user);
-        // mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
-        const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
-        const mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
+        let mailCC = user.profile.email !== undefined ? user.profile.email : '';
+        const salesAreaMail = this.getSalesAreaMail(user);
+        mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
+        // const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
+        // const mailCC = user.profile.email !== undefined ? user.profile.email : '';
 
         const message = "Sales name: " + user.profile.name + "\n"
             + "Sales email: " + user.profile.email + "\n"
