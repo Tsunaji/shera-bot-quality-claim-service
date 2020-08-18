@@ -152,7 +152,7 @@ class Helpers {
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
         const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
         let mailCC = user.profile.email !== undefined ? user.profile.email : '';
-        const salesAreaMail = this.getSalesAreaMail(user);
+        const salesAreaMail = this.getSalesAreaMail(user.salesArea);
         mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
         // const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
         // const mailCC = user.profile.email !== undefined ? user.profile.email : '';
@@ -217,7 +217,7 @@ class Helpers {
         const mailFrom = process.env.MAIL_FROM || process.env.APPSETTING_MAIL_FROM;
         const mailTo = `callcenter@shera.com; crmclaim_factory@shera.com`
         let mailCC = user.profile.email !== undefined ? user.profile.email : '';
-        const salesAreaMail = this.getSalesAreaMail(user);
+        const salesAreaMail = this.getSalesAreaMail(user.salesArea);
         mailCC = mailCC + `; ${salesAreaMail}; naiyana_p@shera.com`
         // const mailTo = 'jirasak_ka@shera.com; rungroj_r@shera.com';
         // const mailCC = user.profile.email !== undefined ? user.profile.email : '';
@@ -281,18 +281,21 @@ class Helpers {
         });
     }
 
-    getSalesAreaMail(user) {
+    getSalesAreaMail(salesArea) {
         let salesAreaMail = '';
 
-        switch (user.salesArea) {
+        switch (salesArea) {
             case 'A2': {
                 salesAreaMail = 'crmclaim_a2@shera.com';
+                break;
             }
             case 'A3': {
                 salesAreaMail = 'crmclaim_a3@shera.com';
+                break;
             }
             case 'A4': {
                 salesAreaMail = 'crmclaim_a4@shera.com';
+                break;
             }
         }
 
