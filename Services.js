@@ -95,7 +95,6 @@ class Services {
             }).then(myTableRows => {
                 return myTableRows[0];
             }).catch(function (err) {
-                // console.log(err);
                 return [];
             });
         return customer;

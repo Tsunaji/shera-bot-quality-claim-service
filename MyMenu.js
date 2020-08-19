@@ -1,6 +1,4 @@
 const { CardFactory, ActionTypes } = require('botbuilder');
-const path = require('path');
-const fs = require('fs');
 
 class MyMenu {
 
@@ -161,25 +159,11 @@ class MyMenu {
     }
 
     mainMenu() {
-
-        const imageData = fs.readFileSync(path.join(__dirname, '/resources/logo_shera_web.png'));
-        const base64Image = Buffer.from(imageData).toString('base64');
-
-        const contentUrl = `data:image/png;base64,${base64Image}`;
-
         const buttons = [
             { type: ActionTypes.ImBack, title: 'Quality Claim', value: 'Quality Claim' },
             { type: ActionTypes.ImBack, title: 'Call Center', value: 'Call Center' },
             { type: ActionTypes.ImBack, title: 'Update Profile', value: 'Update Profile' }
         ];
-
-        // not support line channel.
-        // return CardFactory.heroCard(
-        //     'SHERA CRM',
-        //     'ยินดีต้อนรับสู่ บริการแจ้งเคลมคุณภาพ ท่านสามารถเลือกบริการตามรายการด้านล่างได้เลยค่ะ',
-        //     [contentUrl],
-        //     buttons
-        // );
 
         return CardFactory.heroCard(
             'SHERA CRM',
