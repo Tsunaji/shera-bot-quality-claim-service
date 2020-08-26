@@ -16,29 +16,29 @@
         "url": "https://github.com"
     },
     "dependencies": {
-        "async": "^2.6.2",
+        "async": "^2.6.3",
         "blob": "0.0.5",
-        "botbuilder": "^4.9.2",
-        "botbuilder-azure": "^4.2.0",
-        "botbuilder-dialogs": "^4.9.2",
-        "botframework-config": "^4.2.0",
+        "botbuilder": "^4.10.1",
+        "botbuilder-azure": "^4.10.1",
+        "botbuilder-dialogs": "^4.10.1",
+        "botframework-config": "^4.10.1",
         "dotenv": "^6.2.0",
         "fs": "0.0.1-security",
         "is-empty": "^1.2.0",
-        "jest": "^26.4.0",
-        "mysql2": "^1.6.5",
+        "jest": "^26.4.2",
+        "mysql2": "^1.7.0",
         "nodemailer": "^5.1.1",
         "querystring": "^0.2.0",
-        "restify": "^7.2.3",
-        "sequelize": "^4.42.1"
+        "restify": "^7.7.0",
+        "sequelize": "^4.44.4"
     },
     "devDependencies": {
-        "eslint": "^5.8.0",
+        "eslint": "^5.16.0",
         "eslint-config-standard": "^12.0.0",
-        "eslint-plugin-import": "^2.14.0",
-        "eslint-plugin-node": "^8.0.0",
-        "eslint-plugin-promise": "^4.0.1",
-        "eslint-plugin-standard": "^4.0.0",
-        "nodemon": "^1.18.7"
+        "eslint-plugin-import": "^2.22.0",
+        "eslint-plugin-node": "^8.0.1",
+        "eslint-plugin-promise": "^4.2.1",
+        "eslint-plugin-standard": "^4.0.1",
+        "nodemon": "^1.19.4"
     }
 }
