@@ -27,7 +27,7 @@
         "is-empty": "^1.2.0",
         "jest": "^26.4.2",
         "mysql2": "^1.7.0",
-        "nodemailer": "^5.1.1",
+        "nodemailer": "^6.4.16",
         "querystring": "^0.2.0",
         "restify": "^7.7.0",
         "sequelize": "^4.44.4"
